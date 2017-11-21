@@ -1,0 +1,148 @@
+<div class="animated fadeIn ">
+  <h1>
+    {{'PAYMENT.GENERAL.PLURAL' | translate }}
+  </h1>
+  <div class="row mb-1">
+    <div class="col-4 ml-auto">
+      <div class="form-group text-right">
+        <button class="btn btn-primary" (click)="getProperties(); findPropertyModal.show()">
+          <i class="fa fa-plus"></i>
+          {{'PAYMENT.FORM.ADD' | translate }}
+        </button>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-search"></i>
+        </span>
+        <input class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}" />
+      </div>
+    </div>
+  </div>
+  <table class="table" [mfData]="payments | dataFilter:{query: filterQuery, cols: ['folio', 'property_name', 'date', 'amount']}"
+    #mf="mfDataTable" [mfRowsOnPage]="10" *ngIf="!isLoading">
+    <thead>
+      <tr>
+        <th>
+          <mfDefaultSorter by="folio">{{'PAYMENT.FORM.INPUT_PAYMENT_FOLIO' | translate}}</mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="property_name">{{'PROPERTY.GENERAL.SINGULAR' | translate}}</mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="date">{{'PAYMENT.FORM.INPUT_PAYMENT_DATE' | translate}}</mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="amount">{{'PAYMENT.FORM.INPUT_PAYMENT_AMOUNT' | translate}}</mfDefaultSorter>
+        </th>
+        <th>
+          &nbsp;
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of mf.data" [ngClass]="{'table-danger':p.is_reversed}">
+        <td>{{p.folio}}</td>
+        <td>{{p.property_name}}</td>
+        <td>{{p.date | date:'dd-MM-y'}}</td>
+        <td>{{p.amount | numberFormat:{type: 'currency'} }}</td>
+
+        <ng-template #popTemplate>{{'PAYMENT.TOOLTIP.FOLIOS' | translate}} {{p.tooltip}}
+          <div [innerHtml]="html"></div>
+        </ng-template>
+
+        <td class="text-right">
+          <button class="btn btn-sm btn-secondary" (click)="downloadPDF(p)">
+            <i class="fa fa-file-pdf-o"></i>
+          </button>
+
+          <mark *ngIf="p.tooltip.length>0 && p.is_reconciled == false" [tooltip]= popTemplate placement="left">
+            <button class="btn btn-sm btn-danger" (click)="openModalConfirmDelete(p)" [disabled]="p.is_mov_positive_balance ||   p.is_reversed || p.is_reconciled"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+          </mark>
+
+          <mark *ngIf="p.is_reconciled == true" tooltip = "{{'PAYMENT.TOOLTIP.ISRECONCILED' | translate}}" placement="left">
+              <button class="btn btn-sm btn-danger" (click)="openModalConfirmDelete(p)" [disabled]="p.is_mov_positive_balance ||   p.is_reversed || p.is_reconciled"
+                placement="top">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+              </button>
+          </mark>
+
+          <mark *ngIf="p.tooltip.length == 0 && p.is_reconciled == false">
+            <button class="btn btn-sm btn-danger" (click)="openModalConfirmDelete(p)" [disabled]="p.is_mov_positive_balance ||   p.is_reversed || p.is_reconciled">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+          </mark>
+        </td>
+
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">
+          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  <div class="progress progress-sm" *ngIf="isLoading">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+  </div>
+</div>
+
+<div bsModal #findPropertyModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="actionsModal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'PROPERTY.ACTIONS_MODAL.FIND' | translate}}</h5>
+        <button type="button" class="close" (click)="findPropertyModal.hide()" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="w-50 block-center" *ngIf="!properties">
+          <div class="progress progress-sm">
+            <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+          </div>
+        </div>
+        <div *ngIf="properties">
+          <table class="table table-hover table-sm table-responsive">
+            <thead>
+              <tr>
+                <th>{{'PROPERTY.TABLE_HEADER.CODE' | translate}}</th>
+                <th>{{'PROPERTY.TABLE_HEADER.NAME' | translate}}</th>
+                <th>{{'PROPERTY.TABLE_HEADER.UNITS' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pr of properties" (click)="onSelectProperty(pr); findPropertyModal.hide()">
+                <td>{{pr.code}}</td>
+                <td>{{pr.name}}</td>
+                <td>{{pr.units.length}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="animated fadeIn alert alert-info w-100 block-center" *ngIf="properties.length === 0">
+            <div class="text-center mb20">
+              <i class="fa fa-info-circle fa-5x"></i>
+            </div>
+            <div class="text-center text-bold mb30">
+              {{'PROPERTY.TABLE_HEADER.PROPERTY_DONT_EXIST' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="findPropertyModal.hide()">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<app-confirm-control (output)="outputTable()"></app-confirm-control>
+<toaster-container></toaster-container>

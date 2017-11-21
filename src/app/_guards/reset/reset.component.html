@@ -1,0 +1,42 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form class="card mx-4" name="form" (ngSubmit)="f.form.valid && recover()" #f="ngForm" novalidate>
+          <div class="card-block p-4">
+            <h1>{{'GUARD.AUTH.PASSWORD_FORGOT' | translate}}</h1>
+            <p class="text-muted">{{'GUARD.AUTH.PASSWORD_FORGOT_DESCRIPTION' | translate}}</p>
+
+            <div class="alert alert-danger" role="alert" *ngIf="hasErrors">
+              {{'GUARD.MESSAGE.PASSWORD_FORGOT_UNAUTHORIZED' | translate}}
+            </div>
+
+            <div class="alert alert-success" role="alert" *ngIf="wasSend">
+              {{'GUARD.MESSAGE.PASSWORD_FORGOT_SEND' | translate}}
+            </div>
+
+            <div class="input-group mb-3" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+              <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+              <input type="email" class="form-control" name="email" placeholder="{{'GUARD.AUTH.EMAIL_FIELD' | translate}}" [(ngModel)]="model.email" #email="ngModel" required />
+            </div>
+          </div>
+          <div class="card-footer p-4">
+            <div class="row">
+              <div class="col-6">
+                <button [disabled]="loading" class="btn btn-block btn-primary">
+                  {{'GUARD.AUTH.RECOVER_TITLE' | translate}}
+                </button>
+              </div>
+              <div class="col-6">
+                <button routerLinkActive="active" [routerLink]="['/login']" type="button"
+                        class="btn btn-block btn-link">
+                  {{'GUARD.AUTH.LOGIN' | translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

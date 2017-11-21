@@ -1,0 +1,77 @@
+<h1>
+  {{'BANK_ACCOUNT.GENERAL.CREATE' | translate}}
+</h1>
+<hr>
+<div class="card">
+  <div class="card-header">
+    <i class="fa fa-bank"></i>
+    <strong>
+      {{'BANK_ACCOUNT.GENERAL.SINGULAR' | translate}}
+    </strong>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="formBankAccount" class="animated fadeIn">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label>{{ 'BANK_ACCOUNT.FORM_LABELS.ACCOUNT_TYPE' | translate}}</label>
+            <select class="form-control" formControlName="accountType">
+              <option *ngFor="let item of bankAccountType" [ngValue]="item">{{item.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label>{{ 'BANK_ACCOUNT.FORM_LABELS.BANK' | translate}}</label>
+            <select class="form-control" formControlName="bank">
+              <option *ngFor="let bank of banks" [ngValue]="bank">{{bank.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label>{{ 'BANK_ACCOUNT.FORM_LABELS.NUM_ACCOUNT' | translate}}</label>
+            <input type="text" class="form-control" formControlName="accountNumber" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label>{{ 'BANK_ACCOUNT.FORM_LABELS.OPENING_BALANCE' | translate}}</label>
+            <input type="text" class="form-control" formControlName="openingBalance" currencyMask [options]="maskNumberFormat.currency"/>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label>{{ 'BANK_ACCOUNT.FORM_LABELS.OPENING_DATE' | translate}}</label>
+            <input type="text" bsDatepicker [bsConfig]="bsConfig" value="{{ selectedDate | amFromUtc |amDateFormat: 'DD-MM-YYYY'}}" 
+            class="form-control" formControlName="openingDate" name="openingDate" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label>{{ 'BANK_ACCOUNT.FORM_LABELS.EJECUTIVE_NAME' | translate}}</label>
+            <input type="text" class="form-control" formControlName="executiveName" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label>{{ 'BANK_ACCOUNT.FORM_LABELS.EJECUTIVE_EMAIL' | translate}}</label>
+            <input type="email" class="form-control" formControlName="executiveEmail" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label>{{ 'BANK_ACCOUNT.FORM_LABELS.EJECUTIVE_PHONE' | translate}}</label>
+            <input type="text" class="form-control" formControlName="executivePhone" />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-primary" (click)="onSave()" [disabled]="!formBankAccount.valid">{{'GENERAL.SAVE'| translate}}</button>
+  </div>
+</div>
+<toaster-container></toaster-container>

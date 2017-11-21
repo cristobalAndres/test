@@ -1,0 +1,5 @@
+<div [formGroup]="sectorForm">
+  <input [attr.disabled]="disabledSector === true ? '': null" [style.border]="alert === true ? '2px solid red' : 'none'" [(ngModel)]="amount" formControlName="amount"
+  currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', precision:'0' }" name="amount" placeholder="0" class="form-control" (blur)="changeAmount()" (keypress)="_helperService.validateCharacter($event)"
+  />
+</div>

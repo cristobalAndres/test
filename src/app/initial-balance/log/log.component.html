@@ -1,0 +1,33 @@
+<div class="animated fadeIn" *ngIf="data.length > 0">
+  <table class="table table-striped" [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+    <tr>
+      <th>
+        <mfDefaultSorter by="date">
+          {{'IMPORT_LOG.TABLE_HEADER.DATE' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th *ngFor="let col of cols" class="text-right">
+        <mfDefaultSorter by="col.toLowerCase()">
+          {{'IMPORT_LOG.TABLE_HEADER.' + col | translate}}
+        </mfDefaultSorter>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of mf.data">
+      <td>{{item.created_at | date:'medium'}}</td>
+      <td class="text-right" *ngFor="let logVal of item.event_log_values">
+        {{logVal.value | numberFormat: { type: 'currency' } }}
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="4">
+        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>

@@ -1,0 +1,176 @@
+<div class="animated fadeIn">
+  <h1 class="text-capitalize">
+    {{'PROPERTY.GENERAL.PLURAL' | translate}}
+  </h1>
+
+  <div class="row">
+    <div class="col" *ngFor="let factorTotal of factorTotals">
+      <div class="callout callout-info b-t-1 b-r-1 b-b-1 p-y-q bg-white">
+        <ng-container *ngIf="factorTotal.name === 'DEFAULT_SECTOR'; else other_factor_total">
+          <small class="text-muted text-bold">{{'SECTOR.GENERAL.DEFAULT_SECTOR' | translate}}</small>
+        </ng-container>
+        <ng-template #other_factor_total>
+          <small class="text-muted text-bold">{{factorTotal.name}}</small>
+        </ng-template>
+        <br>
+        <strong class="h4">{{factorTotal.factor | numberFormat: { type: 'percent' } }}</strong>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+
+  <div class="row mb-1">
+    <div class="col-md-4 ml-auto">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" [(ngModel)]="filterQuery"
+               placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}"/>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-bordered table-hover"
+         [mfData]="data | dataFilter:{query: filterQuery, cols: ['name', 'code', 'units_str', 'user', 'factors_str']}"
+         #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+    <tr>
+      <th>
+        <mfDefaultSorter by="name">
+          {{'PROPERTY.TABLE_HEADER.NAME' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th>
+        <mfDefaultSorter by="code">
+          {{'PROPERTY.TABLE_HEADER.CODE' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th>
+        {{'PROPERTY.TABLE_HEADER.UNITS' | translate}}
+      </th>
+      <th>
+        <mfDefaultSorter by="user">
+          {{'PROPERTY.TABLE_HEADER.USER' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th>
+        {{'PROPERTY.TABLE_HEADER.FACTOR' | translate}}
+      </th>
+    </tr>
+    </thead>
+    <tfoot>
+    <tr>
+      <td colspan="6">
+        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+    <tbody>
+    <tr *ngFor="let item of mf.data" (click)="showModal(item); actionsModal.show()">
+      <td>{{item.name}}</td>
+      <td>{{item.code}}</td>
+      <td>
+        <ul>
+          <li *ngFor="let unit of item.units">{{unit}}</li>
+        </ul>
+      </td>
+      <td>{{item.user}}</td>
+      <td>
+        <ul>
+          <li *ngFor="let factor of item.factors">
+            <ng-container *ngIf="factor.name === 'DEFAULT_SECTOR'; else other_sector">
+              {{'SECTOR.GENERAL.DEFAULT_SECTOR' | translate}}: {{factor.factor | numberFormat: { type: 'percent' } }}
+            </ng-container>
+            <ng-template #other_sector>
+              {{factor.name}}: {{factor.factor | numberFormat: { type: 'percent' } }}
+            </ng-template>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="animated fadeIn alert alert-info w-100 block-center" *ngIf="mf.data.length === 0">
+    <div class="text-center mb20">
+      <i class="fa fa-info-circle fa-5x"></i>
+    </div>
+    <div class="text-center text-bold mb30">
+      {{'PROPERTY.TABLE_HEADER.PROPERTY_DONT_EXIST' | translate}}
+    </div>
+  </div>
+</div>
+
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>
+
+<div bsModal #dangerDeleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="dangerDeleteModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-danger" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'GENERAL.CONFIRMATION_TITLE' | translate}}</h5>
+        <button type="button" class="close" (click)="dangerDeleteModal.hide(); deselectPropertyForDelete()"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="selectedPropertyForDelete">{{'PROPERTY.DELETE.CONFIRMATION_TEXT' | translate:deleteModalParam}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="dangerDeleteModal.hide(); deselectPropertyForDelete()">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteProperty(); dangerDeleteModal.hide();">
+          <i class="fa fa-trash"></i> {{'GENERAL.DELETE' | translate}}
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #actionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="actionsModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'PROPERTY.ACTIONS_MODAL.TITLE' | translate}}</h5>
+        <button type="button" class="close" (click)="actionsModal.hide()"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>{{'PROPERTY.GENERAL.SINGULAR' | translate}}: {{selectedProperty.name}}</h5>
+        <div class="row">
+          <div class="col-md-3 mt10 mb10">
+            <a class="btn btn-info btn-block" routerLinkActive="active"
+               [routerLink]="['/property/' + selectedProperty.id + '/payment/create', {advance:'false'}]">
+              <div class="p10"><i class="fa fa-3x fa-credit-card"></i></div>
+              <div>{{'PROPERTY.ACTIONS_MODAL.GET_BILLS' | translate}}</div>
+            </a>
+          </div>
+          <div class="col-md-3 mt10 mb10">
+            <a class="btn btn-success btn-block" routerLinkActive="active"
+               [routerLink]="['/property/' + selectedProperty.id + '/payment/create', {advance:'true'}]">
+              <div class="p10"><i class="fa fa-3x fa-money"></i></div>
+              <div>{{'PROPERTY.ACTIONS_MODAL.ADVANCES' | translate}}</div>
+            </a>
+          </div>
+          <div class="col-md-3 mt10 mb10"
+               (click)="actionsModal.hide(); dangerDeleteModal.show(); selectPropertyForDelete(selectedProperty)">
+            <button class="btn btn-danger btn-block">
+              <div class="p10"><i class="fa fa-3x fa-trash"></i></div>
+              <div>{{'PROPERTY.ACTIONS_MODAL.DELETE' | translate}}</div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="actionsModal.hide()">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

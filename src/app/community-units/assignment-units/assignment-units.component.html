@@ -1,0 +1,241 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'PROPERTY.GENERAL.ASSIGNMENT_UNITS' | translate}}
+  </h1>
+</div>
+<hr>
+<div class="progress progress-sm" *ngIf="data.length === 0">
+  <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+</div>
+<div class="animated fadeIn">
+</div>
+<div *ngIf="data.length > 0">
+  <div class="row mb-3">
+    <div class="col">
+      <button type="button" class="btn btn-primary btn-sm" *ngIf="isAnySelected" (click)="findPropertyModal.show()"><i class="fa fa-share"></i> {{'PROPERTY.GENERAL.ASSIGNMENT_UNITS' | translate}} </button>
+    </div>
+    <div class="col-md-4 ml-auto">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" (keyup)="search($event.target.value)"
+               placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}"/>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa fa-building-o"></i>{{'PROPERTY.GENERAL.PLURAL' | translate}}
+        </div>
+        <div class="card-body">
+          <div *ngFor="let item of properties" class="card">
+            <div class="card-header" [ngClass]="{'card-search': item.state}">
+              <div class="row">
+                <div class="radio col-lg-4">
+                  <input type="checkbox" name="selected" id="{{item.name}}" (click)="selectAllUnit(item)" *ngIf="item.units.length > 0" [checked]="item.selected">&nbsp;
+                  <label for="{{item.name}}"><strong>{{item.name}}</strong></label>
+                </div>
+                <strong class="margin-right-10 col text-center">Factor: {{item.total_factor | number}}</strong>
+                <button type="button" class="btn btn-outline-primary btn-sm float-right" (click)="selectProperty(item);createUnitModal.show();"><i class="fa fa-plus-square"></i> {{'PROPERTY.BUTTONS.NEW_UNIT' | translate}}</button>
+              </div>
+            </div>
+            <div class="card-body" dropDirective (dropEvent)="addDropItemLeft($event, item)" (dropEventMouse)="dropEventMouse($event)" [dropHighlight]="'highlight'" (dragenterEvent)="dragEnterLeft($event, item)" (dragleaveEvent)="dragLeave()" (dragoverMouseEvent)="dragoverMouse($event)">
+              <div class="progress progress-sm" *ngIf="isCreatingUnit && item.id === this.selectedProperty.id">
+                <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+              </div>
+              <div *ngFor="let units of item.units" [dragDirective]='units' [dragHightlight]="'highlight'" (releaseDrop)="releaseDropLeft($event, item)" (startDrag)="startDragLeft(units)" class="card-header mt-2">
+                <div class="row">
+                  <div class="radio col-lg-5">
+                    <input type="checkbox" id="{{units.name}}" name="selected" (click)="selectedUnit(units, item)" [checked]="units.isSelected">
+                    <label for="{{units.name}}"><strong>{{units.name}}</strong></label>
+                  </div>
+                  <strong class="margin-right-10 col text-right">Factor: {{units.total_factor | number}}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!---<div class="col-2 text-center my-auto">
+      <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>&nbsp;<span class="title-drag">{{'PROPERTY.DRAG' | translate}}</span>&nbsp;<i class="fa fa-arrow-right fa-2x" aria-hidden="true"></i>
+    </div>-->
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa fa-building-o"></i>{{'PROPERTY.GENERAL.PLURAL' | translate}}
+        </div>
+        <div class="card-body">
+          <div *ngFor="let item of propertiesAux"  class="card">
+            <div class="card-header" [ngClass]="{'card-search': item.state}">
+              <div class="row">
+                <div class="radio col-lg-3">
+                  <input type="checkbox" name="selected" id="{{item.name}}" (click)="selectAllUnit(item)" *ngIf="item.units.length > 0" [checked]="item.selected">&nbsp;
+                  <label for="{{item.name}}"><strong>{{item.name}}</strong></label>
+                </div>
+                <strong class="margin-right-10 col text-center">Factor: {{item.total_factor | number}}</strong>
+                <button type="button" class="btn btn-outline-primary btn-sm float-right" (click)="selectProperty(item);createUnitModal.show();"><i class="fa fa-plus-square"></i> {{'PROPERTY.BUTTONS.NEW_UNIT' | translate}}</button>
+              </div>
+            </div>
+            <div class="card-body" dropDirective (dropEvent)="addDropItemRight($event, item)" (dropEventMouse)="dropEventMouse($event)" (dragenterEvent)="dragEnterRight($event, item)" (dragleaveEvent)="dragLeave()" [dropHighlight]="'highlight'" (dragoverMouseEvent)="dragoverMouse($event)">
+              <div class="progress progress-sm" *ngIf="isCreatingUnit && item.id === this.selectedProperty.id">
+                <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+             </div>
+              <div *ngFor="let units of item.units" [dragDirective]='units' [dragHightlight]="'highlight'" (releaseDrop)="releaseDropRight($event, item)" (startDrag)="startDragRight(units)" class="card-header mt-2">
+                <div class="row">
+                  <div class="radio col-lg-5">
+                    <input type="checkbox" id="{{units.name}}" name="selected" (click)="selectedUnit(units, item)" [checked]="units.isSelected">
+                    <label for="{{units.name}}"><strong>{{units.name}}</strong></label>
+                  </div>
+                  <strong class="margin-right-10 col text-right">Factor: {{units.total_factor | number}}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #findPropertyModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="actionsModal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Seleccionar inmueble</h5>
+        <button type="button" class="close" (click)="findPropertyModal.hide()" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="w-50 block-center" *ngIf="!data">
+          <div class="progress progress-sm">
+            <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+          </div>
+        </div>
+        <div *ngIf="unitsSelected.length > 0">
+          <table class="table table-hover table-sm table-responsive">
+            <thead>
+            <tr>
+              <th>{{'PROPERTY.TABLE_HEADER.NAME' | translate}}</th>
+              <th>{{'PROPERTY.TABLE_HEADER.UNITS' | translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let pr of data" (click)="onSelectProperty(pr)" [ngClass]="{'property-selected': pr.list}">
+              
+              <ng-container *ngIf = "(!pr.selected && !pr.hasSelectedUnits) || pr.units.length === 0">
+                <td >{{pr.name}}</td>
+                <td >{{pr.units.length}}</td>
+              </ng-container>
+              
+            </tr>
+            </tbody>
+          </table>
+          <div class="animated fadeIn alert alert-info w-100 block-center" *ngIf="data.length === 0">
+            <div class="text-center mb20">
+              <i class="fa fa-info-circle fa-5x"></i>
+            </div>
+            <div class="text-center text-bold mb30">
+              {{'PROPERTY.TABLE_HEADER.PROPERTY_DONT_EXIST' | translate}}
+            </div>
+          </div>
+        </div>
+        <div class="animated fadeIn alert alert-info w-100 block-center" *ngIf="unitsSelected.length === 0">
+          <div class="text-center mb20">
+            <i class="fa fa-info-circle fa-5x"></i>
+          </div>
+          <div class="text-center text-bold mb30">
+            {{'PROPERTY.ACTIONS_MODAL.UNIT_NOT_SELECTED' | translate}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="assignUnitToProperty(); findPropertyModal.hide();" [disabled]="!propertySelected || unitsSelected.length === 0">
+          {{'PROPERTY.ACTIONS_MODAL.ASSIGN' | translate}}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="findPropertyModal.hide()">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div bsModal #createUnitModal="bs-modal" class="modal modal-info fade" tabindex="-1" role="dialog" aria-labelledby="createUnitModal"
+aria-hidden="true">
+<form *ngIf="createUnitForm && unitTypes.length > 0" [formGroup]="createUnitForm" (ngSubmit)="onSubmit(createUnitForm.value);createUnitModal.hide();">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'PROPERTY.CREATE_UNIT_MODAL.TITLE' | translate:createUnitModalParam}}</h5>
+        <button type="button" class="close" (click)="createUnitModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <h5>{{'PROPERTY.CREATE_UNIT_MODAL.DESCRIPTION' | translate}}: {{selectedProperty.name}}</h5>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="name">{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.LABEL_NAME' | translate }}</label>
+                  <input type="text" class="form-control" id="name" placeholder="{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.PLACEHOLDERS.NAME' | translate }}"
+                    formControlName="name" name="name">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="floor">{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.LABEL_FLOOR' | translate }}</label>
+                  <input type="number" class="form-control" id="floor" placeholder="{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.PLACEHOLDERS.FLOOR' | translate }}"
+                    formControlName="floor" name="floor">
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="area">{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.LABEL_AREA' | translate }}</label>
+                  <input type="number" class="form-control" id="area" placeholder="{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.PLACEHOLDERS.AREA' | translate }}"
+                    formControlName="area" name="area" [min]= "0">
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="factor">{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.LABEL_FACTOR' | translate }}</label>
+                  <input type="number" class="form-control" id="area" placeholder="{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.PLACEHOLDERS.FACTOR' | translate }}"
+                    formControlName="factor" name="factor" [min]= "0" [max]="100">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="unit_type">{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.LABEL_TYPE' | translate }}</label>
+                  <select class="form-control" id="unit_type" formControlName="unit_type" name="unit_type">
+                    <option value="" disabled selected>{{ 'PROPERTY.CREATE_UNIT_MODAL.FORM.SELECT_UNIT_TYPE' | translate }}</option>
+                    <option *ngFor="let type_unit of unitTypes" [ngValue]="type_unit.id">{{type_unit.name}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="createUnitModal.hide()">{{'GENERAL.CLOSE' | translate}}</button>
+        <button type="submit" class="btn btn-primary pull-right" [disabled]="!createUnitForm.valid">{{ 'CONSUMER_SERVICES.FORM.SAVE_BUTTON' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>

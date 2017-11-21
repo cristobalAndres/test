@@ -1,0 +1,169 @@
+
+<h1 *ngIf="ServiceId !== 0 && !isUploading">{{ 'CONSUMER_SERVICES.FORM.SERVICE_TITLE_EDIT' | translate }} </h1>
+<h1 *ngIf="ServiceId === 0 && !isUploading">{{ 'CONSUMER_SERVICES.FORM.SERVICE_TITLE_CREATE' | translate }}
+  <span *ngIf="ServiceId !== 0"></span>
+</h1>
+
+
+<div *ngIf="!isUploading && readyToShow" class="col not-padding">
+  <form *ngIf="serviceForm" [formGroup]="serviceForm" (ngSubmit)="onSubmit(serviceForm.value)">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-bank"></i>
+        <strong>
+          {{'CONSUMER_SERVICES.GENERAL.SINGULAR' | translate }}
+        </strong>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6 col-md-6">
+            <div class="form-group">
+              <label for="name">{{ 'CONSUMER_SERVICES.FORM.LABEL_NAME' | translate }}</label>
+              <input type="text" class="form-control" id="name" placeholder="{{ 'CONSUMER_SERVICES.FORM.PLACEHOLDERS.NAME' | translate }}" formControlName="name"
+                name="name">
+            </div>
+          </div>
+
+          <div class="col-6 col-md-6">
+              <div class="form-group">
+                <label for="cuentas">{{ 'CONSUMER_SERVICES.FORM.LABEL_SELECT_ACCOUNT' | translate }}</label>
+                <select class="form-control" id="cuentas" formControlName="account_primary_id" name="account_primary_id" >
+                  <option value="" disabled selected>{{ 'CONSUMER_SERVICES.FORM.PLACEHOLDERS.SELECT_ACCOUNT' | translate }}</option>
+                  <option *ngFor="let account of accounts" [ngValue]="account">
+                    {{account.code}}-{{account.name}}
+                  </option>
+                </select>
+              </div>
+          </div>
+
+          <div class="col">
+              <div class="form-group">
+                <label for="sectors">{{ 'CONSUMER_SERVICES.FORM.LABEL_SECTORS' | translate }}</label>
+                <select class="form-control" id="sectors" formControlName="sector_id" name="sector_id">
+                  <option value="" disabled selected>{{ 'CONSUMER_SERVICES.FORM.PLACEHOLDERS.SELECT_SECTOR' | translate }}</option>
+                  <option *ngFor="let sector of sectors" [ngValue]="sector">
+                    <span *ngIf="sector.name === 'DEFAULT_SECTOR'">
+                        {{'SECTOR.GENERAL.DEFAULT_SECTOR' | translate}}
+                    </span>
+                    <span *ngIf="sector.name != 'DEFAULT_SECTOR'">
+                        {{sector.name}}
+                    </span>
+                 </option>
+                </select>
+              </div>
+          </div>
+
+          <!-- <div class="col">
+              <div class="form-group">
+                <label for="unity_property">{{ 'CONSUMER_SERVICES.FORM.LABEL_UNIT_PROPERTY' | translate }}</label>
+                <select class="form-control" id="unity_property" formControlName="unit_property_id" name="unit_property_id" (change)="changeUnitProperty()">
+                  <option value="" disabled selected>{{ 'CONSUMER_SERVICES.FORM.PLACEHOLDERS.UNIT_PROPERTY' | translate }}</option>
+                  <option *ngFor="let unit_property of units_property" [ngValue]="unit_property">
+                    {{ 'CONSUMER_SERVICES.FORM.FIELDS.'+unit_property.name | translate }}
+                </select>
+              </div>
+          </div> -->
+
+          <div class="col ">
+              <div class="form-group">
+                <label for="units">{{ 'CONSUMER_SERVICES.FORM.LABEL_MEASURE' | translate }}</label>
+                <select class="form-control" id="measure" formControlName="unit_id" name="unit_id" (change)="changeMeasure()">
+                  <option value="" disabled selected>{{ 'CONSUMER_SERVICES.FORM.PLACEHOLDERS.UNITS' | translate }}</option>
+                  <option *ngFor="let measure of measures" [ngValue]="measure"> {{'CONSUMER_SERVICES.FORM.FIELDS.'+measure.name | translate }}
+                  </option>
+                </select>
+              </div>
+          </div>
+
+          <div class="col " >
+              <div class="form-group">
+                <label for="charge_system">{{ 'CONSUMER_SERVICES.FORM.LABEL_CHARGE_SYSTEM' | translate }}</label>
+                <select class="form-control" id="charge_system" formControlName="charge_system_id" name="charge_system_id" (change)="changeChargeSystem()">
+                  <option value="" disabled selected>{{ 'CONSUMER_SERVICES.FORM.PLACEHOLDERS.CHARGE_SYSTEM' | translate }}</option>
+                  <option *ngFor="let charge of charges_system" [ngValue]="charge" > {{'CONSUMER_SERVICES.FORM.FIELDS.'+charge.name | translate}} </option>
+                </select>
+              </div>
+          </div>
+
+          <div class="col " *ngIf= "showAmountFixed">
+              <div class="form-group">
+                <label for="amount">{{ 'CONSUMER_SERVICES.FORM.LABEL_CHARGE_AMOUNT' | translate }}</label>
+                <input type="number" class="form-control" placeholder= "" name= "amount_fixed" formControlName='amount_fixed' min="0"
+                [ngClass]="{'red-border': serviceForm.get('amount_fixed').value === 0}" (change)= "changeAmountFixed(serviceForm.get('amount_fixed').value)"
+                >
+              </div>
+          </div>
+
+        </div>
+
+        <div class="row type-units">
+          <div class="card">
+                <div class="card-header">
+                  <i class="fa fa-building-o"></i>
+                  <strong>
+                    {{'CONSUMER_SERVICES.FORM.TITLE_UNIT_TYPES' | translate }}
+                  </strong>
+                </div>
+
+                <div class="card-body">
+                  <div class="row">
+                      <div class="col-xs-12 col-md-3" *ngFor = "let unit of units">
+                        <div class="form-group" *ngIf = "serviceForm.get('unit_property_id').value && serviceForm.get('unit_property_id').value.name === 'UNIT' ">
+                          <label for="{{unit.id}}">
+                            <input id="{{unit.id}}" [ngModelOptions]="{standalone: true}" name="unit" [checked]="unit.selected" [(ngModel)]="unit.selected"
+                                    (change)= "changeUnit(unit)" type="checkbox"> {{unit.name}}
+                          </label>
+                        </div>
+                        <div class="form-group" *ngIf = "serviceForm.get('unit_property_id').value && serviceForm.get('unit_property_id').value.name === 'PROPERTY' ">
+                          <label for="{{unit.id}}">
+                          <input id="{{unit.id}}" [ngModelOptions]="{standalone: true}" name="unit" [value]="unit.name" [(ngModel)]="defaultRadioValue" [checked]="unit.selected"
+                                  (change)= "changeUnit(unit)" type="radio" /> {{unit.name}}
+                          </label>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row months" *ngIf= "showCalendar">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-calendar"></i>
+                    <strong>
+                      {{'CONSUMER_SERVICES.FORM.TITLE_MONTHS' | translate }}
+                    </strong>
+                </div>
+
+                <div class="card-body" formArrayName= "amountByMonth" >
+                    <div class="row">
+                          <div class= "col-3 col-md-3" *ngFor = "let month of serviceForm['controls'].amountByMonth['controls']; let i=index;">
+                            <div class="form-group" [formGroupName]= "i">
+                                <label for="amount"> {{'GENERAL.MONTHS.'+serviceForm.controls.amountByMonth.controls[i].controls.name.value | translate}} </label>
+                                <input type="number" class="form-control" placeholder= "" name= "amount" formControlName='amount' min="0"
+                                [ngClass]="{'red-border': month.value.amount === 0}"
+                                (change) ='updatedAmountByMonth(month)'>
+                              </div>
+                          </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary btn-block pull-right" [disabled]="!serviceForm.valid || !formValidate">{{ 'CONSUMER_SERVICES.FORM.SAVE_BUTTON' | translate }}</button>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<div class="form-group" *ngIf="isUploading">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>
+
+<toaster-container></toaster-container>

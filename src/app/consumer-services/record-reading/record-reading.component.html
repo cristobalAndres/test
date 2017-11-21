@@ -1,0 +1,212 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'CONSUMER_SERVICES.RECORD_READING.PLURAL' | translate}}
+  </h1>
+  <div class="row">
+    <div class="col-md-12">
+    </div>
+  </div>
+</div>
+<form [formGroup]="formReading" class="animated fadeIn" *ngIf= "isReadyToShow">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="period">{{ 'CONSUMER_SERVICES.RECORD_READING.FORM.PERIOD' | translate }}</label>
+        <select class="form-control" formControlName="period" name="period" (change)="onChangePeriod()">
+          <option value="" disabled selected>{{'CONSUMER_SERVICES.RECORD_READING.FORM.PERIOD_DEFAULT' | translate}}</option>
+          <option *ngFor="let period of periods" [ngValue]="period">{{'GENERAL.MONTHS.' + period.name | translate}} {{ period.periodGroup }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="sector">{{ 'CONSUMER_SERVICES.RECORD_READING.FORM.SECTOR' | translate }}</label>
+        <select class="form-control" formControlName="sector" name="sector" (change)="getServices()">
+          <option value="" disabled selected>{{'CONSUMER_SERVICES.RECORD_READING.FORM.SECTOR_DEFAULT' | translate}}</option>
+          <option *ngFor="let sector of sectors" [ngValue]="sector">
+            <span *ngIf="sector.name === 'DEFAULT_SECTOR'">{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate }}</span>
+            <span *ngIf="sector.name !== 'DEFAULT_SECTOR'">{{ sector.name | translate}}</span>
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="service">{{ 'CONSUMER_SERVICES.RECORD_READING.FORM.SERVICE' | translate }}</label>
+        <select class="form-control" formControlName="service" name="service" (change)="getConsumerServicesReading()">
+          <option value="" disabled selected>{{'CONSUMER_SERVICES.RECORD_READING.FORM.SERVICE_DEFAULT' | translate}}</option>
+          <option *ngFor="let item of consumerServices " [ngValue]="item">{{ item.name }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="form-group" *ngIf="isLoading && isReadyToShow">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>
+
+<div class="alert alert-warning text-center" role="alert" *ngIf="expenseAssignService.length === 0 && isManual && isReadyToShow">
+  <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{ 'CONSUMER_SERVICES.RECORD_READING.ERROR.NO_EXPENSE' | translate }}
+</div>
+
+<div class="alert alert-warning text-center" role="alert" *ngIf="consumerServices.length === 0 && isReadyToShow">
+  <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{ 'CONSUMER_SERVICES.RECORD_READING.ERROR.NOT_SERVICE' | translate }}
+</div>
+
+<div class="alert alert-info text-center" role="alert" *ngIf="isLockedPeriod && isReadyToShow">
+  <i class="fa fa-info-circle" aria-hidden="true"></i> {{ 'CONSUMER_SERVICES.RECORD_READING.ERROR.PERIOD_LOCKED_PREF' | translate}} {{'GENERAL.MONTHS.' + pediodSelected.name |
+  translate}} del {{ pediodSelected.periodGroup }} {{ 'CONSUMER_SERVICES.RECORD_READING.ERROR.PERIOD_LOCKED_MESSAGE' | translate}}
+</div>
+
+<div class="row" *ngIf="expenseAssignService.length > 0 && isReadyToShow">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <strong>
+          {{ 'CONSUMER_SERVICES.RECORD_READING.TABLE_EXPENSE.TITLE' | translate }}
+        </strong>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm">
+          <thead>
+            <th>{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE_EXPENSE.DOCUMENT' | translate }}</th>
+            <th>{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE_EXPENSE.DESC' | translate }}</th>
+            <th class="text-right">{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE_EXPENSE.PERCENT' | translate }}</th>
+            <th class="text-right">{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE_EXPENSE.AMOUNT' | translate }}</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of expenseAssignService; index as i">
+              <td>{{item.doc}}</td>
+              <td>{{item.description}}</td>
+              <td class="text-right">{{item.percentage}}</td>
+              <td class="text-right">{{item.amount | numberFormat:{type: 'currency'} }}</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-right">
+                <strong>{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE_EXPENSE.TOTAL_EXPENSE' | translate }}</strong>
+              </td>
+              <td class="text-right">
+                <strong>{{ totalExpense | numberFormat:{type: 'currency'} }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-right">
+                <strong [ngClass]="{'red': totalAssigned > totalExpense}">{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE_EXPENSE.TOTAL_ASIGNED' | translate }}</strong>
+              </td>
+              <td class="text-right">
+                <strong [ngClass]="{'red': totalAssigned > totalExpense}">{{ totalAssigned | numberFormat:{type: 'currency'} }}</strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="animated fadeIn" *ngIf="consumerServicesReading.length > 0  && !(expenseAssignService.length === 0 && isManual) && isReadyToShow">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>
+            <th>{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.TITLE' | translate }}</th>
+          </strong>
+          <ul class="nav justify-content-end pull-right nav-btn">
+            <li class="nav-item">
+              <button class="ml-1 btn btn-primary btn-sm" (click)="onSave()" [disabled]="!formIsValid || isLockedPeriod">Guardar</button>
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-danger btn-sm" [disabled]="deleteLocked || isLockedPeriod" (click)="confirmationClear.show()">
+                <i class="fa fa-trash" aria-hidden="true"></i> Eliminar valores
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <th>{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.NAME' | translate }}</th>
+              <th class="text-right">{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.PREV' | translate }}</th>
+              <th class="text-right">{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.CURRENT' | translate }}</th>
+              <th class="text-right">{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.CONSUPTION' | translate }}</th>
+              <th class="text-right" *ngIf="isManual">{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.AMOUNT' | translate }}</th>
+              <th class="text-center">{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.STATUS' | translate }}</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of consumerServicesReading; index as i">
+                <td>{{item.name}}</td>
+                <td>
+                  <input type="number" [disabled]="isLockedPeriod" class="form-control text-right" (change)="validRow(item.id)" [(ngModel)]="item.prev_reading"
+                  />
+                </td>
+                <td>
+                  <input type="number" [disabled]="isLockedPeriod" tabindex="{{i + 1}}" class="form-control text-right" (change)="validRow(item.id)" [(ngModel)]="item.current_reading"
+                  />
+                </td>
+                <td>
+                  <input type="number" [disabled]="isLockedPeriod" class="form-control  text-right" (change)="validRow(item.id)" [(ngModel)]="item.consumption"
+                    disabled="disabled" />
+                </td>
+                <td *ngIf="isManual">
+                  <input type="number" [disabled]="isLockedPeriod" tabindex="{{i + consumerServicesReading.length + 1}}" class="form-control text-right" (change)="validRow(item.id)" [(ngModel)]="item.amount"
+                  />
+                </td>
+                <td class="text-center">
+                  <i class="fa fa-thumbs-up green" aria-hidden="true" *ngIf="item.is_current_reading === 1"></i>
+                  <i class="fa fa-thumbs-down red" aria-hidden="true" *ngIf="item.is_current_reading === 2"></i>
+                </td>
+              </tr>
+              <tr *ngIf="!isManual">
+                  <td class="text-right no-border-right padding-right-30" colspan="3"></td>
+                  <td class="text-right no-border-left no-border-right padding-right-30"><strong>{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.TOTAL_CONSUMPTION' | translate }}</strong>
+                    {{consumertotalConsumption}} {{'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.'+formReading.get('service').value.consumer_service_metadata[0].consumer_service_field.name | translate}}
+                  </td>
+                  <td></td>
+              </tr>
+              <tr *ngIf="isManual">
+                  <td class="text-right no-border-left no-border-right padding-right-30"  colspan="4"><strong>{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.TOTAL_CONSUMPTION' | translate }}</strong>
+                    {{consumertotalConsumption}} {{'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.'+formReading.get('service').value.consumer_service_metadata[0].consumer_service_field.name | translate}}
+                  </td>
+                  <td class="text-right no-border-right padding-right-30"><strong>{{ 'CONSUMER_SERVICES.RECORD_READING.TABLE.COLS.TOTAL_AMOUNT' | translate }}</strong> {{consumertotalAmount}}</td>
+                  <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary btn-sm pull-right" (click)="onSave()" [disabled]="!formIsValid || isLockedPeriod">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #confirmationClear="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmationClear"
+  aria-hidden="true">
+  <div class="modal-dialog modal-warning" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'CONSUMER_SERVICES.MODAL_CONFIRMATION.TITLE_MODAL' | translate}}</h5>
+        <button type="button" class="close" (click)="confirmationClear.hide();" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{'CONSUMER_SERVICES.MODAL_CONFIRMATION.CONFIRMATION_CLEAR' | translate}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" (click)="confirmationClear.hide(); clearForm()">
+          <i class="fa fa-thumbs-up"></i> {{'CONSUMER_SERVICES.MODAL_CONFIRMATION.BUTTON_CONTINUE' | translate}}
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

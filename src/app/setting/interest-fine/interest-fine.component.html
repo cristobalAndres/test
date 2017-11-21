@@ -1,0 +1,125 @@
+<h1>
+  {{'SETTINGS.LATE_PAYMENT.SINGULAR' | translate }}
+</h1>
+<form *ngIf="!isLoading  && hadFunds > 0" #formSettings="ngForm" [formGroup]="formSetting" (submit)="saveSetting(formSetting.value)">
+  <div class="row animated fadeIn">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-line-chart"></i>
+          <strong>
+            {{'SETTINGS.LATE_PAYMENT.SINGULAR' | translate }}
+          </strong>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="form-group col-xs-12 col-md-3">
+              <label for="period">{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_PERIODICITY' | translate}}</label>
+              <select formControlName="periodicidad_id" name="periodicidad_id" class="form-control" id="period">
+                <option value="" disabled selected>{{ 'SETTINGS.LATE_PAYMENT.FORM.TITLE_PERIODICITY' | translate  }}</option>
+                <option *ngFor="let periodity of periodicities" [ngValue]="periodity">{{ 'SETTINGS.LATE_PAYMENT.METADATA_FIELDS.' + periodity.name | translate }}</option>
+              </select>
+            </div>
+
+            <div class="form-group col-xs-12 col-md-3">
+              <label for="type_mora">{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_DEBT' | translate}}</label>
+              <select formControlName="interest_type_id" name="interest_type_id" class="form-control" id="interest_type_id">
+                <option value="" disabled selected>{{ 'SETTINGS.LATE_PAYMENT.FORM.TITLE_DEBT' | translate  }}</option>
+                <option *ngFor="let type of interestType" [ngValue]="type">{{ 'SETTINGS.LATE_PAYMENT.METADATA_FIELDS.' + type.name | translate }}</option>
+              </select>
+            </div>
+
+            <div class="form-group col-xs-12 col-md-3">
+              <label for="ccmonth">{{'SETTINGS.LATE_PAYMENT.FORM.INTEREST_RATE.TITLE' | translate}}</label>
+              <select formControlName="interest_rate_id" name="interest_rate_id" class="form-control" id="interest_rate_id" (change)="changeTasa()">
+                <option value="" disabled selected>{{ 'SETTINGS.LATE_PAYMENT.FORM.INTEREST_RATE.TITLE' | translate  }}</option>
+                <option value="true">{{ 'SETTINGS.LATE_PAYMENT.FORM.INTEREST_RATE.STATIC' | translate  }}</option>
+                <option value="false">{{ 'SETTINGS.LATE_PAYMENT.FORM.INTEREST_RATE.CONVENTIONAL_MAXIMUN' | translate  }}</option>
+              </select>
+            </div>
+
+            <div *ngIf="showPorcentTasa" class="form-group col-xs-12 col-md-3">
+              <label for="porcent">{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_PORCENT' | translate}}</label>
+              <input formControlName="porcent" name="porcent" class="form-control" placeholder="0" min="0" max="100" step="1" type="number"
+                (blur)="valdiatePorcent()">
+            </div>
+          </div>
+
+          <div class="row">
+              <div class="col-xs-12 col-md-6">
+                <div class="form-group">
+                  <label for="afecto">{{'SETTINGS.LATE_PAYMENT.FORM.DEBT_TO_CONSIDER.TITLE' | translate}}</label>
+                  <select formControlName="debt" name="debt" class="form-control" id="debt" (change)="changeState()">
+                    <option value="" disabled selected>{{ 'SETTINGS.LATE_PAYMENT.FORM.DEBT_TO_CONSIDER.TITLE' | translate  }}</option>
+                    <option value="true">{{ 'SETTINGS.LATE_PAYMENT.FORM.DEBT_TO_CONSIDER.ALL_DEBT_IN_ARREARS' | translate  }}</option>
+                    <option value="false">{{ 'SETTINGS.LATE_PAYMENT.FORM.DEBT_TO_CONSIDER.SELECT_DEBT_CONCEPTS' | translate  }}</option>
+                  </select>
+                </div>
+              </div>
+          </div>
+
+          <div *ngIf="showConceptDebt === false" class="row no-lateral-margin">
+              <div class="form-group col-xs-12">
+                <div class="row">
+                  <div class="col-md-4" *ngFor="let debt of debtsType">
+                    <div class="checkbox">
+                      <label for="{{debt.name}}">
+                        <input [checked]="debt.state" (change)="conceptDebt(debt)" type="checkbox" id="{{debt.name}}"> {{debt.name}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-md-3">
+              <div class="form-group">
+                <label for="afecto">{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_AFFECTION_FUND' | translate}}</label>
+                <select formControlName="fund_id" name="fund_id" class="form-control" id="fund_id">
+                  <option value="" disabled selected>{{ 'SETTINGS.LATE_PAYMENT.FORM.TITLE_AFFECTION_FUND' | translate  }}</option>
+                  <option *ngFor="let fund of funds" [ngValue]="fund.id">{{fund.name}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-md-6">
+              <div class="form-group">
+                <label for="description">{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_DESCRIPTION' | translate}}</label>
+                <textarea formControlName="description" name="description" class="form-control" id="description" cols="30" rows="2"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group col-xs-12 col-md-3">
+              <label for="ccmonth">{{'SETTINGS.LATE_PAYMENT.FORM.CREDIT.TITLE' | translate}}</label>
+              <div class="row">
+                <div class="col-md-12">
+                  <label class="switch switch-pill switch-text switch-primary mb-0">
+                    <input formControlName="capital_reduction" name="capital_reduction" [(ngModel)]="stateSwitchReduction"  class="switch-input" type="checkbox" (change)="switchReduction(stateSwitchReduction);">
+                    <span class="switch-label" data-on="Si" data-off="No"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card-footer">
+          <button [disabled]="!formSetting.valid || formSetting.pristine || (formSetting.value.debt_type.length === 0 && !showConceptDebt)" class="btn btn-sm btn-primary" type="submit">
+            <i class="fa fa-save"></i> {{'SETTINGS.LATE_PAYMENT.FORM.BUTTON_SAVE' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="form-group" *ngIf="isLoading">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>
+
+<app-interest-for-debt-logs *ngIf="!isLoading"></app-interest-for-debt-logs>

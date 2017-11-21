@@ -1,0 +1,165 @@
+<h1 class="mb30">
+  {{'SURCHARGE.IMPORT.IMPORT_TEXT' | translate }}
+</h1>
+
+<div class="alert alert-info w-50 block-center" role="alert" *ngIf="isLocked">
+  <div class="sk-wave mb20">
+    <div class="sk-rect sk-rect1 bg-success"></div>
+    <div class="sk-rect sk-rect2 bg-success"></div>
+    <div class="sk-rect sk-rect3 bg-success"></div>
+    <div class="sk-rect sk-rect4 bg-success"></div>
+    <div class="sk-rect sk-rect5 bg-success"></div>
+  </div>
+  <div class="text-center text-bold mb30">{{'GENERAL.PROCESS_START' | translate}}</div>
+</div>
+
+<div class="alert alert-danger w-50 block-center animated fadeIn" role="alert" *ngIf= "isLoaded && !checkCategoriesExist()">
+  <div class="text-center text-bold"> {{'SURCHARGE.GENERAL.NOCATEGORY' | translate}} </div>
+</div>
+
+<div class="card animated fadeIn" *ngIf="isError">
+  <div class="card-header">
+    <i class="fa fa-bars"></i> <strong>{{'INITIAL_BALANCE.IMPORT_ERRORS.UPLOAD_ERROR_RESULTS' | translate}}</strong>
+    <div class="pull-right">
+      <button (click)="retryImport()" class="btn btn-sm btn-info">
+        {{'GENERAL.TRY_BACK' | translate}}
+      </button>
+    </div>
+  </div>
+  <div class="card-block">
+    <label>{{'SURCHARGE.IMPORT_ERRORS.'+importError.message | translate}}, en linea(s) : </label> {{importError.row}}
+  </div>
+</div>
+
+<app-upload-control [shortId]='EJ_SHORTID' (onProcessFile)='onProccessFile($event)' [isUploading]='isUploading' *ngIf="!isLocked && isLoaded && !isShowResult && !isError && checkCategoriesExist()"></app-upload-control>
+
+<div class="card animated fadeIn" *ngIf="isShowResult && !isLocked">
+  <div class="card-header">
+    <i class="fa fa-bars"></i> <strong>{{'INITIAL_BALANCE.IMPORT_SUCCESS.UPLOAD_RESULTS' | translate}}</strong>
+    <div class="pull-right">
+      <button (click)="openModalSaveChange()" class="btn btn-sm btn-success" [disabled]="!formParams.valid">
+        <i class="fa fa-check"></i>
+        {{'GENERAL.SAVE_CHANGES' | translate}}
+      </button>
+      <button (click)="openModalCancelChange()" class="btn btn-sm btn-danger">
+        <i class="fa fa-times"></i>
+        {{'GENERAL.CANCEL' | translate}}
+      </button>
+    </div>
+  </div>
+  <div class="card-block">
+    <div class="animated fadeIn">
+      <div class="card animated fadeIn">
+        <div class="card-header">
+          {{ 'SURCHARGE.IMPORT.FORM.TITLE' | translate }}
+        </div>
+        <div class="card-block">
+          <form [formGroup]="formParams">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ 'SURCHARGE.IMPORT.FORM.LABEL_CATEGORY' | translate  }}</label>
+                  <select formControlName="surcharge_category_id" class="form-control"> 
+                    <option value="" disabled selected>{{ 'SURCHARGE.IMPORT.FORM.PLACEHOLDERS.SELECT_CATEGORY' | translate  }}</option>  
+                    <option *ngFor="let element of dataCotegories" value="{{element.id}}">
+                      {{element.name}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label>{{'SURCHARGE.IMPORT.FORM.LABEL_DESCRIPTION' | translate }}</label>
+                  <input class="form-control" formControlName="description" placeholder="{{'SURCHARGE.IMPORT.FORM.PLACEHOLDERS.DESCRIPTION' | translate }}" />
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ 'SURCHARGE.IMPORT.FORM.LABEL_FUND' | translate  }}</label>
+                  <select formControlName="fund_id" class="form-control">
+                      <option value="" disabled selected>{{ 'SURCHARGE.IMPORT.FORM.PLACEHOLDERS.SELECT_FUND' | translate  }}</option>  
+                    <option *ngFor="let element of dataFunds" value="{{element.id}}">
+                      {{element.name}}
+                    </option>
+                </select>
+                </div>
+              </div>
+              
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>{{'SURCHARGE.IMPORT.FORM.LABEL_TYPE' | translate }}</label>
+                  <select formControlName="surcharge_type" class="form-control">
+                      <option value="" disabled selected>{{ 'SURCHARGE.IMPORT.FORM.PLACEHOLDERS.SELECT_TYPE' | translate  }}</option>  
+                      <option *ngFor="let element of types" value="{{element.id}}">
+                        {{element.name}}
+                      </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-3 animated fadeIn" *ngIf='!isOneSurcharge' >
+                <div class="form-group">
+                  <label>{{'SURCHARGE.IMPORT.FORM.LABEL_PERIOD' | translate }}</label>
+                  <select formControlName="period" class="form-control">
+                      <option value="" disabled selected>{{ 'SURCHARGE.IMPORT.FORM.PLACEHOLDERS.SELECT_PERIOD_PAYMENT' | translate  }}</option>  
+                    <option *ngFor="let element of periods" value="{{element.period}}">
+                      {{'GENERAL.MONTHS.' + element.name | translate}} {{element.periodGroup}}
+                    </option>
+                </select>
+                </div>
+              </div>
+
+              <div class="col-md-2 animated fadeIn" *ngIf='!isOneSurcharge'>
+                <div class="form-group">
+                  <label for="tipo_documento">{{'SURCHARGE.IMPORT.FORM.LABEL_RECURRENT' | translate }}</label>
+                  <br>
+                  <label class="switch switch-text switch-pill switch-primary">
+                    <input formControlName="recurrent" type="checkbox" class="switch-input" checked="">
+                    <span class="switch-label" data-on="Si" data-off="No"></span>
+                    <span class="switch-handle"></span>
+                </label>
+                </div>
+              </div>
+              
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped" [mfData]="dataResume" #mf="mfDataTable" [mfRowsOnPage]="10">
+      <thead>
+        <tr>
+          <th>
+            <mfDefaultSorter by="INMUEBLE">
+              {{'SURCHARGE.LIST_IMPORT.INMUEBLE' | translate}}
+            </mfDefaultSorter>
+          </th>
+          <th>
+            <mfDefaultSorter by="MONTO">
+              {{'SURCHARGE.LIST_IMPORT.AMOUNT' | translate}}
+            </mfDefaultSorter>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of mf.data">
+          <td>{{r.INMUEBLE}}</td>
+          <td>{{r.MONTO}}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">
+            <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<app-confirm-control></app-confirm-control>
+<toaster-container></toaster-container>

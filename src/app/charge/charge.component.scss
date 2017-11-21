@@ -1,0 +1,57 @@
+
+.micon{
+  margin: 4px 15px;
+}
+
+.th{
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* rainbow song colours */
+@keyframes fadeBetween { 
+  0% {background-color: transparent;}
+  15% {background-color: #F5EEF8;}
+}
+
+@keyframes fadeBetween2 { 
+  0% {background-color: transparent;}
+  15% {background-color: #FEF9E7;}
+}
+
+@keyframes fadeBetween3 { 
+  0% {background-color: transparent;}
+  15% {background-color: #D1F2EB;}
+}
+
+@keyframes fadeBetween4 { 
+  0% {background-color: transparent;}
+  15% {background-color: #EBEDEF;}
+}
+
+
+.colour-fade {
+  background-color: transparent;
+  animation: fadeBetween 35s;
+}
+
+.colour-fade2 {
+  background-color: transparent;
+  animation: fadeBetween2 35s;
+}
+
+.colour-fade3 {
+  background-color: transparent;
+  animation: fadeBetween3 35s;
+}
+
+.colour-fade4 {
+  background-color: transparent;
+  animation: fadeBetween4 35s;
+}
+
+.scroll{
+  overflow: scroll;
+}

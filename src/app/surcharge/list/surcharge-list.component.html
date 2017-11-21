@@ -1,0 +1,116 @@
+<div class="animated fadeIn" *ngIf="!isLoading">
+  <h1>
+    {{'SURCHARGE.GENERAL.PLURAL' | translate }}
+  </h1>
+
+  <div class="row mb-1">
+    <div class="col-md-4 ml-auto">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}" />
+      </div>
+    </div>
+  </div>
+  
+  <table class="table table-striped" [mfData]="data | dataFilter:{query: filterQuery, cols: ['created_at_format', 'description', 'period_translate', 'amount', 'surcharge_category', 'surcharge_type_name', 'property_name']}"
+    #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+      <tr>
+        <th>
+          <mfDefaultSorter by="created_at">
+            {{'SURCHARGE.TABLE_HEADER.CREATED_AT' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="property_name">
+            {{'SURCHARGE.TABLE_HEADER.PROPERTY_NAME' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="description">
+            {{'SURCHARGE.TABLE_HEADER.DESCRIPTION' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="period">
+            {{'SURCHARGE.TABLE_HEADER.PERIOD' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="surcharge_category">
+            {{'SURCHARGE.TABLE_HEADER.CATEGORY' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="surcharge_type">
+            {{'SURCHARGE.TABLE_HEADER.TYPE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="amount">
+            {{'SURCHARGE.TABLE_HEADER.MOUNT' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of mf.data">
+        <td>{{formatDate(item.created_at)}}</td>
+
+        <td>{{item.property_name}}</td>
+        <td *ngIf="item.surcharge_type_slug !== 'GASTO'">{{item.description}}</td>
+        <td *ngIf="item.surcharge_type_slug === 'GASTO'">{{'SURCHARGE.EXPENSE_SURCHARGE' | translate}}</td>
+        <td>{{item.period | period: { type: 'month' } | translate }} {{ item.period | period: { type: 'year' } }}</td>
+        <td>{{item.surcharge_category}}</td>
+        <td>{{item.surcharge_type_name}}</td>
+        <td class="text-right">{{item.amount | numberFormat: { type: 'currency' } }}</td>
+        <td><button type="button" (click)="confirmDelete(item.id); dangerDeleteModal.show();" [disabled]="item.surcharge_type_slug==='GASTO' || item.period_close===true || item.payment===true" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="8">
+          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+
+<div bsModal #dangerDeleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="dangerDeleteModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-danger" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'GENERAL.CONFIRMATION_TITLE' | translate}}</h5>
+        <button type="button" class="close" (click)="dangerDeleteModal.hide();"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="deletedInfo.id != ''">{{'SURCHARGE.SURCHARGE_DELETE.CONFIRMATION_DELETE_TEXT' | translate:deletedInfo }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="dangerDeleteModal.hide(); cancelDelete()">
+          {{'GENERAL.CANCEL' | translate}}
+        </button>
+        <button type="button" class="btn btn-danger" (click)="onAcceptDelete(); dangerDeleteModal.hide();">
+          <i class="fa fa-trash"></i> {{'GENERAL.DELETE' | translate}}
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div *ngIf="isLoading">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>
+
+<app-confirm-control></app-confirm-control>
+<toaster-container></toaster-container>

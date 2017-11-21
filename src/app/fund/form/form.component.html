@@ -1,0 +1,154 @@
+<h1 *ngIf="fundId !== 0 && !isUploading">{{ 'FUND.FORM.FUND_TITLE_EDIT' | translate }} </h1>
+<h1 *ngIf="fundId === 0 && !isUploading">{{ 'FUND.FORM.FUND_TITLE_CREATE' | translate }}
+  <span *ngIf="fundId !== 0"></span>
+</h1>
+<div *ngIf="!isUploading" class="col not-padding">
+  <form *ngIf="fundForm" [formGroup]="fundForm" (ngSubmit)="onSubmit(fundForm.value)">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-bank"></i>
+        <strong>
+          {{'FUND.GENERAL.SINGULAR' | translate }}
+        </strong>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-3">
+            <div class="form-group">
+              <label for="name">{{ 'FUND.FORM.NAME_FUND' | translate }}</label>
+              <input type="text" class="form-control" id="name" placeholder="{{ 'FUND.FORM.PLACEHOLDERS.FUND_NAME' | translate }}" formControlName="name"
+                name="name">
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-group">
+              <label for="initial_amount">{{ 'FUND.FORM.INITIAL_AMOUNT' | translate }}</label>
+              <input  class="form-control bfh-number" id="initial_amount" placeholder="{{ 'FUND.FORM.PLACEHOLDERS.INITIAL_AMOUNT' | translate }}"
+                formControlName="initial_amount" name="initial_amount" currencyMask [options]="maskCurrencFormat">
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-group">
+              <label for="initial_date">{{ 'FUND.FORM.INITIAL_DATE' | translate }}</label>
+              <input class="form-control" type="text" id="initial_date" [(ngModel)]="selectedDate" formControlName="initial_date" name="initial_date"
+                bsDatepicker [bsConfig]="bsConfig" value="{{ selectedDate | amFromUtc |amDateFormat: 'DD-MM-YYYY'}}" placeholder="{{ 'FUND.FORM.INITIAL_DATE' | translate }}">
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-group">
+              <label for="bank_account_id">{{ 'FUND.FORM.BANK_ACCOUNT' | translate }}</label>
+              <select class="form-control" id="bank_account_id" formControlName="bank_account_id" name="bank_account_id">
+                <option value="" disabled selected>{{ 'FUND.FORM.SELECT_BANK_ACCOUNT' | translate }}</option>
+                <option *ngFor="let data of banksAccount" value="{{data.id}}">
+                  {{data.code}}-{{data.bank.name}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div class="form-group">
+              <label for="fund_income_type_id">{{ 'FUND.FORM.FUND_INCOME_TYPE' | translate }}</label>
+              <select class="form-control" id="fund_income_type_id" formControlName="fund_income_type_id" name="fund_income_type_id" (change)="validateSelectSector()">
+                <option value="" disabled selected>{{ 'FUND.FORM.SELECT_FUND_INCOME_TYPE' | translate }}</option>
+                <option *ngFor="let data of incomeType" [selected]="fundForm.controls['fund_income_type_id'].value.slug === data.slug" [ngValue]="data">
+                  {{data.name}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div *ngIf="fundForm.controls['fund_income_type_id'].value.slug === 'PORCENTAJE_TOTAL_CUENTA_GASTO_COMUN'" class="col animated fadeIn">
+            <div class="row">
+              <div class="col">
+                <div class="form-group form-custom">
+                  <label for="cuentas">{{ 'EXPENSE.GENERAL.SELECT_ACCOUNT' | translate }}</label>
+                  <select class="form-control" id="cuentas" formControlName="account_primary_id" name="account_primary_id" (change)="changeAccount()">
+                    <option value="" disabled selected>{{ 'EXPENSE.GENERAL.SELECT_ACCOUNT_PLACEHOLDER' | translate }}</option>
+                    <option *ngFor="let account of accounts" [ngValue]="account.id">
+                      {{account.code}}-{{account.name}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group form-custom">
+                  <label for="sub_cuentas">{{ 'EXPENSE.GENERAL.SELECT_SUB_ACCOUNT' | translate }}</label>
+                  <select class="form-control" id="sub_cuentas" formControlName="accounting_account_id" name="accounting_account_id">
+                    <option value="" disabled selected>{{ 'EXPENSE.GENERAL.SELECT_SUB_ACCOUNT_PLACEHOLDER' | translate }}</option>
+                    <option *ngFor="let subAccount of subAccounts" [ngValue]="subAccount.id">
+                      {{subAccount.code}}-{{subAccount.name}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-3">
+            <div *ngIf="(fundForm.controls['fund_income_type_id'].value.slug === 'PORCENTAJE_GASTO_COMUN' || fundForm.controls['fund_income_type_id'].value.slug === 'PORCENTAJE_TOTAL_CUENTA_GASTO_COMUN' )"
+              class="form-group animated fadeIn">
+              <label for="amount">{{ 'FUND.FORM.PERCENT' | translate }}</label>
+              <input type="number" class="form-control bfh-number" id="amount" (blur)="validatePercent(fundForm.controls['amount'].value)"
+                placeholder="{{ 'FUND.FORM.PLACEHOLDERS.PERCENTAGE' | translate }}" formControlName="amount" name="amount">
+            </div>
+            <div *ngIf="(fundForm.controls['fund_income_type_id'].value.slug === 'MONTO_FIJO_GASTO_COMUN' || fundForm.controls['fund_income_type_id'].value.slug === 'MONTO_FIJO_INMUEBLES' || fundForm.controls['fund_income_type_id'].value.slug === 'INGRESOS_EXTERNOS' )"
+              class="form-group">
+              <label for="amount">{{ 'FUND.FORM.AMOUNT' | translate }}</label>
+              <input type="number" class="form-control bfh-number" id="amount" placeholder="{{ 'FUND.FORM.PLACEHOLDERS.AMOUNT' | translate }}"
+                formControlName="amount" name="amount">
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div *ngIf="fundForm.controls['fund_income_type_id'].value.slug !== 'INGRESOS_EXTERNOS'" class="animated fadeIn">
+              <label>{{ 'FUND.FORM.SECTORS' | translate }}</label>
+              <div class="row">
+                <div class="col-4" *ngFor="let data of sectors">
+                  <div class="checkbox">
+                    <label for="checkbox1">
+
+                      <input id="{{data.id}}" [ngModelOptions]="{standalone: true}" name="data.active" [checked]="data.active" [(ngModel)]="data.active"
+                        (change)="sectorChange(data)" type="checkbox">
+                      <span *ngIf="data.name === 'DEFAULT_SECTOR'">
+                        {{'SECTOR.GENERAL.DEFAULT_SECTOR' | translate}}
+                      </span>
+                      <span *ngIf="data.name !== 'DEFAULT_SECTOR'">
+                        {{data.name}}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-check">
+              <label>{{ 'FUND.FORM.ACTIVE' | translate }}</label>
+              <label class="switch switch-3d switch-info">
+                <input type="checkbox" class="switch-input" formControlName="active" name="active">
+                <span class="switch-label"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="!fundForm.valid || formValidate">{{ 'FUND.FORM.SAVE_FUND_BUTTON' | translate }}</button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="form-group" *ngIf="isUploading">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>
+
+<toaster-container></toaster-container>

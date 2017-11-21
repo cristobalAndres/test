@@ -1,0 +1,127 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'FINANCIAL_STATE.GENERAL.SINGULAR' | translate }}
+  </h1>
+  <label class="switch switch-default switch-pill switch-primary">
+      <input [(ngModel)]="accountViewDetail" class="switch-input" type="checkbox" (change)="viewAccountChange();">
+      <span class="switch-label"></span>
+      <span class="switch-handle"></span>
+    </label>
+    <span class="switch-handle">{{'FINANCIAL_STATE.GENERAL.ACCOUNT_VIEW_DETAIL' | translate }}</span>
+  <div class="card-group">
+      <div class="card">
+        <div class="card-block">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="card-header bg-info center">
+                <span>{{'FINANCIAL_STATE.ACTIVES.SINGULAR' | translate | uppercase}}</span>
+              </div>
+              <div class="card">
+                <div class="card-block not-padding" *ngFor="let item of actives">
+                  <div class="card-header center">
+                    <span>{{item.name}}</span>
+                  </div>
+                  <div class="row padding-financial-state" *ngFor="let child of item.childs">
+                      <div class="col-8">
+                        <span>{{child.code | accountCodeMask}} | {{child.name}}</span>
+                      </div>
+                      <div class="col-4 text-right">
+                        <span>{{ child.total | numberFormat: {type: 'currency' } }}</span>
+                      </div>
+                  </div>
+                  <div class="row padding-financial-state">
+                    <div class="col-8">
+                      <span>
+                        <strong>{{'FINANCIAL_STATE.GENERAL.TOTAL' | translate | uppercase}}</strong>
+                      </span>
+                    </div>
+                    <div class="col-4 text-right">
+                      <span>
+                        <strong>{{item.total  | numberFormat: {type: 'currency' } }}</strong>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card-header bg-info center">
+                <span>{{'FINANCIAL_STATE.PASIVES.SINGULAR' | translate | uppercase}}</span>
+              </div>
+              <div class="card">
+                <div class="card-block not-padding" *ngFor="let item of pasives">
+                  <div class="card-header center">
+                    <span>{{item.name}}</span>
+                  </div>
+                  <div class="row padding-financial-state" *ngFor="let child of item.childs">
+                    <div class="col-8">
+                      <span>{{child.code | accountCodeMask}} | {{child.name}}</span>
+                    </div>
+                    <div class="col-4 text-right">
+                      <span>{{child.total | numberFormat: {type: 'currency' } }}</span>
+                    </div>
+                  </div>
+                  <div class="row padding-financial-state">
+                    <div class="col-8">
+                      <span>
+                        <strong>{{'FINANCIAL_STATE.GENERAL.TOTAL' | translate | uppercase}}</strong>
+                      </span>
+                    </div>
+                    <div class="col-4 text-right">
+                      <span>
+                        <strong>{{item.total | numberFormat: {type: 'currency' } }}</strong>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-group">
+          <div class="card-block">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="card-header bg-info padding-financial-state">
+                    <div class="row">
+                      <div class="col-8">
+                        <span>
+                          <strong>{{'FINANCIAL_STATE.ACTIVES.TOTAL_ACTIVES' | translate | uppercase}}</strong>
+                        </span>
+                      </div>
+                      <div class="col-4 text-right">
+                        <span>
+                          <strong>{{totalActives | numberFormat: {type: 'currency' } }}</strong>
+                        </span>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="card-header bg-info padding-financial-state">
+                  <div class="row">
+                    <div class="col-8">
+                      <span>
+                          <strong>{{'FINANCIAL_STATE.PASIVES.TOTAL_PASIVES' | translate | uppercase}}</strong>
+                      </span>
+                    </div>
+                    <div class="col-4 text-right">
+                      <span>
+                        <strong>{{totalPasives | numberFormat: {type: 'currency' } }}</strong>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isLoading">
+      <div class="progress progress-sm">
+        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+      </div>
+    </div>
+  </div>
+  <toaster-container></toaster-container>

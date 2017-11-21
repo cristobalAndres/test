@@ -1,0 +1,19 @@
+<div class="card">
+  <div class="card-header">
+    <i class="fa fa-download"></i> <strong>{{'COMMUNITY.IMPORT.DOWNLOAD_IMPORT' | translate}}</strong>
+  </div>
+  <div class="card-block">
+    <button class="btn btn-info btn-block form-group" (click)="generate()">
+      <i class="fa fa-cloud-download"></i> {{'COMMUNITY.IMPORT.GENERATE_TEMPLATE' | translate}}
+    </button>
+    <div class="form-group animated fadeIn" *ngIf="isGenerating">
+      <div class="progress progress-sm">
+        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar"
+             style="width: 100%"></div>
+      </div>
+    </div>
+    <small class="text-muted">
+      {{'COMMUNITY.IMPORT.GENERATE_TEMPLATE_DESCRIPTION' | translate}}
+    </small>
+  </div>
+</div>

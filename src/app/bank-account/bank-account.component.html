@@ -1,0 +1,154 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'BANK_ACCOUNT.GENERAL.PLURAL' | translate}}
+  </h1>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="form-group col-md-8">
+          <button routerLinkActive="active" [routerLink]="['/bank-account/create']" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i>&nbsp; {{ 'BANK_ACCOUNT.CREATE.SINGULAR' | translate}}</button>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+            <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <table class="table big-table" [mfData]="data | dataFilter:{query: filterQuery, cols: ['initial_amount']}" #mf="mfDataTable" [mfRowsOnPage]="10">
+            <thead>
+              <tr>
+                <th>
+                  <mfDefaultSorter by="initial_date">
+                    {{'BANK_ACCOUNT.TABLE_HEADER.INITIAL_DATE' | translate}}
+                  </mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="bank_account_type.name">
+                    {{'BANK_ACCOUNT.TABLE_HEADER.ACCOUNT_TYPE' | translate}}
+                  </mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="bank.name">
+                    {{'BANK_ACCOUNT.TABLE_HEADER.INSTITUTION' | translate}}
+                  </mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="initial_amount">
+                    {{'BANK_ACCOUNT.TABLE_HEADER.INITIAL_BALANCE' | translate}}
+                  </mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="initial_amount">
+                    {{ 'BANK_ACCOUNT.FORM_LABELS.DEFAULT_ACCOUNT' | translate}}
+                  </mfDefaultSorter>
+                </th>
+                <th class="text-right">
+                  <mfDefaultSorter by="tools">
+                    {{'BANK_ACCOUNT.TABLE_HEADER.TOOLS' | translate}}
+                  </mfDefaultSorter>
+                </th>
+              </tr>
+            </thead>
+            <tfoot *ngIf="!isLoading">
+              <tr>
+                <td colspan="12">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+            <tbody *ngIf="!isLoading">
+              <tr *ngFor="let item of mf.data">
+                <td>{{item.initial_date}}</td>
+                <td>{{item.bank_account_type.name}}</td>
+                <td>{{item.bank.name}} {{item.code}}</td>
+                <td>{{item.initial_amount | numberFormat: {type: 'currency' } }}</td>
+                <td>
+                  <div *ngIf="item.bank_account_type.slug !== 'FONDOS_MUTUOS' && item.bank_account_type.slug !== 'CUENTA_DE_AHORRO'">
+                  <label class="switch switch-pill switch-text switch-primary mb-0">
+                    <input name="change_default" class="switch-input" [(ngModel)]="item.is_default"
+                    [disabled]="item.is_default === true || item.bank_account_type.slug === 'FONDOS_MUTUOS' || item.bank_account_type.slug === 'CUENTA_DE_AHORRO'" 
+                    type="checkbox" (click)="selectBankAccount(item);changeDefaultModal.show()">
+                    <span class="switch-label" data-on="Si" data-off="No"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+                </div>
+                </td>
+                <td class="text-right">
+                  <button routerLinkActive="active" [routerLink]="['/bank-account/edit/', item.id]" type="button" class="btn btn-sm btn-primary"
+                  title="{{'FUND.TOOLS.EDIT' | translate}}"><i class="fa fa-edit"></i></button>
+                  <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" [disabled]="item.is_default === true" (click)="selectBankAccount(item);actionsModal.show()">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td> 
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div *ngIf="isLoading">
+        <div class="progress progress-sm">
+          <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div bsModal #actionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+aria-labelledby="dangerDeleteModal"
+aria-hidden="true">
+<div class="modal-dialog modal-danger" role="document">
+<div class="modal-content">
+ <div class="modal-header">
+   <h5 class="modal-title">{{'GENERAL.CONFIRMATION_TITLE' | translate}}</h5>
+   <button type="button" class="close" (click)="actionsModal.hide()"
+           aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+   </button>
+ </div>
+ <div class="modal-body">
+   <p>{{'BANK_ACCOUNT.GENERAL.MSG_DELETE' | translate}}</p>
+ </div>
+ <div class="modal-footer">
+   <button type="button" class="btn btn-secondary" (click)="actionsModal.hide()">
+     {{'GENERAL.CANCEL' | translate}}
+   </button>
+   <button type="button" class="btn btn-danger" (click)="deleteBankAccount(bankAccountId);actionsModal.hide()">
+     <i class="fa fa-trash"></i> {{'GENERAL.DELETE' | translate}}
+   </button>
+ </div>
+</div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #changeDefaultModal="bs-modal" class="modal fade" [config]="{backdrop: 'static', keyboard: false}" tabindex="-1" role="dialog"
+aria-labelledby="dangerDeleteModal"
+aria-hidden="true">
+<div class="modal-dialog modal-warning" role="document">
+<div class="modal-content">
+ <div class="modal-header">
+   <h5 class="modal-title">{{'GENERAL.CONFIRMATION_TITLE' | translate}}</h5>
+   <button type="button" class="close" (click)="cancelModalChageDefault();changeDefaultModal.hide()"
+           aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+   </button>
+ </div>
+ <div class="modal-body">
+   <p>{{'BANK_ACCOUNT.GENERAL.MSG_CHANGE_DEFAULT' | translate}}</p>
+ </div>
+ <div class="modal-footer">
+   <button type="button" class="btn btn-secondary" (click)="cancelModalChageDefault();changeDefaultModal.hide()">
+     {{'GENERAL.CANCEL' | translate}}
+   </button>
+   <button type="button" class="btn btn-warning" (click)="changeDefault(bankAccountId);changeDefaultModal.hide()">
+    {{'BANK_ACCOUNT.GENERAL.CHANGE' | translate}}
+   </button>
+ </div>
+</div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<toaster-container></toaster-container>

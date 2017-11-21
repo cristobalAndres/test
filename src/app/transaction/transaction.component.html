@@ -1,0 +1,59 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="text-capitalize">
+        {{'TRANSACTION.GENERAL.PLURAL' | translate}}
+      </h1>
+      <div class="row mb-1">
+        <div class="col-md-4 ml-auto">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+            <input type="text" class="form-control" [(ngModel)]="filterQuery"
+                    placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}"/>
+          </div>
+        </div>
+      </div>
+      <ul class="list-group list-group-flush" *ngFor="let transaction of transactions | dataFilter:{query: filterQuery, cols: ['description']}">
+        <li class="list-group-item">
+            <strong>{{transaction.transaction_type.name | uppercase}} | {{transaction.description}} | {{transaction.date | date: 'dd-MM-yyyy H:mm:s'}}</strong>
+        </li>
+        <li class="list-group-item">
+          <table class="table table-responsive table-sm">
+            <thead class="thead-default">
+              <tr>
+                <th></th>
+                <th>DEBE</th>
+                <th>HABER</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tfoot></tfoot>
+            <tbody>
+              <ng-container *ngFor="let entry of transaction.entries">
+                <tr>
+                  <td>{{entry.account.code | accountCodeMask}} {{entry.account.name}}</td>
+                  <td>
+                    <ng-container *ngIf="entry.type === 'DEBE'">
+                      {{ entry.amount | numberFormat: {type: 'number'} }}
+                    </ng-container>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="entry.type === 'HABER'">
+                      {{ entry.amount | numberFormat: {type: 'number'} }}
+                    </ng-container>
+                  </td>
+                  <td>{{entry.observation}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </li>
+      </ul>
+      <div *ngIf="isLoading">
+        <div class="progress progress-sm">
+          <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,603 @@
+import { Community } from '../models/community.model';
+
+export const COMMUNITY_FIXTURE: Community[] = [{
+  id: 1,
+  name: 'Dahle',
+  identification_number: '096589360-X',
+  code: '182-61-2742',
+  active: 'true'
+}, {
+  id: 2,
+  name: 'Hintze',
+  identification_number: '897017175-4',
+  code: '540-68-8867',
+  active: 'true'
+}, {
+  id: 3,
+  name: 'Forster',
+  identification_number: '591469126-5',
+  code: '853-93-1453',
+  active: 'true'
+}, {
+  id: 4,
+  name: 'Randy',
+  identification_number: '343569589-7',
+  code: '818-24-0355',
+  active: 'true'
+}, {
+  id: 5,
+  name: 'Dapin',
+  identification_number: '929752584-9',
+  code: '483-53-7340',
+  active: 'true'
+}, {
+  id: 6,
+  name: 'Center',
+  identification_number: '066568632-3',
+  code: '745-76-0131',
+  active: 'true'
+}, {
+  id: 7,
+  name: 'Helena',
+  identification_number: '865254740-8',
+  code: '133-74-8655',
+  active: 'true'
+}, {
+  id: 8,
+  name: 'Brown',
+  identification_number: '026087335-7',
+  code: '328-64-5815',
+  active: 'true'
+}, {
+  id: 9,
+  name: 'Loomis',
+  identification_number: '869676784-5',
+  code: '309-28-2041',
+  active: 'true'
+}, {
+  id: 10,
+  name: 'Derek',
+  identification_number: '646683648-7',
+  code: '979-92-4674',
+  active: 'true'
+}, {
+  id: 11,
+  name: 'Coleman',
+  identification_number: '952968565-3',
+  code: '734-56-8485',
+  active: 'true'
+}, {
+  id: 12,
+  name: 'Dennis',
+  identification_number: '597239846-X',
+  code: '293-42-3028',
+  active: 'true'
+}, {
+  id: 13,
+  name: 'Derek',
+  identification_number: '415028524-1',
+  code: '218-32-6287',
+  active: 'true'
+}, {
+  id: 14,
+  name: 'Golf Course',
+  identification_number: '598903291-9',
+  code: '586-81-9440',
+  active: 'true'
+}, {
+  id: 15,
+  name: 'Debs',
+  identification_number: '743127318-5',
+  code: '331-03-6509',
+  active: 'true'
+}, {
+  id: 16,
+  name: 'Hayes',
+  identification_number: '131410608-2',
+  code: '769-98-4945',
+  active: 'true'
+}, {
+  id: 17,
+  name: 'Dorton',
+  identification_number: '233169034-0',
+  code: '880-60-9128',
+  active: 'true'
+}, {
+  id: 18,
+  name: 'Arizona',
+  identification_number: '244600122-X',
+  code: '780-14-0791',
+  active: 'true'
+}, {
+  id: 19,
+  name: 'Reinke',
+  identification_number: '655596016-7',
+  code: '746-66-3786',
+  active: 'true'
+}, {
+  id: 20,
+  name: 'Ronald Regan',
+  identification_number: '908136873-7',
+  code: '842-64-8787',
+  active: 'true'
+}, {
+  id: 21,
+  name: 'Corry',
+  identification_number: '263043511-3',
+  code: '320-38-4684',
+  active: 'true'
+}, {
+  id: 22,
+  name: 'Birchwood',
+  identification_number: '914200460-8',
+  code: '835-91-5751',
+  active: 'true'
+}, {
+  id: 23,
+  name: 'Prairie Rose',
+  identification_number: '434992541-4',
+  code: '500-75-0459',
+  active: 'true'
+}, {
+  id: 24,
+  name: 'American Ash',
+  identification_number: '900153062-1',
+  code: '167-38-4802',
+  active: 'true'
+}, {
+  id: 25,
+  name: 'Prairie Rose',
+  identification_number: '740545678-2',
+  code: '901-60-6467',
+  active: 'true'
+}, {
+  id: 26,
+  name: 'Pepper Wood',
+  identification_number: '535524765-2',
+  code: '761-26-9159',
+  active: 'true'
+}, {
+  id: 27,
+  name: 'Towne',
+  identification_number: '214265487-8',
+  code: '303-08-1353',
+  active: 'true'
+}, {
+  id: 28,
+  name: 'Helena',
+  identification_number: '985638186-X',
+  code: '893-53-0533',
+  active: 'true'
+}, {
+  id: 29,
+  name: 'Vernon',
+  identification_number: '806737388-4',
+  code: '134-62-2005',
+  active: 'true'
+}, {
+  id: 30,
+  name: 'Magdeline',
+  identification_number: '541759374-5',
+  code: '149-18-3686',
+  active: 'true'
+}, {
+  id: 31,
+  name: 'Saint Paul',
+  identification_number: '535737920-3',
+  code: '906-83-3977',
+  active: 'true'
+}, {
+  id: 32,
+  name: 'Old Gate',
+  identification_number: '704204462-2',
+  code: '486-37-5302',
+  active: 'true'
+}, {
+  id: 33,
+  name: 'Grim',
+  identification_number: '090412994-2',
+  code: '970-12-3848',
+  active: 'true'
+}, {
+  id: 34,
+  name: 'Shoshone',
+  identification_number: '239914424-4',
+  code: '770-46-5621',
+  active: 'true'
+}, {
+  id: 35,
+  name: 'Stephen',
+  identification_number: '521429697-5',
+  code: '415-10-8043',
+  active: 'true'
+}, {
+  id: 36,
+  name: 'Lakewood Gardens',
+  identification_number: '520284776-9',
+  code: '186-05-8561',
+  active: 'true'
+}, {
+  id: 37,
+  name: 'Jenifer',
+  identification_number: '180973769-9',
+  code: '564-20-6594',
+  active: 'true'
+}, {
+  id: 38,
+  name: 'Caliangt',
+  identification_number: '023315177-X',
+  code: '214-87-5505',
+  active: 'true'
+}, {
+  id: 39,
+  name: 'Morning',
+  identification_number: '232265495-7',
+  code: '574-11-0947',
+  active: 'true'
+}, {
+  id: 40,
+  name: 'Dwight',
+  identification_number: '338246501-9',
+  code: '148-80-0738',
+  active: 'true'
+}, {
+  id: 41,
+  name: 'South',
+  identification_number: '383655938-2',
+  code: '130-68-7967',
+  active: 'true'
+}, {
+  id: 42,
+  name: 'Gina',
+  identification_number: '334349921-8',
+  code: '969-27-4487',
+  active: 'true'
+}, {
+  id: 43,
+  name: '4th',
+  identification_number: '463615446-0',
+  code: '628-75-9391',
+  active: 'true'
+}, {
+  id: 44,
+  name: '1st',
+  identification_number: '444772931-8',
+  code: '156-02-5498',
+  active: 'true'
+}, {
+  id: 45,
+  name: 'Donald',
+  identification_number: '259290728-9',
+  code: '502-96-0106',
+  active: 'true'
+}, {
+  id: 46,
+  name: 'Roth',
+  identification_number: '930439850-9',
+  code: '718-18-6829',
+  active: 'true'
+}, {
+  id: 47,
+  name: 'Dovetail',
+  identification_number: '000978809-3',
+  code: '504-83-2886',
+  active: 'true'
+}, {
+  id: 48,
+  name: 'Norway Maple',
+  identification_number: '515275429-0',
+  code: '783-76-8499',
+  active: 'true'
+}, {
+  id: 49,
+  name: 'Cottonwood',
+  identification_number: '371541465-0',
+  code: '369-58-0965',
+  active: 'true'
+}, {
+  id: 50,
+  name: 'Longview',
+  identification_number: '954186500-3',
+  code: '188-84-6033',
+  active: 'true'
+}, {
+  id: 51,
+  name: 'Hollow Ridge',
+  identification_number: '094224983-6',
+  code: '584-48-5987',
+  active: 'true'
+}, {
+  id: 52,
+  name: 'Merrick',
+  identification_number: '296439191-2',
+  code: '847-56-5394',
+  active: 'true'
+}, {
+  id: 53,
+  name: 'Del Sol',
+  identification_number: '941061258-6',
+  code: '464-61-0279',
+  active: 'true'
+}, {
+  id: 54,
+  name: 'Atwood',
+  identification_number: '631170892-2',
+  code: '446-92-0574',
+  active: 'true'
+}, {
+  id: 55,
+  name: 'Fairfield',
+  identification_number: '066232718-7',
+  code: '916-87-1010',
+  active: 'true'
+}, {
+  id: 56,
+  name: 'Fairfield',
+  identification_number: '571088080-9',
+  code: '147-33-1628',
+  active: 'true'
+}, {
+  id: 57,
+  name: 'Calypso',
+  identification_number: '745192615-X',
+  code: '154-13-4854',
+  active: 'true'
+}, {
+  id: 58,
+  name: 'Eastwood',
+  identification_number: '539535884-6',
+  code: '602-73-2779',
+  active: 'true'
+}, {
+  id: 59,
+  name: 'Cottonwood',
+  identification_number: '552711703-4',
+  code: '773-59-9570',
+  active: 'true'
+}, {
+  id: 60,
+  name: 'Forest Run',
+  identification_number: '868408612-0',
+  code: '625-64-7299',
+  active: 'true'
+}, {
+  id: 61,
+  name: 'Golf View',
+  identification_number: '548425331-4',
+  code: '613-18-9686',
+  active: 'true'
+}, {
+  id: 62,
+  name: 'Almo',
+  identification_number: '483673035-X',
+  code: '312-63-3583',
+  active: 'true'
+}, {
+  id: 63,
+  name: 'Northwestern',
+  identification_number: '953462568-X',
+  code: '754-99-3764',
+  active: 'true'
+}, {
+  id: 64,
+  name: 'Lukken',
+  identification_number: '596610317-8',
+  code: '492-41-8410',
+  active: 'true'
+}, {
+  id: 65,
+  name: 'Merchant',
+  identification_number: '295412379-6',
+  code: '995-99-6090',
+  active: 'true'
+}, {
+  id: 66,
+  name: 'Hoard',
+  identification_number: '842914968-6',
+  code: '738-42-6357',
+  active: 'true'
+}, {
+  id: 67,
+  name: 'Magdeline',
+  identification_number: '099924649-6',
+  code: '868-26-7193',
+  active: 'true'
+}, {
+  id: 68,
+  name: 'Dexter',
+  identification_number: '430400377-1',
+  code: '630-32-2858',
+  active: 'true'
+}, {
+  id: 69,
+  name: 'Mandrake',
+  identification_number: '143642560-3',
+  code: '744-84-0020',
+  active: 'true'
+}, {
+  id: 70,
+  name: 'Karstens',
+  identification_number: '681087943-9',
+  code: '721-84-9750',
+  active: 'true'
+}, {
+  id: 71,
+  name: 'Green Ridge',
+  identification_number: '888066447-6',
+  code: '104-66-9974',
+  active: 'true'
+}, {
+  id: 72,
+  name: 'Bayside',
+  identification_number: '780406058-0',
+  code: '547-37-8879',
+  active: 'true'
+}, {
+  id: 73,
+  name: 'Kedzie',
+  identification_number: '384944310-8',
+  code: '138-82-3413',
+  active: 'true'
+}, {
+  id: 74,
+  name: 'South',
+  identification_number: '516070405-1',
+  code: '406-40-2603',
+  active: 'true'
+}, {
+  id: 75,
+  name: 'Novick',
+  identification_number: '869194012-3',
+  code: '196-14-4622',
+  active: 'true'
+}, {
+  id: 76,
+  name: 'Superior',
+  identification_number: '470707507-X',
+  code: '293-89-5649',
+  active: 'true'
+}, {
+  id: 77,
+  name: 'Shelley',
+  identification_number: '996232721-0',
+  code: '538-38-0477',
+  active: 'true'
+}, {
+  id: 78,
+  name: 'Westend',
+  identification_number: '224121414-0',
+  code: '306-51-6290',
+  active: 'true'
+}, {
+  id: 79,
+  name: 'Pond',
+  identification_number: '088762535-5',
+  code: '682-86-3453',
+  active: 'true'
+}, {
+  id: 80,
+  name: 'Warrior',
+  identification_number: '002344916-0',
+  code: '249-56-2419',
+  active: 'true'
+}, {
+  id: 81,
+  name: 'Randy',
+  identification_number: '660849935-3',
+  code: '952-79-6695',
+  active: 'true'
+}, {
+  id: 82,
+  name: 'Granby',
+  identification_number: '646666655-7',
+  code: '188-13-0560',
+  active: 'true'
+}, {
+  id: 83,
+  name: 'North',
+  identification_number: '460860478-3',
+  code: '186-54-7408',
+  active: 'true'
+}, {
+  id: 84,
+  name: 'Di Loreto',
+  identification_number: '661308040-3',
+  code: '492-09-1798',
+  active: 'true'
+}, {
+  id: 85,
+  name: 'Southridge',
+  identification_number: '383300839-3',
+  code: '714-00-1672',
+  active: 'true'
+}, {
+  id: 86,
+  name: 'Hermina',
+  identification_number: '259816719-8',
+  code: '522-78-8107',
+  active: 'true'
+}, {
+  id: 87,
+  name: 'Northridge',
+  identification_number: '917003612-8',
+  code: '505-49-8951',
+  active: 'true'
+}, {
+  id: 88,
+  name: 'Sloan',
+  identification_number: '184999271-1',
+  code: '458-85-7226',
+  active: 'true'
+}, {
+  id: 89,
+  name: 'Namekagon',
+  identification_number: '467788770-5',
+  code: '468-50-7014',
+  active: 'true'
+}, {
+  id: 90,
+  name: 'Pierstorff',
+  identification_number: '227048461-4',
+  code: '414-25-9707',
+  active: 'true'
+}, {
+  id: 91,
+  name: 'Charing Cross',
+  identification_number: '076168014-4',
+  code: '355-66-7058',
+  active: 'true'
+}, {
+  id: 92,
+  name: 'Cascade',
+  identification_number: '858330748-2',
+  code: '241-02-0952',
+  active: 'true'
+}, {
+  id: 93,
+  name: 'Birchwood',
+  identification_number: '470593723-6',
+  code: '585-15-0118',
+  active: 'true'
+}, {
+  id: 94,
+  name: 'Gale',
+  identification_number: '908961306-4',
+  code: '336-27-6540',
+  active: 'true'
+}, {
+  id: 95,
+  name: 'Lien',
+  identification_number: '222899253-4',
+  code: '470-80-8501',
+  active: 'true'
+}, {
+  id: 96,
+  name: 'Hermina',
+  identification_number: '432430793-8',
+  code: '325-54-9785',
+  active: 'true'
+}, {
+  id: 97,
+  name: 'Pawling',
+  identification_number: '257613623-0',
+  code: '196-76-7792',
+  active: 'true'
+}, {
+  id: 98,
+  name: 'Dunning',
+  identification_number: '577295375-3',
+  code: '868-76-5402',
+  active: 'true'
+}, {
+  id: 99,
+  name: 'Elgar',
+  identification_number: '619074638-1',
+  code: '649-10-3720',
+  active: 'true'
+}, {
+  id: 100,
+  name: 'Hauk',
+  identification_number: '144301412-5',
+  code: '349-20-5144',
+  active: 'true'
+}];

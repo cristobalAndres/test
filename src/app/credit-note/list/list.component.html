@@ -1,0 +1,189 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'CREDIT_NOTE.GENERAL.MASSIVE.PLURAL' | translate}}
+  </h1>
+  <div class="row">
+    <div class="col-md-12">
+    </div>
+  </div>
+</div>
+<hr>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-12">
+      <h4>{{'BILL.GENERAL.PLURAL' | translate}}</h4>
+    </div>
+  </div>
+  <!-- filtros -->
+  <div [formGroup]="formCreditsNotes" class="row">
+    <div class="col">
+      <label for="cuentas">{{ 'CREDIT_NOTE.FILTERS.PERIOD' | translate }}</label>
+      <select class="form-control" formControlName="period" name="period" [(ngModel)]="periodSelected" id="period" (change)="getBillingNotes()">
+        <option value="" disabled selected>{{ 'EXPENSE.GENERAL.SELECT_PERIOD_PLACEHOLDER' | translate }}</option>
+        <option *ngFor="let period of periods" [ngValue]="period">
+          {{'GENERAL.MONTHS.' + period.name | translate}} {{period.periodGroup}}
+        </option>
+      </select>
+    </div>
+    <div class="col">
+      <label for="cuentas">{{ 'CREDIT_NOTE.FILTERS.CONCEPT' | translate }}</label>
+      <select class="form-control" formControlName="deb_type" name="deb_type" [(ngModel)]="conceptTypeSelected" (change)="getBillingNotes();">
+        <option value="" disabled selected>{{'CREDIT_NOTE.TABLE_HEADER.CONCEPT_TYPE' | translate}}</option>
+        <option *ngFor="let debt of debtsType" [ngValue]="debt">
+          <span>{{ debt.name }}</span>
+        </option>
+      </select>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="afecto">{{'CREDIT_NOTE.FILTERS.ASSIGN_FUND' | translate}}</label>
+        <select formControlName="fund" name="fund" class="form-control" id="fund" [(ngModel)]="fundSelected">
+          <option value="" disabled selected>{{ 'CREDIT_NOTE.TABLE_HEADER.FUND' | translate }}</option>
+          <option *ngFor="let fund of funds" [ngValue]="fund">{{fund.name}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-1 center">
+      <label *ngIf="formCreditsNotes['controls'].bills.value.length > 0" for="seleccionar">{{ 'CREDIT_NOTE.TABLE_HEADER.ASSIGN' | translate }}</label>
+      <label *ngIf="formCreditsNotes['controls'].bills.value.length > 0" class="switch switch-sm switch-text switch-primary mb-0 margin-top-min">
+        <input [(ngModel)]="paymentNoteAllSwitch" [ngModelOptions]="{standalone: true}" (change)="checkedPaymentNoteAll(paymentNoteAllSwitch);"
+          class="switch-input" type="checkbox">
+        <span class="switch-label"></span>
+        <span class="switch-handle"></span>
+      </label>
+    </div>
+    <div class="col-1 text-right">
+      <button *ngIf="paymentNoteAll && formCreditsNotes['controls'].bills.value.length > 0" (click)="showBiltDebtsAll()" class="btn btn-sm btn-primary btn-margin-right">
+        <i class="fa fa-caret-up"></i>
+      </button>
+      <button *ngIf="!paymentNoteAll && formCreditsNotes['controls'].bills.value.length > 0" (click)="showBiltDebtsAll()" class="btn btn-sm btn-primary btn-margin-right">
+        <i class="fa fa-caret-down"></i>
+      </button>
+    </div>
+  </div>
+  <!-- filtros -->
+  <!-- header table -->
+  <div *ngIf="!isLoading && paymentNotes.length > 0" class="animated fadeIn">
+    <div class="row assign-property-header">
+      <div class="col-1 not-padding">
+        <b>{{ 'CREDIT_NOTE.TABLE_HEADER.NUMBER_BILL' | translate }}</b>
+      </div>
+      <div class="col">
+        <b>{{ 'CREDIT_NOTE.TABLE_HEADER.PROPERTY_NAME' | translate }}</b>
+      </div>
+      <div class="col-2">
+        <b>{{ 'CREDIT_NOTE.TABLE_HEADER.PERIOD' | translate }}</b>
+      </div>
+      <div class="col not-padding">
+        <b>{{ 'CREDIT_NOTE.TABLE_HEADER.CONCEPT_TYPE' | translate }}</b>
+      </div>
+      <div class="col-2 center">
+        <b>{{ 'CREDIT_NOTE.TABLE_HEADER.AMOUNT' | translate }}</b>
+      </div>
+      <div class="col-2 center">
+        <b>{{ 'CREDIT_NOTE.TABLE_HEADER.AMOUNT_CREDIT_NOTE' | translate }}</b>
+      </div>
+      <div class="col">
+        <b>{{ 'CREDIT_NOTE.TABLE_HEADER.STATE' | translate }}</b>
+      </div>
+      <div class="col-1 text-right">
+        <b>{{ 'CREDIT_NOTE.TABLE_HEADER.ASSIGN' | translate }}</b>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+  <!-- header table -->
+  <!-- body table -->
+  <div *ngIf="!isLoading">
+    <div *ngFor="let paymentNote of paymentNotes" class="animated fadeIn">
+      <div class="card">
+        <div class="card-header line-height">
+          <div class="row">
+            <div class="col-1">
+              <span>{{paymentNote.id}}</span>
+            </div>
+            <div class="col">
+              <span>{{paymentNote.property.name}}</span>
+            </div>
+            <div class="col-2">
+              <span>{{'GENERAL.MONTHS.' + periodSelected.name | translate}} {{periodSelected.periodGroup}}</span>
+            </div>
+            <div class="col not-padding">
+              <span>{{conceptTypeSelected.name}}</span>
+            </div>
+            <div class="col-2 text-right">
+              <span>{{ paymentNote.amountDebts | numberFormat: { type: 'currency' } }}</span>
+            </div>
+            <div class="col-2 text-right">
+              <span>{{ paymentNote.amountPaymentNote | numberFormat: { type: 'currency' } }}</span>
+            </div>
+            <div class="col">
+              <span *ngIf="paymentNote.amountBalance === 0" class="badge badge-success badge-margin">{{ 'CREDIT_NOTE.LIST_STATE.PAID' | translate }}</span>
+              <span *ngIf="paymentNote.amountDebts === paymentNote.amountBalance" class="badge badge-primary badge-margin">{{ 'CREDIT_NOTE.LIST_STATE.PENDING' | translate }}</span>
+              <span *ngIf="paymentNote.amountDebts !== paymentNote.amountBalance && paymentNote.amountBalance !== 0" class="badge badge-warning badge-margin">{{ 'CREDIT_NOTE.LIST_STATE.PARTIAL' | translate }}</span>
+            </div>
+            <div class="col-1 text-right">
+              <label class="switch switch-sm switch-text switch-primary mb-0 margin-top-min">
+                <input [(ngModel)]="paymentNote.state" class="switch-input" type="checkbox" (change)="checkedPaymentNote(paymentNote);">
+                <span class="switch-label"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>
+            <div class="col-1 text-right">
+              <button class="btn btn-sm btn-primary" *ngIf="paymentNote.show" (click)="showBiltDebts(paymentNote)">
+                <i class="fa fa-caret-up"></i>
+              </button>
+              <button class="btn btn-sm btn-primary" *ngIf="!paymentNote.show" (click)="showBiltDebts(paymentNote)">
+                <i class="fa fa-caret-down"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="paymentNote.show" class="card-body animated fadeIn">
+          <div *ngFor="let debt of paymentNote.bill_debts" class="row assign-property">
+            <div class="col-1"></div>
+            <div class="col-2 not-padding">
+              <span>{{'GENERAL.MONTHS.' + periodSelected.name | translate}} {{periodSelected.periodGroup}}</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col">
+              <span>{{conceptTypeSelected.name}}</span>
+            </div>
+            <div class="col-2 center">
+              <span>{{debt.balance | numberFormat: { type: 'currency' } }}</span>
+            </div>
+            <div class="col">
+              <input type="number" [disabled]="!debt.state" [(ngModel)]="debt.amountView" class="form-control form-control-sm" placeholder="0"
+                (change)="updateAmountCreditNoteDebt(paymentNote, debt);">
+            </div>
+            <div class="col-1">
+              <span *ngIf="stateBillDebt(debt) === 'PAGADA'" class="badge badge-success badge-margin">{{ 'CREDIT_NOTE.LIST_STATE.PAID' | translate }}</span>
+              <span *ngIf="stateBillDebt(debt) === 'PARTIAL'" class="badge badge-warning badge-margin">{{ 'CREDIT_NOTE.LIST_STATE.PARTIAL' | translate }}</span>
+            </div>
+            <div class="col-1 text-right not-padding">
+              <label class="switch switch-sm switch-text switch-primary mb-0 margin-top-min">
+                <input [(ngModel)]="debt.state" class="switch-input" type="checkbox" (click)="checkedPaymentNoteDebtView(paymentNote,debt);">
+                <span class="switch-label"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>
+            <div class="col-1 text-right">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- body table -->
+  <br>
+  <div *ngIf="isLoading" class="form-group">
+    <div class="progress progress-sm">
+      <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col align-self-end">
+      <button [disabled]="!formCreditsNotes.valid || validateButtonSendCreditNote()" (click)="saveCreditNotes(formCreditsNotes.value);"
+        class="btn btn-primary btn-block pull-right" type="submit">{{ 'EXPENSE.GENERAL.BTN_SAVE' | translate }}</button>
+    </div>
+  </div>

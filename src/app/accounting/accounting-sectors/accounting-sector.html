@@ -1,0 +1,15 @@
+<div class="col" [formGroup]="accountingForm">
+  <div class="form-check">
+    <label *ngIf="accountingForm.value.name === 'DEFAULT_SECTOR'">
+      {{'SECTOR.GENERAL.DEFAULT_SECTOR' | translate}}
+    </label>
+    <label *ngIf="accountingForm.value.name !== 'DEFAULT_SECTOR'">
+      {{accountingForm.value.name}}
+    </label>
+    <label class="switch switch-3d switch-info" >
+        <input type="checkbox" class="switch-input" formControlName="active" name="active" (change)="outputFormSector(accountingForm.value)" >
+        <span class="switch-label"></span>
+        <span class="switch-handle"></span>
+      </label>
+  </div>
+</div>

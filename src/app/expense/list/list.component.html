@@ -1,0 +1,253 @@
+<div class="animated fadeIn">
+  <h1 class="text-capitalize">
+    {{'EXPENSE.GENERAL.PLURAL' | translate}}
+  </h1>
+  <div class="row">
+    <div class="col-md-12">
+      <form #formFilterDate="ngForm" [formGroup]="formSearchDate" (submit)="searchByDate(formSearchDate.value)">
+        <div class="row">
+          <div class="form-group col-md-2">
+            <label for="periodMonth">{{'GENERAL.MONTH' | translate}}</label>
+            <select id="periodMonth" [(ngModel)]="selectMonth" class="form-control" formControlName="periodMonth" (change)="changeOfPeriod()">
+              <option *ngFor="let month of months" [ngValue]="month.number">{{'GENERAL.MONTHS.' + month.name | translate}}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-1">
+            <label for="periodYear">{{'GENERAL.YEAR' | translate}}</label>
+            <select id="periodYear" [(ngModel)]="selectYear" class="form-control" formControlName="periodYear" (change)="changeOfPeriod()">
+              <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="creation_date">{{ 'EXPENSE.EXPENSES.INIT_DATE' | translate }}</label>
+            <input id="creation_date" [attr.disabled]="searchDate === true?null:''" type="text" [(ngModel)]="selectDate" value="{{ selectDate | date:'dd-MM-yyyy' }}"
+              formControlName="date" name="date" class="form-control" bsDatepicker [bsConfig]="bsConfig">
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="end_date">{{ 'EXPENSE.EXPENSES.END_DATE' | translate }}</label>
+            <input id="end_date" [attr.disabled]="searchDate === true?null:''" type="text" [(ngModel)]="selectExpirationDate" value="{{ selectExpirationDate | date:'dd-MM-yyyy' }}"
+              formControlName="expiration_date" name="expiration_date" class="form-control" bsDatepicker [bsConfig]="bsConfig">
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="expense_type">{{ 'EXPENSE.EXPENSES.SELECT_TYPE_DOCUMENT' | translate }}</label>
+            <select id="expense_type" formControlName="expanse_type" name="expanse_type" class="form-control">
+              <option value="" selected>{{ 'EXPENSE.GENERAL.SELECT_ALL' | translate }}</option>
+              <option *ngFor="let element of expenseTypes" [ngValue]="element.id">
+                {{element.name}}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="expense_assign">{{ 'EXPENSE.EXPENSES.SELECT_ASSIGMENTS_PLACE' | translate }}</label>
+            <select id="expense_assign" formControlName="assign_id" name="assign_id" class="form-control">
+              <option value="" selected>{{ 'EXPENSE.GENERAL.SELECT_ALL' | translate }}</option>
+              <option value="-1" selected>{{ 'EXPENSE.GENERAL.SELECT_NOT_ASSIGNED' | translate }}</option>
+              <option *ngFor="let element of assignTypes" [ngValue]="element.id">
+                {{'EXPENSE.ASSIGNMENT_TYPES.' + element.slug | translate}}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-1 content-button-search">
+            <button [disabled]="!formSearchDate.valid" type="submit" class="btn btn-sm btn-primary">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <table *ngIf="data.length > 0" class="table big-table" [mfData]="data | dataFilter:{query: filterQuery, cols: ['expense_date','expense_supplier_name','expense_code','expense_type_name','expense_description','expense_period','expense_assignment_type','amount']}"
+        #mf="mfDataTable" [mfRowsOnPage]="10">
+        <thead>
+          <tr>
+            <th>
+              <mfDefaultSorter by="expense_date">
+                {{'EXPENSE.CREATE.TABLE.HEAD.INIT_DATE' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="expense_supplier_name">
+                {{'EXPENSE.CREATE.TABLE.HEAD.PROVIDER' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="expense_type_name">
+                {{'EXPENSE.CREATE.TABLE.HEAD.DOCUMENT' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="expense_description">
+                {{'EXPENSE.CREATE.TABLE.HEAD.DESCRIPTION' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="expense_assignment_type">
+                {{'EXPENSE.CREATE.TABLE.HEAD.ASSIGN' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="">
+                {{'EXPENSE.CREATE.TABLE.HEAD.PORCENT' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="expense_period">
+                {{'EXPENSE.CREATE.TABLE.HEAD.PERIOD' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="">
+                {{'EXPENSE.CREATE.TABLE.HEAD.WAY_TO_PAY' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="">
+                {{'EXPENSE.CREATE.TABLE.HEAD.PAYMENT_DOCUMENT' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="">
+                {{'EXPENSE.CREATE.TABLE.HEAD.NUMBER_OUT' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th>
+              <mfDefaultSorter by="amount">
+                {{'EXPENSE.CREATE.TABLE.HEAD.AMOUNT' | translate}}
+              </mfDefaultSorter>
+            </th>
+            <th class="center">
+              <mfDefaultSorter by="">
+                {{'EXPENSE.CREATE.TABLE.HEAD.TOOLS' | translate}}
+              </mfDefaultSorter>
+            </th>
+          </tr>
+        </thead>
+        <tfoot *ngIf="!isLoading">
+          <tr>
+            <td colspan="12">
+              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+            </td>
+          </tr>
+        </tfoot>
+        <tbody *ngIf="!isLoading">
+          <tr *ngFor="let item of mf.data">
+            <td>{{item.expense_date}}</td>
+            <td>{{item.expense_supplier_name }}</td>
+            <td>{{item.expense_type_code}}{{item.expense_code}}</td>
+            <td>{{item.expense_description}}</td>
+            <td>
+              <ul>
+                <li *ngFor="let assignment of item.expense_assignments">
+                  <ng-container *ngIf="assignment.expense_assignment_type">
+                    {{assignment.expense_assignment_type.name}}
+                  </ng-container>
+                </li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li *ngFor="let assignment of item.expense_assignments">
+                  {{ getPercentage(assignment) }}
+                </li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li *ngFor="let assignment of item.expense_assignments">
+                  <ng-container *ngFor="let fee of assignment.expense_fees">
+                    {{ fee.period | period: {type: 'month'} | translate }} {{ fee.period | period: {type: 'year'} }} - {{fee.description | translate}}
+                  </ng-container>
+                </li>
+              </ul>
+            </td>
+            <td>
+              <div *ngFor="let outcome of item.outcomes">
+                {{outcome.payment}}
+              </div>
+            </td>
+            <td>
+              <div *ngFor="let outcome of item.outcomes">
+                <div *ngIf="outcome.paymentDocument">
+                  <div *ngFor="let element of outcome.paymentDocument">
+                    <ng-container *ngFor="let check of element">{{check.code}}</ng-container>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div *ngFor="let outcome of item.outcomes">
+                {{outcome.departureNumber}}
+              </div>
+            </td>
+            <td class="text-right">{{item.amount | numberFormat: { type: 'currency' } }}</td>
+            <td class="center">
+              <button routerLinkActive="active" [routerLink]="['/expense/edit/', item.id]" type="button" class="btn btn-sm btn-primary"
+                title="{{'EXPENSE.TOOLS.EDIT' | translate}}">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button type="button" class="btn btn-sm btn-primary" title="{{'EXPENSE.TOOLS.UNASSIGN' | translate}}" (click)="dangerDeleteModal.show(); selectExpense(item, 'assign')"
+                [disabled]="!item.unassignable">
+                <i class="fa fa-unlock"></i>
+              </button>
+              <button *ngIf="item.outcomes.length === 0" (click)="dangerDeleteModal.show(); selectExpense(item)" type="button" class="btn btn-sm btn-danger"
+                title="{{'EXPENSE.TOOLS.DELETE' | translate}}" [disabled]="!item.removable">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="data.length === 0 && !isLoading" class="animated fadeIn alert alert-info w-80 block-center">
+        <div class="text-center mb20">
+          <i class="fa fa-info-circle fa-3x"></i>
+        </div>
+        <div class="text-center text-bold mb30">
+          {{ 'EXPENSE.GENERAL.NOTIFICATION.NO_EXPENSES' | translate }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div *ngIf="isLoading">
+    <div class="progress progress-sm">
+      <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #dangerDeleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dangerDeleteModal"
+  aria-hidden="true">
+  <div class="modal-dialog modal-danger" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'GENERAL.CONFIRMATION_TITLE' | translate}}</h5>
+        <button type="button" class="close" (click)="dangerDeleteModal.hide(); deselectExpense()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="selectedExpenseForDelete">{{'EXPENSE.DELETE.CONFIRMATION_TEXT' | translate:deleteModalParam}} </p>
+        <p *ngIf="selectedExpenseForUnassigment">{{'EXPENSE.ASSIGN.UNASSIGNMENT' | translate:deleteModalParam}} </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="dangerDeleteModal.hide(); deselectExpense()">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+        <button *ngIf="selectedExpenseForDelete" type="button" class="btn btn-danger" (click)="deleteExpense(); dangerDeleteModal.hide();">
+          <i class="fa fa-trash"></i> {{'GENERAL.DELETE' | translate}}
+        </button>
+        <button *ngIf="selectedExpenseForUnassigment" type="button" class="btn btn-danger" (click)="unassignmentExpense(selectedExpenseForUnassigment.id); dangerDeleteModal.hide();">
+          <i class="fa fa-unlock"></i> Confirmar
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

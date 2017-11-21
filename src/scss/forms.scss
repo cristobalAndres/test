@@ -1,0 +1,11 @@
+.has-error {
+  input {
+    border-color: #dc3545;
+  }
+  .invalid-feedback {
+    display: block;
+    margin-top: .25rem;
+    font-size: .875rem;
+    color: #dc3545;
+  }
+}

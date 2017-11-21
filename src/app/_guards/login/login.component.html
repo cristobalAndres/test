@@ -1,0 +1,54 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card-group mb-0">
+          <div class="card p-4">
+            <div class="card-body">
+              <h1>{{'GUARD.AUTH.LOGIN_TITLE' | translate}}</h1>
+              <p class="text-muted">{{'GUARD.AUTH.LOGIN_DESCRIPTION' | translate}}</p>
+              <div class="alert alert-danger" role="alert" *ngIf="hasErrors">
+                {{'GUARD.MESSAGE.UNAUTHORIZED' | translate}}
+              </div>
+              <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+                <div class="input-group mb-3" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+                  <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+                  <input type="email" class="form-control" name="email" placeholder="{{'GUARD.AUTH.EMAIL_FIELD' | translate}}" [(ngModel)]="model.email" #email="ngModel" required />
+                  <div *ngIf="f.submitted && !email.valid" class="invalid-feedback">{{'GUARD.AUTH.EMAIL_FIELD' | translate}}</div>
+                </div>
+                <div class="input-group mb-4" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                  <span class="input-group-addon"><i class="icon-lock"></i></span>
+                  <input type="password" class="form-control" placeholder="{{'GUARD.AUTH.PASSWORD_FIELD' | translate}}" name="password" [(ngModel)]="model.password" #password="ngModel" required />
+                  <div *ngIf="f.submitted && !password.valid" class="invalid-feedback">{{'GUARD.AUTH.PASSWORD_FIELD' | translate}}</div>
+                </div>
+                <div class="form-group" *ngIf="loading">
+                  <div class="progress progress-sm">
+                    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar"
+                         style="width: 100%"></div>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                    <button [disabled]="loading" class="btn btn-primary px-4">{{'GUARD.AUTH.LOGIN_TITLE' | translate}}</button>
+                  </div>
+                  <div class="col-6 text-right">
+                    <button routerLinkActive="active" [routerLink]="['/reset']" type="button" class="btn btn-link px-0">{{'GUARD.AUTH.PASSWORD_FORGOT' | translate}}</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
+            <div class="card-body text-center">
+              <div>
+                <h2>{{'GUARD.AUTH.SIGN_UP' | translate}}</h2>
+                <p>{{'GUARD.AUTH.SIGN_UP_DESCRIPTION' | translate}}</p>
+                <button type="button" class="btn btn-primary active mt-3">{{'GUARD.AUTH.SIGN_UP_CONTACT' | translate}}!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

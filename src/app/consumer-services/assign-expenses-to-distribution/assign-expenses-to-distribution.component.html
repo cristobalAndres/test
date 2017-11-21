@@ -1,0 +1,219 @@
+<div class="animated fadeIn">
+  <i *ngIf="!expandCardsFlag" (click)="expandCards()" class="float-right fa fa-expand icon-expand click"></i>
+  <i *ngIf="expandCardsFlag" (click)="expandCards()" class="float-right fa fa-compress icon-expand click"></i>
+  <h1>
+    {{'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.PLURAL' | translate}}
+  </h1>
+</div>
+<hr>
+<div class="animated fadeIn">
+  <div class="row">
+    <div [ngClass]="expandCardsFlag ? 'col-lg-12' : 'col-lg-6'">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-object-group"></i> {{ 'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.SINGULAR' | translate }}
+          <span *ngIf="sectorSelected && sectorSelected.name !== 'DEFAULT_SECTOR'">
+            <strong>{{ sectorSelected.name | translate}}</strong>
+          </span>
+          <strong *ngIf="periodSelected" class="float-right">{{'GENERAL.MONTHS.' + periodSelected.name | translate}}</strong>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <label for="cuentas">{{ 'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.SELECT_SECTOR' | translate }}</label>
+              <select class="form-control" name="sector" [(ngModel)]="sectorSelected" (change)="getDistributions()">
+                <option value="" disabled selected>{{'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.SELECT_SECTOR' | translate}}</option>
+                <option *ngFor="let sector of sectors" [ngValue]="sector">
+                  <span *ngIf="sector.name === 'DEFAULT_SECTOR'">{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate }}</span>
+                  <span *ngIf="sector.name !== 'DEFAULT_SECTOR'">{{ sector.name | translate}}</span>
+                </option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="cuentas">{{ 'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.SELECT_PERIOD' | translate }}</label>
+              <select class="form-control" name="sector" [(ngModel)]="periodSelected" (change)="expenseSelectedAssign(expenseSelected)">
+                <option value="" disabled selected>{{'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.SELECT_PERIOD' | translate}}</option>
+                <option *ngFor="let period of periods" [ngValue]="period">
+                  <span>{{'GENERAL.MONTHS.' + period.name | translate}} {{period.periodGroup}}</span>
+                </option>
+              </select>
+            </div>
+          </div>
+          <br>
+          <div class="form-group" *ngIf="isLoading">
+            <div class="progress progress-sm">
+              <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+            </div>
+          </div>
+          <div *ngIf="distributions.length === 0 && !isLoading" class="animated fadeIn alert alert-info w-80 block-center">
+            <div class="text-center mb20">
+              <i class="fa fa-info-circle fa-3x"></i>
+            </div>
+            <div class="text-center text-bold mb30">
+              {{ 'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.NOT_CONSUMER_SERVICES' | translate }}
+            </div>
+          </div>
+          <div *ngIf="distributions">
+            <div *ngFor="let distribution of distributions; index as i" class="card">
+              <div class="card-header click" (click)="activeCardDistribution(distribution);">
+                {{(i + 1)}}
+                <i class="fa fa-slack"></i>
+                <strong>{{distribution.supplier.name}}</strong>
+                <strong *ngIf="sectorSelected.name === 'DEFAULT_SECTOR'" class="margin-right-10 float-right">{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate | uppercase }}</strong>
+                <strong *ngIf="sectorSelected.name !== 'DEFAULT_SECTOR'" class="margin-right-10 float-right">{{ sectorSelected.name | translate | uppercase}}</strong>
+              </div>
+              <div *ngIf="distribution.state" class="card-body animated fadeIn">
+                <div class="row">
+                  <div class="col-12" *ngFor="let config of distribution.consumer_service_dist_metadata">
+                    <strong *ngIf="config.value.key === 'FIXED_CHARGED_TYPE' ">{{ 'CONSUMER_SERVICES.TABLE_HEADER.FIXED_CHARGE' | translate}}: </strong>
+                    <strong *ngIf="config.value.key === 'DISTRIBUTION_TYPE' ">{{ 'CONSUMER_SERVICES.TABLE_HEADER.DISTRIBUTION_TYPE' | translate}}: </strong>
+                    <span *ngIf="config.value.key === 'FIXED_CHARGED_TYPE' ">{{ 'CONSUMER_SERVICES.FIXED_CHARGED_TYPE.' + config.value.name | translate}}</span>
+                    <span *ngIf="config.value.key === 'DISTRIBUTION_TYPE' ">{{ 'CONSUMER_SERVICES.DISTRIBUTION_TYPE.' + config.value.name | translate}}</span>
+                  </div>
+                </div>
+                <br>
+                <div class="table table-bordered table-striped table-sm row margin-1">
+                  <div class="col" *ngIf="distribution.isMonth">
+                    <strong>{{ 'CONSUMER_SERVICES.TABLE_BODY.MONTH' | translate }}</strong>
+                  </div>
+                  <div class="col" *ngFor="let header of distribution.table.headers">
+                    <strong *ngIf="header === 'FIXED_CHARGE' ">{{ 'CONSUMER_SERVICES.TABLE_BODY.FIXED_CHARGE' | translate | uppercase}} </strong>
+                    <strong *ngIf="header !== 'FIXED_CHARGE' ">{{header | uppercase}}</strong>
+                  </div>
+                </div>
+                <div *ngIf="distribution.isMonth" class="padding-table-td content-distribution-item">
+                  <div class="row distribution-item" *ngFor="let item of distribution.table.body; index as i">
+                    <div class="col">
+                      <span>{{'GENERAL.MONTHS.' + item.month | translate | uppercase}}</span>
+                      <small class="text-muted">&nbsp; % </small>
+                    </div>
+                    <div class="col text-right" *ngFor="let consumerService of item.amounts">
+                      {{consumerService.amount}}
+                      <small class="text-muted">&nbsp; % </small>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="!distribution.isMonth" class="padding-table-td content-distribution-item">
+                  <div class="row distribution-item" *ngFor="let item of distribution.table.body; index as i">
+                    <div class="col text-right" *ngFor="let consumerService of item.amounts">
+                      {{consumerService.amount}}
+                      <small class="text-muted">&nbsp; % </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="distributionSelected" [ngClass]="expandCardsFlag ? 'col-lg-12' : 'col-lg-6'">
+      <br *ngIf="expandCardsFlag">
+      <div class="card">
+        <form #formDistribution="ngForm" (ngSubmit)="onSubmit()">
+          <div class="card-header">
+            <i class="fa fa-credit-card"></i> {{ 'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.DETAIL_EXPENSE' | translate }}
+            <span *ngIf="sectorSelected && sectorSelected.name !== 'DEFAULT_SECTOR'">
+              <strong>{{ sectorSelected.name | translate}}</strong>
+            </span>
+            <button [disabled]="!expenseSelected" class="float-right btn btn-primary btn-sm">{{ 'GENERAL.SAVE' | translate}}</button>
+          </div>
+          <div class="card-body">
+            <table *ngIf="expenses && expenseSelected" class="table table-bordered table-striped table-sm">
+              <thead>
+                <tr>
+                  <th *ngFor="let header of distributionSelected.table.headers">
+                    <strong *ngIf="header === 'FIXED_CHARGE' ">{{ 'CONSUMER_SERVICES.TABLE_BODY.FIXED_CHARGE' | translate | uppercase}} </strong>
+                    <strong *ngIf="header !== 'FIXED_CHARGE' ">{{header | uppercase}}</strong>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="distributionSelected.table.body.length === 1">
+                  <td class="text-right" *ngFor="let percent of distributionSelected.table.body[0].amounts; index as i">
+                    {{ calculateAmountPercent((((+expenseSelected.amount) * percent.amount) / 100 ), distributionSelected.table.object[i], percent.amount)
+                    | numberFormat: {type: 'currency'} }}
+                    <small class="text-muted">&nbsp; % {{percent.amount}}</small>
+                  </td>
+                </tr>
+                <tr class="text-right" *ngIf="distributionSelected.table.body.length > 1">
+                  <td *ngFor="let percent of identifyMonth(distributionSelected.table.body); index as i" class="text-right">
+                    {{ calculateAmountPercent((((+expenseSelected.amount) * percent.amount) / 100 ), distributionSelected.table.object[i], percent.amount)
+                    | numberFormat: {type: 'currency'} }}
+                    <small class="text-muted">&nbsp; % {{percent.amount}}</small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngIf="!expenseSelected && !isLoadingExpense" class="animated fadeIn alert alert-info w-80 block-center">
+              <div class="text-center mb20">
+                <i class="fa fa-info-circle fa-3x"></i>
+              </div>
+              <div class="text-center text-bold mb30">
+                {{ 'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.SELECT_EXPENSE' | translate }}
+              </div>
+            </div>
+            <div class="form-group" *ngIf="isLoadingExpense">
+              <div class="progress progress-sm">
+                <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <br>
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-credit-card-alt"></i> {{ 'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.SELECT_EXPENSES' | translate }}
+          <span *ngIf="sectorSelected && sectorSelected.name !== 'DEFAULT_SECTOR'">
+            <strong>{{ sectorSelected.name | translate}}</strong>
+          </span>
+          <strong class="float-right">{{distributionSelected.supplier.name}}</strong>
+          <span class="float-right margin-right-10">{{ 'CONSUMER_SERVICES.TABLE_HEADER.SUPPLIER' | translate }}:</span>
+
+        </div>
+        <div class="card-body">
+          <table *ngIf="expenses && expenses.length > 0" class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr>
+                <th>{{'EXPENSE.ASSIGN.TABLE.HEAD.DOCUMENT' | translate | uppercase}}</th>
+                <th>{{'EXPENSE.ASSIGN.TABLE.HEAD.DESCRIPTION' | translate | uppercase}}</th>
+                <th>{{'EXPENSE.ASSIGN.TABLE.HEAD.AMOUNT' | translate | uppercase}}</th>
+                <th class="text-center"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let expense of expenses">
+                <td *ngIf="expense">{{expense.expense.expense_type.code}} {{expense.expense.code}}</td>
+                <td *ngIf="expense">{{expense.expense.description}}</td>
+                <td *ngIf="expense">
+                  <span class="float-right">{{expense.amount | numberFormat: {type: 'currency'} }}</span>
+                </td>
+                <td *ngIf="expense" class="text-center">
+                  <div class="radio">
+                    <label>
+                      <input (click)="expenseSelectedAssign(expense)" type="radio" name="selected">
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="expenses.length === 0 && !isLoadingExpense" class="animated fadeIn alert alert-info w-80 block-center">
+            <div class="text-center mb20">
+              <i class="fa fa-info-circle fa-3x"></i>
+            </div>
+            <div class="text-center text-bold mb30">
+              {{ 'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.NOT_EXPENSES' | translate }}
+            </div>
+          </div>
+          <div class="form-group" *ngIf="isLoadingExpense">
+            <div class="progress progress-sm">
+              <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'ACCOUNTING_ACCOUNTS.GENERAL.PLURAL' | translate}}
+  </h1>
+  <div class="row">
+    <div class="col-lg-12 margin-top-min">
+      <div class="row">
+        <div class="col-lg-3">{{ 'ACCOUNTING_ACCOUNTS.LIST_ACCOUNT.HEADER.CODE' | translate }}</div>
+        <div class="col-lg-3">{{ 'ACCOUNTING_ACCOUNTS.LIST_ACCOUNT.HEADER.NAME' | translate }}</div>
+        <div class="col-lg-4">{{ 'ACCOUNTING_ACCOUNTS.LIST_ACCOUNT.HEADER.NUMBER_OF_ACCOUNTS' | translate }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <form #formAccounting="ngForm" [formGroup]="accountingForm" style="width: 100%;">
+      <div class="col-lg-12 margin-top-min">
+        <div formArrayName="accountings">
+          <div *ngFor="let children of accountingForm['controls'].accountings['controls']; let _j=index">
+            <div class="row child-account">
+              <app-accounting-father class="col-lg-12"
+                [accountingForm]="accountingForm['controls'].accountings['controls'][_j]"
+                [form]="accountingForm['controls'].accountings"
+                [sectors]="sectors"
+                (output)="ouputAdd($event);"
+                (changeStatusActive)="outputStatusCheck($event)"
+                (changeStatusActiveEdit)="outputChangeStatusActiveedit($event)"
+                [disableEdit]="disabledEdit" (statusSelected)="outputStatusSelected($event)" (disabledAllFather)="outputDisabledAllFathers($event)"
+              >
+              </app-accounting-father>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="form-group" *ngIf="isUploading">
+    <div class="progress progress-sm">
+      <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+    </div>
+  </div>
+</div>
+
+
+<button type="button" id="modalView" class="btn btn-sm btn-primary" (click)="dangerDeleteModal.show();" style="display: none;"><i class="fa fa-unlock" ></i></button>
+
+<div bsModal #dangerDeleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dangerDeleteModal"
+  aria-hidden="true">
+  <div class="modal-dialog modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>{{ 'ACCOUNTING_ACCOUNTS.NEW_ACCOUNT.TITLE' | translate }}</h5>
+        <button type="button" class="close" (click)="dangerDeleteModal.hide();" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #formNew="ngForm" [formGroup]="newForm" style="width: 100%;">
+          <label>{{ 'ACCOUNTING_ACCOUNTS.NEW_ACCOUNT.FORM' | translate }}</label>
+          <input type="text" class="form-control" formControlName="name" name="alias" (keyup)="validateAlias($event.target.value)" placeholder="{{ 'ACCOUNTING_ACCOUNTS.NEW_ACCOUNT.FORM' | translate }}"><br>
+          <div class="animated fadeIn alert alert-warning w-100 " *ngIf="existAlias">
+            <div class="text-center text-bold mb10">
+              <div class="col-lg-12">{{ 'ACCOUNTING_ACCOUNTS.NEW_ACCOUNT.EXIST_SUBACCOUNT' | translate }}</div>
+              <br>
+              <button class="btn btn-default" (click)="dangerDeleteModal.hide();">{{ 'GENERAL.CANCEL' | translate }}</button>
+              <button class="btn btn-primary" (click)="dangerDeleteModal.hide(); sendAccount(newForm.value);">{{ 'EXPENSE.GENERAL.BTN_SAVE' | translate  }}</button>
+            </div>
+          </div>
+          <button [disabled]="!newForm.valid" *ngIf="!existAlias" class="btn btn-primary btn-block pull-right" (click)="dangerDeleteModal.hide(); sendAccount(newForm.value);">{{ 'EXPENSE.GENERAL.BTN_SAVE' | translate  }}</button>
+        </form>
+
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+

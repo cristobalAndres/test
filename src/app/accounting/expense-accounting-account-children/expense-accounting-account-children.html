@@ -1,0 +1,43 @@
+<div class="row child-account" [formGroup]="accountingForm" >
+  <div class="col-lg-2">{{accountingForm.value.code | accountCodeMask}}</div>
+  <div class="col-lg-4" *ngIf="!formActive ">{{accountingForm.value.alias ? accountingForm.value.alias: accountingForm.value.name }} &nbsp;&nbsp;<span class="badge badge-info" *ngIf="!accountingForm.value.name">{{ 'ACCOUNTING_ACCOUNTS.NEW_ACCOUNT.NEW' | translate }}</span></div>
+  <div [ngClass]="showSpinner ? 'col-lg-3': 'col-lg-4'" *ngIf="formActive && accountingForm.value.id === editAlias.id">
+    <div class="form-group"><input type="text" id="alias" class="form-control" formControlName="aliasAux" (keyup)="validateAlias($event.target.value, accountingForm.value)" name="alias"></div>
+  </div>
+  <div class="col-lg-4 text-right" *ngIf="existAlias">
+    <div class="animated fadeIn alert alert-warning w-100">
+      <div class="text-center text-bold mb1">
+        <div class="col-lg-12"><i class="fa fa-info-circle fa-2x"></i> &nbsp;{{ 'ACCOUNTING_ACCOUNTS.NEW_ACCOUNT.EXIST_SUBACCOUNT_FORM' | translate }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-1" *ngIf="showSpinner">
+    <i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i>
+  </div>
+  <div [ngClass]="existAlias ? 'col-lg-2 text-right': 'col-lg-6 text-right'">
+    <button class="btn btn-sm btn-primary" *ngIf="!formActive || accountingForm.value.id !== editAlias.id" (click)="editAccountingChild(accountingForm.value)" [disabled]="blockStatus || accountingForm.value.status"><i class="fa fa-edit"></i></button>
+    <button class="btn btn-sm btn-success" *ngIf="(formActive && accountingForm.value.id === editAlias.id) && !existAlias" (click)="updateAccountingChild(accountingForm.value)"
+      [disabled]="!accountingForm.valid"><i class="fa fa-check"></i></button>
+    <button class="btn btn-sm btn-warning" *ngIf="(formActive && accountingForm.value.id === editAlias.id) && existAlias" (click)="updateAccountingChild(accountingForm.value)"
+            [disabled]="!accountingForm.valid"><i class="fa fa-check"></i></button>
+    <button class="btn btn-sm btn-danger" *ngIf="formActive && accountingForm.value.id === editAlias.id" (click)="cancelEditChild()"><i class="fa fa-close"></i></button>
+    <button *ngIf="accountingForm.value.active" class="btn btn-sm btn-default" (click)="changeSector(accountingForm.value)"><i class="fa fa-caret-up"></i></button>
+    <button *ngIf="!accountingForm.value.active" class="btn btn-sm btn-default" (click)="changeSector(accountingForm.value)" [disabled]="blockStatus || accountingForm.value.status"><i class="fa fa-caret-down"></i></button>
+  </div>
+  <div *ngIf="accountingForm.value.active" class="card-block fadeIn animated">
+    <hr>
+    <strong>{{ 'ACCOUNTING_ACCOUNTS.SECTORS' | translate }}</strong>
+    <div class="row text-center" formArrayName="sectors" *ngIf="!showSpinnerBig">
+      <div *ngFor="let sector of accountingForm['controls'].sectors['controls']; let i=index" >
+        <div *ngIf="accountingForm['controls'].sectors['controls'][i].value.name !== null">
+          <app-accounting-sectors class="col sectors" [accountingForm]="accountingForm['controls'].sectors['controls'][i]" [accountingId]="accountingId"
+                                  (sector)="outputFormSector($event)"></app-accounting-sectors>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 divSpinner">
+      <i class="fa fa-spinner fa-spin fa-3x fa-fw spinnerBig" aria-hidden="true" *ngIf="showSpinnerBig"></i>
+    </div>
+
+  </div>
+</div>

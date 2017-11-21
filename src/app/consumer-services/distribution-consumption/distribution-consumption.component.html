@@ -1,0 +1,227 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'CONSUMER_SERVICES.DISTRIBUTION_CONSUMPTION.PLURAL' | translate}}
+  </h1>
+  <div class="row">
+    <div class="col-md-12">
+    </div>
+  </div>
+</div>
+<hr>
+<div class="form-group" *ngIf="isLoading">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>
+<form *ngIf="!isLoading" [formGroup]="formDistribution" (ngSubmit)="onSubmit(formDistribution.value)" class="animated fadeIn">
+  <!-- parametros -->
+  <div class="row">
+    <div class="col">
+      <label for="cuentas">{{ 'CONSUMER_SERVICES.TABLE_HEADER.SECTOR' | translate }}</label>
+      <select class="form-control" formControlName="sector" name="sector" [(ngModel)]="sectorSelected" (change)="getTupla('sector')">
+        <option value="" disabled selected>{{'CONSUMER_SERVICES.TABLE_HEADER.SECTOR' | translate}}</option>
+        <option *ngFor="let sector of sectors" [ngValue]="sector">
+          <span *ngIf="sector.name === 'DEFAULT_SECTOR'">{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate }}</span>
+          <span *ngIf="sector.name !== 'DEFAULT_SECTOR'">{{ sector.name | translate}}</span>
+        </option>
+      </select>
+    </div>
+    <div class="col" *ngIf="bodysConsumerServices.length > 0">
+      <label for="cuentas">{{ 'CONSUMER_SERVICES.TABLE_HEADER.SUPPLIER' | translate }}</label>
+      <select formControlName="supplier" name="supplier" [(ngModel)]="supplierSelected" class="form-control" (change)="getTupla('supplier')">
+        <option value="" disabled selected>{{ 'CONSUMER_SERVICES.TABLE_HEADER.SUPPLIER' | translate }}</option>
+        <option *ngFor="let supplier of suppliers" [ngValue]="supplier">
+          {{supplier.name}}
+        </option>
+      </select>
+    </div>
+    <div class="col" *ngIf="bodysConsumerServices.length > 0">
+      <div class="form-group">
+        <label for="afecto">{{'CONSUMER_SERVICES.TABLE_HEADER.DISTRIBUTION_TYPE' | translate}}</label>
+        <select formControlName="distributionType" name="distributionType" [(ngModel)]="distributionTypeSelected" class="form-control"
+          (change)="refreshConsumerServices(distributionTypeSelected);">
+          <option value="" disabled selected>{{ 'CONSUMER_SERVICES.TABLE_HEADER.DISTRIBUTION_TYPE' | translate }}</option>
+          <option *ngFor="let distributionType of distributionTypes" [ngValue]="distributionType">
+            {{'CONSUMER_SERVICES.DISTRIBUTION_TYPE.' + distributionType.name | translate}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col" *ngIf="bodysConsumerServices.length > 0">
+      <div class="form-group">
+        <label for="afecto">{{'CONSUMER_SERVICES.TABLE_HEADER.FIXED_CHARGE' | translate}}</label>
+        <select formControlName="fixedCharge" name="fixedCharge" class="form-control" [(ngModel)]="fixedChargeSelected" (change)="changeFixedCharge()">
+          <option value="" disabled selected>{{ 'CONSUMER_SERVICES.TABLE_HEADER.FIXED_CHARGE' | translate }}</option>
+          <option *ngFor="let fixedCharge of fixedCharges" [ngValue]="fixedCharge">
+            {{'CONSUMER_SERVICES.FIXED_CHARGED_TYPE.' + fixedCharge.name | translate}}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row type-units" *ngIf = "showUnits">
+      <div class="card">
+            <div class="card-header">
+              <i class="fa fa-building-o"></i>
+              <strong>
+                {{'CONSUMER_SERVICES.FORM.TITLE_UNIT_TYPES' | translate }}
+              </strong>
+            </div>
+            
+            <div class="card-body">
+              <div class="row">
+                  <div class="col-xs-12 col-md-3" *ngFor = "let unit of units; let i=index;">
+                    <div class="form-group">
+                      <label for="{{unit.id}}">
+                        
+                        <input id="{{unit.id}}" [ngModelOptions]="{standalone: true}" name="unit" [checked]="unit.selected" [(ngModel)]="unit.selected"
+                                (change)= "changeUnit(unit)" type="checkbox"> {{unit.name}}
+                      </label>
+                    </div>  
+                  </div>
+              </div>
+            </div>
+              
+        </div>   
+    </div>
+
+  <!-- parametros -->
+  <!-- notificación -->
+  <br *ngIf="bodysConsumerServices.length === 0">
+  <div *ngIf="bodysConsumerServices.length === 0" class="animated fadeIn alert alert-info w-80 block-center">
+    <div class="text-center mb20">
+      <i class="fa fa-info-circle fa-3x"></i>
+    </div>
+    <div class="text-center text-bold mb30">
+      {{ 'CONSUMER_SERVICES.FIXED_CHARGED_TYPE.MESSAGE_WITHOUT_SERVICES' | translate }}
+    </div>
+  </div>
+  <!-- notificación -->
+  <!-- tabla -->
+  <div *ngIf="bodysConsumerServices.length > 0" class="animated fadeIn">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-object-group"></i> {{'CONSUMER_SERVICES.GENERAL.CONSUMER_SERVICES_FOR' | translate}}
+            <span *ngIf="sectorSelected && sectorSelected.name === 'DEFAULT_SECTOR'">
+              <strong>{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate }}</strong>
+            </span>
+            <span *ngIf="sectorSelected && sectorSelected.name !== 'DEFAULT_SECTOR'">
+              <strong>{{ sectorSelected.name | translate}}</strong>
+            </span>
+          </div>
+          <div class="card-body">
+            <div *ngIf="headersConsumerServices" class="table table-bordered table-striped table-sm row margin-1">
+              <div class="col" *ngIf="distributionTypeSelected.name === 'MONTHLY' ">
+                <strong>{{ 'CONSUMER_SERVICES.TABLE_BODY.MONTH' | translate | uppercase }}</strong>
+              </div>
+              <div class="col" *ngFor="let header of headersConsumerServices">
+                <strong>{{header.name | uppercase}} %</strong>
+              </div>
+              <div class="col-2" *ngIf="fixedChargeSelected && fixedChargeSelected.name !== 'NONE' ">
+                <strong>{{ 'CONSUMER_SERVICES.TABLE_BODY.FIXED_CHARGE' | translate | uppercase }} %</strong>
+              </div>
+              <div class="col-2 center">
+                <strong>{{ 'CONSUMER_SERVICES.TABLE_BODY.TOTAL' | translate | uppercase }}</strong>
+              </div>
+            </div>
+            <div class="padding-table-td content-distribution-item" formArrayName="distributions" *ngIf="distributionTypeSelected.name === 'FIXED' ">
+              <div class="row distribution-item" *ngFor="let distribution of formDistribution.controls.distributions.controls; index as i">
+                <div class="col" [formGroupName]="i">
+                  <div class="row" formArrayName="consumerServices">
+                    <div class="col" *ngFor="let consumerService of distribution.controls.consumerServices.controls; index as j">
+                      <div [formGroupName]="j">
+                        <input (change)="validateAmountDistribution(distribution.value, distribution, false);" min="0" max="100" formControlName="amount"
+                          class="form-control form-control-sm input-danger" [ngClass]="{'input-danger' : distribution.state }"
+                          type="number">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-2" *ngIf="fixedChargeSelected && fixedChargeSelected.name !== 'NONE' ">
+                  <div [formGroupName]="i">
+                    <input type="hidden" formControlName="distributionType" [(ngModel)]="distributionTypeSelected.id">
+                    <input (change)="validateAmountDistribution(distribution.value, distribution, true);" min="0" max="100" formControlName="fixedChargeAmount"
+                      class="form-control form-control-sm" [ngClass]="{'input-danger' : distribution.state }" type="number">
+                  </div>
+                </div>
+                <div class="col-2" [formGroupName]="i" class="col-2 text-right text-line">
+                  <input formControlName="total" [(ngModel)]="distribution.total" class="form-control" type="hidden">
+                  <strong>
+                    <span>{{calculateTotal(distribution.value) }}</span>
+                  </strong>
+                </div>
+              </div>
+            </div>
+            <div class="padding-table-td content-distribution-item" formArrayName="distributions" *ngIf="distributionTypeSelected.name === 'MONTHLY' ">
+              <div class="row distribution-item" *ngFor="let distribution of formDistribution.controls.distributions.controls; index as i">
+                <div class="col-2" [formGroupName]="i">
+                  <div *ngIf="distributionTypeSelected.name === 'MONTHLY' && distribution.controls.monthName">
+                    <span>{{'GENERAL.MONTHS.' + distribution.controls.monthName.value | translate}}</span>
+                  </div>
+                </div>
+                <div class="col" [formGroupName]="i">
+                  <div class="row" formArrayName="consumerServices">
+                    <div class="col" *ngFor="let consumerService of distribution.controls.consumerServices.controls; index as j">
+                      <div [formGroupName]="j">
+                        <input (change)="validateAmountDistribution(distribution.value, distribution, false);" min="0" max="100" formControlName="amount"
+                          class="form-control form-control-sm" [ngClass]="{'input-danger' : distribution.state }" type="number">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-2" *ngIf="fixedChargeSelected && fixedChargeSelected.name !== 'NONE' ">
+                  <div [formGroupName]="i">
+                    <input type="hidden" formControlName="distributionType" [(ngModel)]="distributionTypeSelected.id">
+                    <input (change)="validateAmountDistribution(distribution.value, distribution, true);" min="0" max="100" formControlName="fixedChargeAmount"
+                      class="form-control form-control-sm" [ngClass]="{'input-danger' : distribution.state }" type="number">
+                  </div>
+                </div>
+                <div class="col-2" [formGroupName]="i" class="col-2 text-right text-line">
+                  <input formControlName="total" [(ngModel)]="distribution.total" class="form-control" type="hidden">
+                  <strong>
+                    <span>{{calculateTotal(distribution.value) }}</span>
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- tabla -->
+  <div *ngIf="bodysConsumerServices.length > 0" class="row">
+    <div class="col align-self-end">
+      <button [disabled]="!formDistribution.valid || disabledButtonSend" type="submit" class="btn btn-primary btn-block pull-right">{{ 'EXPENSE.GENERAL.BTN_SAVE' | translate }}</button>
+    </div>
+  </div>
+</form>
+<br>
+
+<div bsModal (onHide)="deselectDistributionMessage()" #confirmationTupla="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="confirmationTupla" aria-hidden="true">
+  <div class="modal-dialog modal-warning" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'CONSUMER_SERVICES.MODAL_CONFIRMATION.TITLE_MODAL' | translate}}</h5>
+        <button type="button" class="close" (click)="confirmationTupla.hide();" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="messageModal.sector" [innerHtml]="'CONSUMER_SERVICES.MODAL_CONFIRMATION.CONFIRMATION_MESSAGE' | translate:messageModal"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" (click)="confirmationTupla.hide(); deselectDistributionMessage()">
+          <i class="fa fa-thumbs-up"></i> {{'CONSUMER_SERVICES.MODAL_CONFIRMATION.BUTTON_CONTINUE' | translate}}
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

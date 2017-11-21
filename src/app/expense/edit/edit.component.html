@@ -1,0 +1,51 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'EXPENSE.GENERAL.EDIT' | translate}}
+  </h1>
+  <form #formExpanses="ngForm" [formGroup]="formExpenseEdit" (submit)="expenseSaveEdit(formExpenseEdit.value);">
+    <div class="animated fadeIn">
+      <div class="card-block">
+        <div class="col-lg-12">
+          <div class="content-parameters-post">
+            <div formArrayName="expense">
+              <div *ngFor="let expense of formExpenseEdit['controls'].expense['controls']; let i=index" class="row">
+                <div class="card">
+                  <div class="card-header">
+                    <span>{{ 'EXPENSE.EXPENSES.EXPENSE' | translate  }} {{expenseId}}</span>
+                    <button *ngIf="formExpenseEdit['controls'].expense['controls'].length > 1" type="button" class="btn btn-danger pull-right"
+                      (click)="removeExpense(i);">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                  </div>
+                  <div *ngIf="elementView" class="card-block animated fadeIn">
+                    <app-expense-dynamic 
+                      [sectors]="sectors" 
+                      [position]="i" 
+                      [edit]="edit" 
+                      [title]="titleAssignmets" 
+                      [periodInitSetting]="periodInitSetting"
+                      [periodCurrentSetting]="periodCurrentSetting"
+                      [expensesForm]="formExpenseEdit['controls'].expense['controls'][i]"
+                      (ouputFees)="ouputFees($event)" 
+                      (ouputStateForm)="ouputFormValid($event)" 
+                      (ouputStateFormFees)="ouputFormValidFee($event)"
+                      (ouputPeriod)="ouputPeriodSelected($event)"></app-expense-dynamic>
+                  </div>
+                  <div class="card-block animated fadeIn">
+                    <button [disabled]="!formExpenseEdit.valid || validForm === true" *ngIf="formExpenseEdit['controls'].expense['controls'].length > 0 && !isUploading"
+                      class="btn btn-primary btn-block" type="submit">{{ 'EXPENSE.GENERAL.BTN_SAVE' | translate  }}</button>
+                    <div class="form-group" *ngIf="isUploading">
+                      <div class="progress progress-sm">
+                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

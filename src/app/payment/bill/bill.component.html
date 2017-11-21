@@ -1,0 +1,407 @@
+<div class="animated fadeIn ">
+  <h1 *ngIf="advance === false">
+    {{'PAYMENT.FORM.CREATE_TITLE' | translate }}
+  </h1>
+  <h1 *ngIf="advance === true">
+    {{'PAYMENT.FORM.ADVANCE_TITLE' | translate }}
+  </h1>
+
+  <div class="progress progress-sm" *ngIf="!getReadyToShow()">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+
+  <div class="animated fadeIn alert alert-info w-50 block-center" *ngIf="isProcessingData && successData === null">
+    <div class="sk-wave mb20">
+      <div class="sk-rect sk-rect1 bg-success"></div>
+      <div class="sk-rect sk-rect2 bg-success"></div>
+      <div class="sk-rect sk-rect3 bg-success"></div>
+      <div class="sk-rect sk-rect4 bg-success"></div>
+      <div class="sk-rect sk-rect5 bg-success"></div>
+    </div>
+    <div class="text-center text-bold mb30">{{'GENERAL.PROCESS_START' | translate}}</div>
+  </div>
+
+  <div class="animated fadeIn alert alert-success w-50 block-center" *ngIf="isProcessingData  && getReadyToShow() && (successData === true) ">
+    <div class="sk-wave mb20">
+      <i class="fa fa-check-circle-o fa-5x"></i>
+    </div>
+    <div class="text-center text-bold mb30">{{'GENERAL.NOTIFICATION.SUCCESS' | translate}}</div>
+  </div>
+
+  <div class="animated fadeIn alert alert-danger w-50 block-center" *ngIf="isProcessingData && getReadyToShow() && (successData === false) ">
+    <div class="sk-wave mb20">
+      <i class="fa fa-exclamation-circle fa-5x"></i>
+    </div>
+    <div class="text-center text-bold mb30">{{'GENERAL.NOTIFICATION.UNKNOWN_ERROR' | translate}}</div>
+  </div>
+
+  <div class="animated fadeIn alert alert-success w-50 block-center" *ngIf="bills.length == 0 && getReadyToShow() && (advance === false) ">
+    <div class="text-center mb20">
+      <i class="fa fa-check-circle fa-5x"></i>
+    </div>
+    <div class="text-center text-bold mb30">
+      {{'PAYMENT.FORM.NO_DEBT' | translate}}
+    </div>
+  </div>
+
+  <div class="animated fadeIn alert alert-info w-50 block-center" *ngIf=" (bills.length > 0) && getReadyToShow() && (advance === true) ">
+    <div class="text-center mb20">
+      <i class="fa fa-check-circle fa-5x"></i>
+    </div>
+    <div class="text-center text-bold mb30">
+      {{'PAYMENT.FORM.YES_DEBT' | translate}}
+    </div>
+  </div>
+
+  <div class="row mt50" *ngIf="!isProcessingData && getReadyToShow() && ((bills.length > 0 && advance !== true) || (bills.length === 0 && advance === true))">
+    <div class="col-7" [hidden]="advance === true">
+      <accordion>
+        <accordion-group #group *ngFor="let bill of bills; let i = index" [isOpen]="i == 0">
+          <div accordion-heading>
+            <span>{{ bill.community_periods[0].period }} - {{bill.bill_type.name}}</span>
+            <div class="btn btn-sm pull-right">
+              <i class="fa" [ngClass]="{'fa-chevron-down': group?.isOpen, 'fa-chevron-up': !group?.isOpen}"></i>
+            </div>
+          </div>
+          <div class="card-block">
+            <div *ngIf="!billDebtCollection[bill.id]">
+              <div class="progress progress-sm">
+                <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated card-light" role="progressbar"></div>
+              </div>
+            </div>
+            <table class="table table-hover">
+              <thead>
+                <tr class="row bg-light">
+                  <th class="col-1">&nbsp;</th>
+                  <th class="col-5">{{'GENERAL.DESCRIPTION' | translate}}</th>
+                  <th class="col-3 text-right">{{'GENERAL.TOTAL_AMOUNT' | translate}}</th>
+                  <th class="col-3 text-right">{{'GENERAL.BALANCE' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row" *ngFor="let debt of billDebtCollection[bill.id]" (click)="onSelectedDebt(debt)" [ngClass]="{'table-warning': isSelectedDebt(debt)}">
+                  <td class="col-1">
+                    <input type="checkbox" [checked]="isSelectedDebt(debt)">
+                  </td>
+                  <td class="col-5">
+                    <ng-container *ngIf=" debt.description === 'EXPENSE_SURCHARGE' || 
+                                          debt.description === 'COMMON_EXPENSE' ||
+                                          debt.description === 'FIXED_CHARGE' ||
+                                          debt.description === 'INTEREST_LATE';else default_desc">{{'PAYMENT.TYPE_BILL_DEBT.' + debt.description | translate}}</ng-container>
+                    <ng-template #default_desc>{{ debt.description }}</ng-template>
+                  </td>
+                  <td class="col-3 text-right">{{debt.amount | numberFormat:{ type: 'currency'} }}</td>
+                  <td class="col-3 text-right">{{debt.balance | numberFormat:{ type: 'currency'} }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </accordion-group>
+      </accordion>
+    </div>
+
+    <div class="col-5">
+      <div class="card" *ngIf="last.length !== 0">
+        <div class="card-header">
+          <i class="fa fa-money"></i>
+          <strong>{{'PAYMENT.LAST_PAYMENT.TITLE' | translate}}</strong>
+        </div>
+        <div class="card-block">
+          <div class="row form-group">
+            <div class="col-4">{{'PAYMENT.LAST_PAYMENT.AMOUNT' | translate}}</div>
+            <div class="col-8">{{lastPayment.amount | numberFormat:{ type: 'currency'} }}</div>
+          </div>
+          <div class="row form-group">
+            <div class="col-4">{{'PAYMENT.LAST_PAYMENT.FOLIO' | translate}}</div>
+            <div class="col-8">{{lastPayment.folio}}</div>
+          </div>
+          <div class="row form-group">
+            <div class="col-4">{{'PAYMENT.LAST_PAYMENT.DATE' | translate}}</div>
+            <div class="col-8">{{lastPayment.date | date:'dd-MM-yyyy'}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-money"></i>
+          <strong>{{'PROPERTY.GENERAL.SINGULAR' | translate}}</strong>
+        </div>
+        <div class="card-block">
+          <div class="row form-group">
+            <div class="col-4">{{'PROPERTY.TABLE_HEADER.NAME' | translate}}</div>
+            <div class="col-8">{{property.name}}</div>
+          </div>
+          <div class="row form-group">
+            <div class="col-4">{{'PROPERTY.TABLE_HEADER.UNITS' | translate}}</div>
+            <div class="col-8">{{property.units.length}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-money"></i>
+          <strong>{{'DEBT.RESUME.TITLE' | translate}}</strong>
+        </div>
+        <div class="card-block">
+          <div class="row">
+            <div class="form-group col-12">
+              <label for="bank_account" class="text-bold">
+                {{'PAYMENT.FORM.INPUT_PAYMENT_BANK_ACCOUNT' | translate}}
+              </label>
+              <select class="form-control" id="bank_account" [(ngModel)]="paymentData.bank_account_id" (change)="bankAccountChange()" required>
+                <option [value]="bankAccount.id" *ngFor="let bankAccount of bankAccountCollection">{{bankAccount.bank.name}} {{bankAccount.bank_account_type.name}} {{bankAccount.code}}</option>
+              </select>
+            </div>
+            <div class="form-group col-6 z-index-2000">
+              <label for="payment_date" class="text-bold">{{'PAYMENT.FORM.INPUT_PAYMENT_DATE' | translate}}</label>
+              <!--
+              <input type="date" class="form-control text-right" id="payment_date" required
+                     [(ngModel)]="paymentData.date">
+              -->
+              <input id="payment_date" name="payment_date" type="text" class="form-control" (bsValueChange)="changeDateModel($event)" bsDatepicker
+                value="{{ paymentData.date | date:'dd-MM-yyyy' }}" [bsConfig]="bsConfig" />
+
+            </div>
+            <div class="form-group col-6">
+              <label for="payment_date" class="text-bold">{{'PAYMENT.FORM.INPUT_PAYMENT_FOLIO' | translate}}</label>
+              <input type="number" class="form-control text-right" id="payment_folio" required [(ngModel)]="paymentData.folio">
+            </div>
+            <div class="form-group col-12">
+              <label for="payment_date" class="text-bold">{{'PAYMENT.FORM.INPUT_PAYMENT_COMMENTS' | translate}}</label>
+              <textarea class="form-control" id="payment_comments" [(ngModel)]="paymentData.comments"></textarea>
+            </div>
+          </div>
+          <div class="form-group text-center">
+            <button class="btn btn-primary" (click)="newPaymentItem(); paymentModal.show()" [disabled]="paymentData.haveUniquePayment || (debtResume.balance > debtResume.debt && advance === false )  ">
+              <i class="fa fa-money"></i> {{'DEBT.RESUME.ADD_PAYMENT' | translate}}
+            </button>
+            <button class="btn btn-default" hidden>
+              <i class="fa fa-files-o"></i> {{'DEBT.RESUME.ADD_INI' | translate}}
+            </button>
+          </div>
+          <div class="row form-group">
+            <div class="col-8">
+              <label class="switch switch-default switch-info switch-sm" *ngIf="isImmediatePaySurcharge" style="margin-left:10px; margin-right:10px">
+                <input type="checkbox" class="switch-input" (click)="onChangeActivePositiveBalance()" [(ngModel)]="isEnablePositiveBalance"
+                  [disabled]="+positiveBalance.balance < 1" />
+                <span class="switch-label"></span>
+                <span class="switch-handle"></span>
+              </label>
+              <a class="btn btn-link text-success btn-sm" *ngIf="!isImmediatePaySurcharge">
+                <i class="fa fa-check"></i>
+              </a>
+              {{'DEBT.RESUME.POSITIVE_BALANCE' | translate}}
+
+            </div>
+            <div class="col-4 text-right">{{ positiveBalance.balance | numberFormat:{type: 'currency'} }}</div>
+          </div>
+          <div class="form-group">
+            <div class="row" *ngFor="let de of paymentData.debits">
+              <div class="col-8">
+                <button class="btn btn-link text-danger btn-sm" (click)="removeDebtItem(de)">
+                  <i class="fa fa-trash"></i>
+                </button>
+                <ng-container *ngIf="de.description === 'EXPENSE_SURCHARGE' || 
+                                    de.description === 'COMMON_EXPENSE' ||
+                                    de.description === 'FIXED_CHARGE' ||
+                                    de.description === 'INTEREST_LATE';else default_desc">{{'PAYMENT.TYPE_BILL_DEBT.' + de.description | translate}}</ng-container>
+                <ng-template #default_desc>{{ de.description }}</ng-template>
+              </div>
+              <div class="col-4 text-right">
+                <input class="form-control text-right" currencyMask [options]="maskNumberFormat.currency" (keyup)="updateDeposit($event, de)"
+                  [(ngModel)]="de.deposit">
+
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row" *ngFor="let pi of paymentData.credits">
+              <div class="col-8">
+                <button class="btn btn-link text-danger btn-sm" (click)="removePaymentItem(pi)">
+                  <i class="fa fa-trash"></i>
+                </button>
+                {{'WALLET.INCOME_TYPE.' + pi.wallet_income_type.slug | translate}} {{pi.payment_income_origin.name}} {{pi.payment_document_number}}
+              </div>
+              <div class="col-4 text-right">{{ pi.payment_amount | numberFormat:{type: 'currency'} }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div *ngIf="this.advance !== true " class="row form-group text-bold">
+            <div class="col-8">{{'GENERAL.TOTAL.DEBT' | translate}}</div>
+            <div class="col-4 text-right">{{ debtResume.debt | numberFormat:{type: 'currency'} }}</div>
+          </div>
+          <div class="row form-group text-bold">
+            <div class="col-8">{{'GENERAL.TOTAL.PAY' | translate}}</div>
+            <div class="col-4 text-right">{{ debtResume.pay | numberFormat:{type: 'currency'} }}</div>
+          </div>
+          <div class="row form-group text-bold text-danger" *ngIf="(debtResume.pay - debtResume.debt) < 0">
+            <div class="col-8">{{'GENERAL.TOTAL.REMAIN' | translate}}</div>
+            <div class="col-4 text-right">{{ debtResume.balance | numberFormat:{type: 'currency'} }}</div>
+          </div>
+          <div class="row form-group text-bold text-success" *ngIf="(debtResume.pay - debtResume.debt) > 0">
+            <div class="col-8">{{'GENERAL.TOTAL.BALANCE' | translate}}</div>
+            <div class="col-4 text-right">{{ debtResume.balance | numberFormat:{type: 'currency'} }}</div>
+          </div>
+        </div>
+        <div class="card-block text-center">
+          <button class="btn btn-success" (click)="paymentResumeModal.show()" [disabled]="!paymentData.bank_account_id || (debtResume.pay - debtResume.debt) < 0 || debtResume.pay === 0 || (paymentData.credits.length === 0 && paymentData.debits.length === 0 || (balance > debtResume.debt && paymentData.credits.length > 0 && advance === false && (isImmediatePaySurcharge && isEnablePositiveBalance)))">
+            <i class="fa fa-send"></i> {{'PAYMENT.FORM.EXECUTE' | translate}}
+          </button>
+          <button class="btn btn-danger" (click)="resetPayment();">
+            {{'GENERAL.CANCEL' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>
+
+<div bsModal #paymentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel">
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'DEBT.RESUME.ADD_PAYMENT' | translate}}</h5>
+      </div>
+      <div class="modal-body payment-modal-group income-type-{{incomeTypeSelected.slug.toLowerCase()}}">
+        <div class="row income-type-group">
+          <div class="form-group col-6">
+            <label for="wallet_income_type_id">{{'PAYMENT.FORM.WALLET_INCOME_TYPE' | translate}}</label>
+            <select class="form-control" id="wallet_income_type_id" name="wallet_income_type_id" [(ngModel)]="paymentItem.wallet_income_type_id"
+              (change)="incomeTypeChange()">
+              <option value="0" attr.slug="none">{{'GENERAL.SELECT' | translate}}</option>
+              <option *ngFor="let it of incomeTypesFiltered" value="{{it.id}}" attr.slug="{{it.slug}}">
+                {{'WALLET.INCOME_TYPE.' + it.slug | translate}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="row document-group">
+          <div class="form-group col-12 income-origin">
+            <label for="wallet_income_origin_id">{{'PAYMENT.FORM.PAYMENT_INCOME_ORIGIN' | translate}}</label>
+            <select class="form-control" id="wallet_income_origin_id" name="wallet_income_origin_id" [(ngModel)]="paymentItem.payment_income_origin_id"
+              (change)="bankChange()">
+              <option value="0" attr.slug="none">{{'GENERAL.SELECT' | translate}}</option>
+              <option *ngFor="let bank of banks" value="{{bank.id}}">
+                {{bank.name}}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-6 income-date ">
+            <label for="payment_document_date">{{'PAYMENT.FORM.INPUT_PAYMENT_DATE' | translate}}</label>
+            <!--
+            <input type="date" class="form-control text-right" id="payment_document_date"
+                   [(ngModel)]="paymentItem.payment_document_date">
+            -->
+            <input id="payment_document_date" type="text" [(ngModel)]="paymentItem.payment_document_date" value="{{ paymentItem.payment_document_datedate | date:'dd-MM-yyyy' }}"
+              class="form-control" bsDatepicker [bsConfig]="bsConfig">
+          </div>
+          <div class="form-group col-6 income-document">
+            <label for="payment_document_number">{{'PAYMENT.FORM.INPUT_PAYMENT_CHECK_NUMBER' | translate}}</label>
+            <input class="form-control" id="payment_document_number" [(ngModel)]="paymentItem.payment_document_number">
+          </div>
+        </div>
+        <div class="form-group amount-group">
+          <label for="payment_amount">{{'PAYMENT.FORM.INPUT_PAYMENT_AMOUNT' | translate}}</label>
+          <input class="form-control text-right" id="payment_amount" placeholder="0" [(ngModel)]="paymentItem.payment_amount" currencyMask
+            [options]="maskNumberFormat.currency">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="newPaymentItem(); paymentModal.hide()">
+          {{'GENERAL.CANCEL' | translate}}
+        </button>
+        <button type="button" class="btn btn-success" [disabled]="(+paymentItem.wallet_income_type_id === 0 || +paymentItem.payment_amount === 0 || paymentItem.payment_amount === null)"
+          (click)="addPaymentItem(); paymentModal.hide();">
+          <i class="fa fa-check"></i> {{'DEBT.RESUME.ADD_PAYMENT' | translate}}
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div bsModal #paymentResumeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="paymentResumeModalLabel">
+  <div class="modal-dialog modal-info modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'PAYMENT.FORM.RESUME' | translate}}</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row mb20">
+          <div class="col-4">
+            <span class="text-bold">{{"PAYMENT.FORM.INPUT_PAYMENT_FOLIO" | translate}}: </span>{{paymentData.folio}}
+          </div>
+          <div class="col-8">
+            <span class="text-bold">{{"PAYMENT.FORM.INPUT_PAYMENT_BANK_ACCOUNT" | translate}}: </span>{{paymentData.bank_account.bank.name}} {{paymentData.bank_account.bank_account_type.name}}
+            {{paymentData.bank_account.code}}
+          </div>
+          <div class="col-4">
+            <span class="text-bold">{{"PAYMENT.FORM.INPUT_PAYMENT_DATE" | translate}}: </span>{{paymentData.date | date:'dd-MM-yyyy' }}
+          </div>
+          <div class="col-8">
+            <span class="text-bold">{{"PAYMENT.FORM.INPUT_PAYMENT_COMMENTS" | translate}}: </span>{{paymentData.comments}}
+          </div>
+        </div>
+        <div class="row m0 bg-primary text-uppercase text-bold pt10 pb10 br0">
+          <div class="col-6">{{"ACCOUNTING.GENERAL.CONCEPT" | translate}}</div>
+          <div class="col-3 text-right">{{"ACCOUNTING.GENERAL.DEBIT" | translate}}</div>
+          <div class="col-3 text-right">{{"ACCOUNTING.GENERAL.CREDIT" | translate}}</div>
+        </div>
+        <div class="table">
+          <div class="row m0 tr" *ngFor="let debit of paymentData.debits">
+            <div class="col-6 td">
+              <div class="row">
+                <ng-container *ngIf="debit.description === 'EXPENSE_SURCHARGE' || 
+                                      debit.description === 'COMMON_EXPENSE' ||
+                                      debit.description === 'FIXED_CHARGE' ||
+                                      debit.description === 'INTEREST_LATE';else default_desc">{{'PAYMENT.TYPE_BILL_DEBT.' + debit.description | translate}}</ng-container>
+                <ng-template #default_desc>{{ debit.description }}</ng-template>
+              </div>
+            </div>
+            <div class="col-3 td text-right">{{debit.deposit | numberFormat:{type: 'currency'} }}</div>
+            <div class="col-3 td text-right">{{ 0 | numberFormat:{type: 'currency'} }}</div>
+          </div>
+          <div class="row m0 tr" *ngFor="let credit of paymentData.credits">
+            <div class="col-6 td">{{'WALLET.INCOME_TYPE.' + credit.wallet_income_type.slug | translate}} {{credit.payment_income_origin.name}}
+              {{credit.payment_document_number}}
+            </div>
+            <div class="col-3 td text-right">{{ 0 | numberFormat:{type: 'currency'} }}</div>
+            <div class="col-3 td text-right">{{credit.payment_amount | numberFormat:{type: 'currency'} }}</div>
+          </div>
+          <div class="row m0 tr" *ngIf="positiveBalance.balance > 0 && isEnablePositiveBalance">
+            <div class="col-6 td">{{'DEBT.RESUME.POSITIVE_BALANCE' | translate}}</div>
+            <div class="col-3 td text-right">{{ 0 | numberFormat:{type: 'currency'} }}</div>
+            <div class="col-3 td text-right">{{positiveBalance.balance | numberFormat:{type: 'currency'} }}</div>
+          </div>
+          <div class="row m0 bg-inverse br0 pt5 pb5 text-right text-bold text-uppercase">
+            <div class="col-6">{{"GENERAL.TOTAL.PLURAL" | translate}}</div>
+            <div class="col-3">{{ debtResume.debt | numberFormat:{type: 'currency'} }}</div>
+            <div class="col-3">{{ debtResume.pay | numberFormat:{type: 'currency'} }}</div>
+          </div>
+          <div class="row m0 bg-inverse br0 pt5 pb5 text-right text-bold text-uppercase">
+            <div class="col-6">{{"ACCOUNTING.GENERAL.BALANCE" | translate}}</div>
+            <div class="col-6">{{ debtResume.balance | numberFormat:{type: 'currency'} }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="paymentResumeModal.hide()">
+          {{'GENERAL.BACK' | translate}}
+        </button>
+        <button type="button" class="btn btn-success" (click)="createPayment(); paymentResumeModal.hide()">
+          <i class="fa fa-send"></i> {{'PAYMENT.FORM.EXECUTE' | translate}}
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

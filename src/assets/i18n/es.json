@@ -1,0 +1,1280 @@
+{
+  "MODULE": {
+    "SECTION": "ITEM EXAMPLE"
+  },
+  "GENERAL": {
+    "ALL": "Todos",
+    "CLOSE": "Cerrar",
+    "CONFIRM": "Confirmar",
+    "BACK": "Volver",
+    "TRY_BACK": "Intentar nuevamente",
+    "SAVE_CHANGES": "Guardar los cambios",
+    "SAVE": "Guardar",
+    "CANCEL": "Cancelar",
+    "CONFIRMATION_TITLE": "Confirmación",
+    "INFORMATION_TITLE": "Información",
+    "ERROR_TITLE": "Error",
+    "SUCCESS_TITLE": "Éxito",
+    "SUCCESS_MESSAGE": "Los datos fueron guardados con éxito",
+    "ACCEPT_CHANGES": "Aceptar los cambios",
+    "CANCEL_CHANGES": "Cancelar los cambios",
+    "PROCESSING": "Procesando, por favor espere...",
+    "PROCESS_START": "Se están procesando los cambios solicitados, finalizará en breves momentos",
+    "CONFIRMATION_DELETE_TEXT": "¿Está seguro que desea eliminar este registro?",
+    "PLEASE_WAIT": "Por favor espere",
+    "DELETE": "Eliminar",
+    "ADD": "Nuevo",
+    "PRINT": "Imprimir",
+    "IMPORT_FILE": "Importar archivo",
+    "SELECT": "Seleccione",
+    "DESCRIPTION": "Descripción",
+    "AMOUNT": "Monto",
+    "TOTAL_AMOUNT": "Monto total",
+    "BALANCE": "Saldo",
+    "TOTAL": {
+      "SINGULAR": "Total",
+      "PLURAL": "Totales",
+      "PAY": "Total de pagos",
+      "BALANCE": "Saldo a favor",
+      "REMAIN": "Saldo restante por pagar",
+      "DEBT": "Deuda total"
+    },
+    "YEAR": "Año",
+    "MONTH": "Mes",
+    "DAY": "Dia",
+    "YES": "Si",
+    "NOT": "No",
+    "NOTIFICATION": {
+      "UNKNOWN_ERROR": "Lo siento, algo ha salido mal",
+      "SUCCESS": "Se ha guardado correctamente",
+      "DELETE": "Se ha eliminado correctamente",
+      "MODIFICATION": "Se ha modificado correctamente",
+      "WARNING": "",
+      "ERROR": "",
+      "INFO": "",
+      "PRIMARY": "",
+      "CANCELLED": "Se ha cancelado la operación"
+    },
+    "SEARCH": {
+      "SEARCH_BY_NAME": "Buscar por nombre",
+      "SEARCH": "Buscar"
+    },
+    "MONTHS": {
+      "JANUARY": "Enero",
+      "FEBRUARY": "Febrero",
+      "MARCH": "Marzo",
+      "APRIL": "Abril",
+      "MAY": "Mayo",
+      "JUNE": "Junio",
+      "JULY": "Julio",
+      "AUGUST": "Agosto",
+      "SEPTEMBER": "Septiembre",
+      "OCTOBER": "Octubre",
+      "NOVEMBER": "Noviembre",
+      "DECEMBER": "Diciembre"
+    },
+    "UPLOAD_CONTROL": {
+      "IMPORT": {
+        "IMPORT_TEXT": "Importar Recargos",
+        "DOWNLOAD_IMPORT": "Descargar archivo",
+        "GENERATE_TEMPLATE": "Generar archivo",
+        "UPLOAD_FILE": "Subir archivo",
+        "VALID_EXTENSIONS": "Solo se permiten archivos con extensión .xlsx",
+        "IMPORT_FILE": "Archivo",
+        "LAST_IMPORT_STATUS_TITLE": "Última carga de archivo:",
+        "LAST_IMPORT_SUCCESS_TITLE": "La última carga de archivo se ha realizado correctamente",
+        "GENERATE_TEMPLATE_DESCRIPTION": "Este archivo en formato Excel le permitirá ingresar los saldos iniciales para su comunidad"
+      },
+      "IMPORT_SUCCESS": {
+        "UPLOAD_RESULTS": "Resultados de la importación del archivo"
+      },
+      "IMPORT_SUBMIT": {
+        "CONFIRMATION_TEXT": "¿Está seguro que desea guardar esta información?",
+        "CANCELLATION_TEXT": "Si cancela los cambios, tendrá que volver a importar el archivo."
+      },
+      "IMPORT_ERRORS": {
+        "UPLOAD_ERROR_RESULTS": "Errores encontrados en la importación del archivo"
+      }
+    }
+  },
+  "HOME": "Inicio",
+  "DASHBOARD": "Escritorio",
+  "ACCOUNTING": {
+    "GENERAL": {
+      "CONCEPT": "Concepto",
+      "DEBIT": "Debe",
+      "CREDIT": "Haber",
+      "BALANCE": "Saldo"
+    }
+  },
+  "IMPORT_LOG": {
+    "TABLE_HEADER": {
+      "DATE": "Fecha",
+      "TOTAL_PROPERTIES": "Total de inmuebles",
+      "TOTAL_UNITS": "Total de unidades",
+      "TOTAL_FACTOR": "Factor de prorrateo Total",
+      "TOTAL_INITIAL_BALANCE_DEBTS": "Total de deudas",
+      "TOTAL_INITIAL_BALANCE_CREDITS": "Total saldo a favor"
+    }
+  },
+  "SURCHARGE": {
+    "GENERAL": {
+      "SINGULAR": "Cobro exclusivo",
+      "PLURAL": "Cobros exclusivos",
+      "NOCATEGORY": "No existen categorías creadas.",
+      "YES": "Si",
+      "NOT": "No"
+    },
+    "SURCHARGE_DELETE": {
+      "CONFIRMATION_DELETE_TEXT": "¿Está seguro de eliminar el cobro exclusivo {{id}} del inmueble {{name}} con un monto de {{monto}}?",
+      "PROPERTY_NAME": "Inmueble",
+      "PROPERTY_AMOUNT": "Monto",
+      "PROPERTY_DESCRIPTION": "Descripción",
+      "PROPERTY_PERIOD": "Periodo",
+      "PROPERTY_CATEGORY": "Categoría"
+    },
+    "EXPENSE_SURCHARGE": "Gasto - Cobro exclusivo",
+    "TABLE_HEADER": {
+      "CREATED_AT": "Fecha",
+      "PERIOD": "Período",
+      "MOUNT": "Monto",
+      "CATEGORY": "Categoría",
+      "DESCRIPTION": "Descripción",
+      "TYPE": "Tipo",
+      "PROPERTY_NAME": "Nombre inmueble"
+    },
+    "IMPORT": {
+      "IMPORT_TEXT": "Importar cobros exclusivos",
+      "DOWNLOAD_IMPORT": "Descargar archivo",
+      "GENERATE_TEMPLATE": "Generar archivo",
+      "UPLOAD_FILE": "Subir archivo",
+      "VALID_EXTENSIONS": "Solo se permiten archivos con extensión .xlsx",
+      "IMPORT_FILE": "Archivo",
+      "LAST_IMPORT_STATUS_TITLE": "Última carga de archivo:",
+      "LAST_IMPORT_SUCCESS_TITLE": "La última carga de archivo se ha realizado correctamente",
+      "GENERATE_TEMPLATE_DESCRIPTION": "Este archivo en formato Excel le permitirá ingresar los saldos iniciales para su comunidad",
+      "FORM": {
+        "TITLE": "Datos de cobro exclusivo",
+        "LABEL_CATEGORY": "Categoría",
+        "LABEL_TYPE": "Tipo",
+        "LABEL_DESCRIPTION": "Descripción",
+        "LABEL_FUND": "Fondo",
+        "LABEL_RECURRENT": "Recurrente",
+        "LABEL_PERIOD": "Periodo de cobro",
+        "LABEL_AMOUNT": "Monto",
+        "SELECT_FUND": "Seleccionar Fondo...",
+        "SELECT_TYPE": "Seleccionar Tipo Recargo...",
+        "SELECT_CATEGORY": "Seleccionar Categoría...",
+        "SELECT_PERIOD": "Seleccionar Periodo...",
+        "PLACEHOLDERS": {
+          "SELECT_CATEGORY": "Seleccionar categoría",
+          "SELECT_FUND": "Seleccionar Fondo",
+          "SELECT_PERIOD_PAYMENT": "Seleccionar período de cobro",
+          "SELECT_TYPE": "Seleccionar tipo de cobro exclusivo",
+          "DESCRIPTION": "Seleccionar descripción"
+        }
+      }
+    },
+    "IMPORT_SUCCESS": {
+      "UPLOAD_RESULTS": "Resultados de la importación del archivo"
+    },
+    "IMPORT_SUBMIT": {
+      "CONFIRMATION_TEXT": "¿Está seguro que desea guardar esta información?",
+      "CANCELLATION_TEXT": "Si cancela los cambios, tendrá que volver a importar el archivo."
+    },
+    "IMPORT_ERRORS": {
+      "LINE": "Líneas",
+      "ERROR_TITLE": "Error en importación",
+      "UPLOAD_ERROR_RESULTS": "Errores encontrados en la importación del archivo",
+      "ERROR_SURCHARGE_NOT_NUMBER": "Error de formato",
+      "ERROR_PROPERTY_NOT_EXIST": "Error, no existe inmueble"
+    },
+    "CATEGORY_SURCHARGE": {
+      "GENERAL": {
+        "SINGULAR": "Categoría de cobro exclusivo",
+        "PLURAL": "Categorías de cobros exclusivos"
+      },
+      "TABLE_HEADER": {
+        "CREATED_AT": "Fecha",
+        "NAME": "Nombre"
+      },
+      "NEW_CATEGORY_SURCHARGE": "Nueva categoría",
+      "CREATE_CATEGORY_SURCHARGE": "Crear nueva categoría de cobro exclusivo",
+      "NEW_CATEGORY_SURCHARGE_SHORT": "Nueva categoría de cobro exclusivo",
+      "CREATE_CATEGORY_SURCHARGE_SUCCESS": "Categoría creada exitosamente",
+      "CREATE_CATEGORY_SURCHARGE_ERROR": "Error al crear nueva categoría",
+      "DELETE_CATEGORY_SURCHARGE_SUCCESS": "Categoria borrada exitosamente",
+      "DELETE_CATEGORY_SURCHARGE_ERROR": "Error al borrar categoría",
+      "MODAL": {
+        "CONFIRMATION_TITLE": "Confirmación de eliminación",
+        "DELETE": {
+          "CONFIRMATION_TEXT": "¿Está seguro de eliminar la categoría {{value}} ?"
+        }
+      }
+    },
+    "CATEGORY_IMPORT": {
+      "GENERAL": {
+        "SINGULAR": "Importar cobros exclusivos"
+      }
+    },
+    "LIST_IMPORT": {
+      "INMUEBLE": "Inmueble",
+      "AMOUNT": "Monto"
+    },
+    "CATEGORY_LIST": {
+      "GENERAL": {
+        "SINGULAR": "Listar cobros exclusivos"
+      }
+    }
+  },
+  "INITIAL_BALANCE": {
+    "GENERAL": {
+      "SINGULAR": "Saldos iniciales",
+      "PLURAL": "Saldos iniciales"
+    },
+    "IMPORT": {
+      "IMPORT_TEXT": "Importar saldos iniciales",
+      "DOWNLOAD_IMPORT": "Descargar archivo",
+      "GENERATE_TEMPLATE": "Generar archivo",
+      "UPLOAD_FILE": "Subir archivo",
+      "VALID_EXTENSIONS": "Solo se permiten archivos con extensión .xlsx",
+      "IMPORT_FILE": "Archivo",
+      "LAST_IMPORT_STATUS_TITLE": "Última carga de archivo:",
+      "LAST_IMPORT_SUCCESS_TITLE": "La última carga de archivo se ha realizado correctamente",
+      "GENERATE_TEMPLATE_DESCRIPTION": "Este archivo en formato Excel le permitirá ingresar los saldos iniciales para su comunidad"
+    },
+    "IMPORT_SUCCESS": {
+      "UPLOAD_RESULTS": "Resultados de la importación del archivo"
+    },
+    "TABLE_HEADER_IMPORT_SUCCESS": {
+      "DEBT_CONCEPT": "Concepto",
+      "NAME": "Nombre",
+      "AMOUNT": "Monto"
+    },
+    "IMPORT_SUBMIT": {
+      "CONFIRMATION_TEXT": "¿Está seguro que desea guardar esta información?",
+      "CANCELLATION_TEXT": "Si cancela los cambios, tendrá que volver a importar el archivo."
+    },
+    "IMPORT_ERRORS": {
+      "UPLOAD_ERROR_RESULTS": "Errores encontrados en la importación del archivo"
+    }
+  },
+  "COMMON_EXPENSE": {
+    "GENERAL": {
+      "SINGULAR": "Informe gasto común",
+      "PLURAL": "Informes gasto común",
+      "CLOSE_COMMON_EXPENSE": "Cerrar gasto común"
+    },
+    "TOTALS": {
+      "TOTAL_BY_SECTOR": "Total por sector",
+      "COMMUNITY_TOTAL": "Total gasto común comunidad"
+    },
+    "EXPENSE_DETAIL": {
+      "SUPPLIER": "Proveedor",
+      "DOC_NUMBER": "Nº doc.",
+      "DESCRIPTION": "Descripción",
+      "FEE": "Cuota"
+    },
+    "FUND_DETAIL": {
+      "FUND_TITLE": "Detalle de fondos",
+      "FUND": "Fondo",
+      "FUND_TOTAL": "Total fondo"
+    },
+    "VALIDATE": {
+      "SURCHARGE_DONT_PAY_TOTAL": "Existen recargos de pago inmediato que no han sido pagados",
+      "CONSUMER_SERVICE_NOT_EXPENSE_ASSOICATED": "Existen gastos asociados a servicios de consumo y no existen lecturas asignadas a dichos servicios",
+      "ACCOUNT_WITHOUT_EXPENSES": "Existen cuentas obligatorias que no tienen gastos asociados",
+      "READINGS_WITHOUT_EXPENSES": "Existen registros de lectura que no presentan un gasto asignado",
+      "PERIOD_CLOSED": "Período se encuentra cerrado"
+
+    },
+    "MODAL": {
+      "DATE_CLOUSURE_PREVIUS_PERIOD": "Fecha cierre periodo anterior",
+      "DATE_ISSUE": "Fecha Emisión",
+      "DATE_EXPIRATION": "Fecha Vencimiento",
+      "CONSUMER_SERVICE_NOT_EXPENSE_ASSOICATED": "Existen gastos asociados a servicios de consumo y no existen lecturas asignadas a dichos servicios",
+      "ACCOUNT_WITHOUT_EXPENSES": "Existen cuentas obligatorias que no tienen gastos asociados",
+      "READINGS_WITHOUT_EXPENSES": "Existen registros de lectura que no presentan un gasto asignado",
+      "BUTTON_CONTINUE_TEXT": "Continuar"
+    }
+  },
+  "COMMUNITY": {
+    "GENERAL": {
+      "SINGULAR": "Comunidad",
+      "PLURAL": "Comunidades"
+    },
+    "TABLE_HEADER": {
+      "CODE": "Código",
+      "NAME": "Nombre",
+      "ACTIONS": "Acciones",
+      "IDENTIFICATION_NUMBER": "RUT",
+      "ACTIVE": "ESTADO",
+      "UPDATE": "Importar comunidad"
+    },
+    "IMPORT": {
+      "IMPORT_TEXT": "Importar comunidad",
+      "DOWNLOAD_IMPORT": "Descargar archivo",
+      "GENERATE_TEMPLATE": "Descargar archivo",
+      "UPLOAD_FILE": "Subir archivo",
+      "VALID_EXTENSIONS": "Solo se permiten archivos con extensión .xlsx",
+      "IMPORT_FILE": "Archivo",
+      "LAST_IMPORT_STATUS_TITLE": "Última carga de archivo:",
+      "LAST_IMPORT_SUCCESS_TITLE": "La última carga de archivo se ha realizado correctamente",
+      "GENERATE_TEMPLATE_DESCRIPTION": "Este archivo en formato Excel le permitirá ingresar los datos para la carga de su comunidad"
+    },
+    "IMPORT_ERROR_TYPES": {
+      "ERROR": "Error",
+      "WARNING": "Alerta"
+    },
+    "IMPORT_VALIDATIONS": {
+      "NOT_UNIQUE_UNIT_NAME": "nombre de unidad ya existente",
+      "INVALID_PROPERTY_OWNER_EMAIL_ADDRESS": "formato de email no válido para el propietario",
+      "INVALID_DEBTOR_EMAIL_ADDRESS": "formato de email no válido para el responsable de la deuda",
+      "INVALID_PROPERTY_OWNER_DATE_ASSIGNMENT": "formato de fecha no válido para la asignación del propietario al inmueble",
+      "INVALID_UNIT_TO_PROPERTY_DATE_ASSIGNMENT": "formato de fecha no válido para la asignación de la unidad al inmueble",
+      "INVALID_UNIT_TYPE": "tipo de unidad desde la tabla unit_type",
+      "INVALID_UNIT_SQUARE_METER": "formato numérico no válido en el piso de la unidad",
+      "INVALID_UNIT_FLOOR": "formato numérico no válido en el piso de la unidad",
+      "WARNING_LIKE_UNIT_NAME": "nombres de unidad semejantes en la planilla",
+      "WARNING_LIKE_PROPERTY_NAME": "nombres de inmueble semejantes en la planilla"
+    },
+    "IMPORT_SUCCESS": {
+      "UPLOAD_RESULTS": "Resultados de la importación del archivo",
+      "TOTAL_PROPERTIES": "TOTAL INMUEBLES",
+      "TOTAL_UNITS": "TOTAL UNIDADES",
+      "TOTAL_FACTOR": "TOTAL FACTOR"
+    },
+    "IMPORT_ERRORS": {
+      "UPLOAD_ERROR_RESULTS": "Errores encontrados en la importación del archivo"
+    },
+    "IMPORT_SUBMIT": {
+      "CONFIRMATION_TEXT": "¿Está seguro que desea guardar esta información?",
+      "CANCELLATION_TEXT": "Si cancela los cambios, tendrá que volver a importar el archivo."
+    },
+    "IMPORT_SUBMIT_STATUS": {
+      "UPLOAD_LENGTH_ZERO": "El archivo no tiene registros",
+      "UPLOAD_CANCELLED": "La carga del archivo ha sido cancelada",
+      "UPLOAD_ID_NOT_FOUND": "No se encuentra la carga del archivo",
+      "UPLOAD_ERROR": "Ha sucedido un error en la carga del archivo",
+      "UPLOAD_FILE_ERROR": "Ha sucedido un error en la carga del archivo",
+      "UPLOAD_PROCESSED": "El archivo se ha cargado correctamente",
+      "COMMUNITY_NOT_FOUND": "No se encuentra la comunidad",
+      "INVALID_EMAIL_CONFIRMATION": "La confirmación por correo no se pudo ejecutar"
+    },
+    "TABLE_HEADER_IMPORT_SUCCESS": {
+      "IMPORT_TEXT": "Importar propiedades",
+      "PROPERTY_NAME": "Nombre inmueble",
+      "UNIT_LENGTH": "Unidades",
+      "UNIT_NAME": "Unidad",
+      "UNIT_MT2": "mt2",
+      "UNIT_FLOOR": "Piso",
+      "UNIT_FACTOR": "Factor",
+      "UNIT_TYPE_NAME": "Tipo unidad",
+      "EMAIL": "Correo electrónico",
+      "NAME": "Nombres y apellidos"
+    },
+    "TABLE_HEADER_IMPORT_ERRORS": {
+      "POSITION": "Fila Columna",
+      "PROPERTY_NAME": "Inmueble",
+      "UNIT_NAME": "Unidad",
+      "MESSAGE": "Mensaje",
+      "ERROR_TYPE": "Tipo de error",
+      "ERROR_CODE": "Código de error",
+      "POSSIBLE_VALUES": "Valores posibles"
+    }
+  },
+  "COMMUNITY-UNITS": {
+    "GENERAL": {
+      "SINGULAR": "Comunidad",
+      "PLURAL": "Comunidad",
+      "LIST": "Listar unidades",
+      "DETAIL": {
+        "TITLE": "Listado de unidades",
+        "TABLE_HEADER": {
+          "TYPE": "Tipo",
+          "NAME": "Nombre",
+          "FACTOR": "Factor prorrateo",
+          "PROPERTY": "Inmueble",
+          "OWNER": "Propietario",
+          "TOOLS": "Herramientas"
+        },
+        "BUTTONS": {
+          "EDIT_UNIT": "Editar Unidad",
+          "DELETE_UNIT": "Borrar Unidad",
+          "EDIT_OWNER": "Editar Propietario",
+          "ADD_OWNER": "Agregar Propietario",
+          "CHANGE_OWNER": "Cambiar Propietario"
+        },
+        "CONFIRMATION_DELETE_TEXT": "¿Está seguro que desea eliminar la unidad {{value}}?",
+        "MESSAGE_WITHOUT_UNITS": "No existen unidades en el condominio"
+      },
+      "MESSAGE_SUCCESS_UNIT_ASSIGMENT": "Unidad asigada exitosamente"
+    }
+  },
+  "PROPERTIES": {
+    "TOTAL": {
+      "COUNT": "Total de inmuebles",
+      "DEBT": "Deuda total del inmueble"
+    }
+  },
+  "PROPERTY": {
+    "GENERAL": {
+      "SINGULAR": "Inmueble",
+      "PLURAL": "Inmuebles",
+      "ASSIGNMENT_UNITS": "Asignar unidades",
+      "LIST": "Listar inmuebles"
+    },
+    "BUTTONS": {
+      "NEW_UNIT": "Crear unidad"
+    },
+    "TABLE_HEADER": {
+      "NAME": "Nombre",
+      "CODE": "Código",
+      "UNITS": "Unidades",
+      "USER": "Usuario",
+      "FACTOR": "Factor",
+      "TOOLS": "Herramientas",
+      "PROPERTY_DONT_EXIST": "No hay inmuebles disponibles"
+    },
+    "ACTIONS_MODAL": {
+      "FIND": "Buscar inmueble",
+      "TITLE": "¿Qué deseas hacer con éste inmueble?",
+      "GET_BILLS": "Ingresos operacionales",
+      "ADD_UNIT": "Crear unidad",
+      "ADVANCES": "Abonos",
+      "DELETE": "Eliminar inmueble",
+      "OTHERS": "Otras acciones",
+      "UNIT_NOT_SELECTED": "Debes seleccionar almenos una unidad",
+      "ASSIGN": "Asignar"
+    },
+    "CREATE_UNIT_MODAL": {
+      "TITLE": "Crear unidad",
+      "DESCRIPTION": "Inmueble ",
+      "FORM": {
+        "LABEL_NAME": "Nombre",
+        "LABEL_FLOOR": "Piso",
+        "LABEL_AREA": "Superficie(m2)",
+        "LABEL_FACTOR": "Factor %",
+        "LABEL_TYPE": "Tipo Unidad",
+        "SELECT_UNIT_TYPE": "Seleccione Tipo",
+        "PLACEHOLDERS": {
+          "NAME": "Ingrese nombre",
+          "FLOOR": "Ingrese piso",
+          "AREA": "Ingrese m2",
+          "FACTOR": "Ingrese Factor"
+        }
+      }
+    },
+    "CREATE": {
+      "ERRORS": {
+        "UNIT_EXIST": "Unidad ya existe"
+      },
+      "SUCCESS": "La unidad ha sido creada y asignada"
+    },
+    "DELETE": {
+      "CONFIRMATION_TEXT": "¿Está seguro que desea eliminar el inmueble {{value}}?",
+      "ERRORS": {
+        "ERROR_PROPERTY_WITH_RELATED_UNITS": "El inmueble tiene unidades relacionadas. Elimine o reasigne las unidades y vuelva a intentarlo.",
+        "ERROR_PROPERTY_WITH_BILLS": "El inmueble tiene notas de cobro asociadas, por lo tanto, no se puede eliminar."
+      },
+      "SUCCESS": "El inmueble ha sido eliminado exitosamente."
+    },
+    "DRAG": "DRAG"
+  },
+  "BILL": {
+    "GENERAL": {
+      "SINGULAR": "Nota de cobro",
+      "PLURAL": "Notas de cobro"
+    }
+  },
+  "DEBT": {
+    "RESUME": {
+      "SUBTOTAL": "Subtotal de deudas",
+      "POSITIVE_BALANCE": "Saldo a favor",
+      "ADD_PAYMENT": "Agregar pago",
+      "ADD_INI": "Agregar ingreso no identificado",
+      "TITLE": "Pago de deuda"
+    },
+    "TYPE": {
+      "GASTO_COMUN": "Gasto Común",
+      "FONDO": "Fondo",
+      "SERVICIO_DE_CONSUMO_INDIVIDUAL": "Servicio de consumo individual",
+      "MULTA_POR_MORA": "Multa por mora",
+      "INTERES_POR_MORA": "Interés por mora",
+      "RECARGO_POR_MORA": "Recargo por mora"
+    }
+  },
+  "PAYMENT": {
+    "GENERAL": {
+      "SINGULAR": "Ingreso operacional",
+      "PLURAL": "Ingresos operacionales"
+    },
+    "PAYMENT_ADVANCE": {
+      "SINGULAR": "Abono",
+      "PLURAL": "Abonos"
+    },
+    "TOOLTIP": {
+      "FOLIOS": "El pago no puede ser eliminado porque el saldo a favor generado esta siendo usado por pagos con los siguientes folios ",
+      "ISRECONCILED": "El pago no puede ser eliminado porque se encuentra conciliado."
+    },
+    "FORM": {
+      "CREATE_TITLE": "Crear ingreso operacional",
+      "ADD": "Agregar pago",
+      "ADD_ADVANCE": "Agregar abono",
+      "PAYMENT_TYPE": "Tipo de pago",
+      "PAYMENT_INCOME_ORIGIN": "Banco",
+      "WALLET_INCOME_TYPE": "Seleccione el tipo de pago",
+      "INPUT_PAYMENT_AMOUNT": "Monto",
+      "INPUT_PAYMENT_DATE": "Fecha",
+      "INPUT_PAYMENT_FOLIO": "Folio",
+      "INPUT_PAYMENT_COMMENTS": "Observaciones",
+      "INPUT_PAYMENT_CHECK_NUMBER": "Número de documento",
+      "INPUT_PAYMENT_BANK_ACCOUNT": "Cuenta bancaria de destino",
+      "EXECUTE": "Ejecutar el pago",
+      "RESUME": "Resumen de pago",
+      "NO_DEBT": "No tienes deudas por pagar para este inmueble",
+      "YES_DEBT": "El inmueble tiene deudas por pagar",
+      "ADVANCE_TITLE": "Crear abono",
+      "NO_ADVANCES": "No existen abonos"
+    },
+    "DELETE": {
+      "CONFIRM_DELETE": "¿Estás seguro de querer eliminar el pago asociado al inmueble {{property_name}} con el folio {{folio}}?",
+      "SUCCESS": "Pago eliminado con éxito."
+    },
+    "LAST_PAYMENT": {
+      "TITLE": "Último Pago",
+      "AMOUNT": "Monto",
+      "FOLIO": "Folio",
+      "DATE": "Fecha"
+    },
+    "NOTIFICATION": {
+      "PAYMENT_ASSOCIATED": "Cuenta bancaria tiene pagos asociados",
+      "CHECKBOOK_ASSOCIATED": "Cuenta bancaria tiene cheques asociados",
+      "FUND_ASSOCIATED": "Cuenta bancaria tiene fondos asociados",
+      "OUTCOME_ASSOCIATED": "Cuenta bancaria tiene egresos asociados"
+    },
+    "TYPE_BILL_DEBT": {
+      "COMMON_EXPENSE": "Gasto común",
+      "EXPENSE_SURCHARGE": "Gasto - Cobro exclusivo",
+      "FIXED_CHARGE": "Cargo fijo",
+      "INTEREST_LATE": "Interés por mora"
+    }
+  },
+  "FINANCIAL_STATE": {
+    "GENERAL": {
+      "SINGULAR": "Estado financiero",
+      "PLURAL": "Estados financieros",
+      "ACCOUNT_VIEW_DETAIL": "Detalle de cuentas sin movimientos",
+      "TOTAL": "Total"
+    },
+    "ACTIVES": {
+      "SINGULAR": "Activos",
+      "TOTAL_ACTIVES": "Total activos"
+    },
+    "PASIVES": {
+      "SINGULAR": "Pasivos",
+      "TOTAL_PASIVES": "Total pasivos"
+    }
+  },
+  "ITEMS": {
+    "GENERAL": {
+      "SINGULAR": "Item",
+      "PLURAL": "Items"
+    }
+  },
+  "UNITS": {
+    "GENERAL": {
+      "SINGULAR": "Unidad",
+      "PLURAL": "Unidades"
+    },
+    "TYPES": {
+      "DEPARTAMENTO": {
+        "SINGULAR": "Departamento",
+        "PLURAL": "Departamentos"
+      },
+      "BODEGA": {
+        "SINGULAR": "Bodega",
+        "PLURAL": "Bodegas"
+      },
+      "ESTACIONAMIENTO": {
+        "SINGULAR": "Estacionamiento",
+        "PLURAL": "Estacionamientos"
+      },
+      "CASA": {
+        "SINGULAR": "Casa",
+        "PLURAL": "Casas"
+      },
+      "PARCELA": {
+        "SINGULAR": "Parcela",
+        "PLURAL": "Parcelas"
+      },
+      "OFICINA": {
+        "SINGULAR": "Oficina",
+        "PLURAL": "Oficinas"
+      },
+      "LOCAL COMERCIAL": {
+        "SINGULAR": "Local Comercial",
+        "PLURAL": "Locales Comerciales"
+      },
+      "ESTACIONAMIENTO/BODEGA": {
+        "SINGULAR": "Estacionamiento/Bodega",
+        "PLURAL": "Estacionamientos/Bodegas"
+      }
+    }
+  },
+  "SECTOR": {
+    "GENERAL": {
+      "SINGULAR": "Sector",
+      "PLURAL": "Sectores",
+      "DEFAULT_SECTOR": "Sector general",
+      "SECTOR": "Sector",
+      "LIST": "Listar sectores",
+      "CREATE": "Crear sector"
+    },
+    "FORM": {
+      "NAME": "Nombre sector",
+      "MANUAL": "Manual",
+      "AUTOMATIC": "Automático",
+      "DETAIL_UNITS": "Detalle unidades",
+      "UNIT": "unid.",
+      "TABLE": {
+        "UNIT": "Unidad",
+        "FACTOR": "Factor",
+        "FACTOR_RECALCULATED": "Factor recalculado",
+        "MESSAGE_NOT_UNITS": "Debes asignar unidades!",
+        "MESSAGE_PERCENT_DIFFERENCE": "Se ha generado una diferencia de {{percent}} % <br>  ¿Qué deseas hacer?",
+        "BTN_AUTOMATIC": "Calcular automáticamente",
+        "CONTINUE": "Guardar en cuenta de ajuste"
+      }
+    },
+    "TABLE_HEADER": {
+      "SECTOR_NAME": "Nombre",
+      "UNITS": "Unidades",
+      "TOTAL_FACTOR": "Total Factor %",
+      "FACTOR": "Factor por unidades %"
+    }
+  },
+  "FUND": {
+    "GENERAL": {
+      "SINGULAR": "Fondo",
+      "PLURAL": "Fondos",
+      "LIST": "Listar fondos",
+      "CREATE": "Crear fondo",
+      "DATA": "Detalle fondo"
+    },
+    "FORM": {
+      "FUND_TITLE_CREATE": "Crear fondo",
+      "FUND_TITLE_EDIT": "Editar fondo",
+      "NAME_FUND": "Nombre",
+      "INITIAL_AMOUNT": "Saldo de apertura",
+      "INITIAL_DATE": "Fecha de apertura",
+      "BANK_ACCOUNT": "Cuenta bancaria",
+      "SELECT_BANK_ACCOUNT": "Seleccione cuenta bancaria",
+      "FUND_INCOME_TYPE": "Forma de recaudación",
+      "SELECT_FUND_INCOME_TYPE": "Seleccione forma de recaudación",
+      "SECTORS": "Sectores afectados",
+      "ACCOUNTIG_ACCOUNT": "Cuentas contables",
+      "SELECT_ACCOUNTIG_ACCOUNT": "Seleccione cuentas bancaria",
+      "AMOUNT": "Monto",
+      "PERCENT": "Porcentaje",
+      "ACTIVE": "Activo",
+      "MSG_SUCCESS": "¡Fondo creado exitosamente!",
+      "MSG_SUCCESS_EDIT": "¡Cambios guardados!",
+      "MSG_ERROR_GET": "¡Error al consultar por fondo!",
+      "MSG_ERROR": "¡Error al crear el fondo!",
+      "MSG_ERROR_EDIT": "¡Error al guardar cambios!",
+      "MSG_ALERT_PERCENT": "Porcentaje debe ser entre 1 y 100",
+      "MSG_ALERT_FUND_SELECTED": "Debe seleccionar al menos 1 sector",
+      "SAVE_FUND_BUTTON": "Guardar",
+      "PLACEHOLDERS": {
+        "FUND_NAME": "Nombre fondo",
+        "INITIAL_AMOUNT": "Saldo apertura",
+        "PERCENTAGE": "Porcentaje",
+        "AMOUNT": "Monto"
+      },
+      "MSG_DELETE_FUND": "¿Está seguro que desea eliminar fondo?"
+    },
+    "BTN": {
+      "NEW_FUND": "Nuevo fondo"
+    },
+    "TABLE": {
+      "NAME": "Nombre",
+      "DESCRIPTION": "Descripción",
+      "ACCOUNT": "Cuenta bancaria",
+      "FORM_COLLECTION": "Forma de recaudación",
+      "AMOUNT": "Monto Inicial",
+      "BALANCE": "Saldo teórico",
+      "STATE": "Estado",
+      "TOOLS": "Herramientas"
+    },
+    "TOOLS": {
+      "EDIT": "Editar fondo"
+    },
+    "VALIDATION": {
+      "BILL_DEBTS_ASSOCIATED": "Fondo tiene deudas asociadas",
+      "SURCHARGE_ASSOCIATED": "Fondo tiene recargos asociados"
+    }
+  },
+  "BANK": {
+    "GENERAL": {
+      "SINGULAR": "Banco",
+      "PLURAL": "Bancos",
+      "PLURAL_MAYUS": "BANCOS"
+    },
+    "TABLE_HEADER": {
+      "NAME": "Nombre",
+      "CREATION_DATE": "Fecha Creación",
+      "UPDATE_DATE": "Fecha Actualización",
+      "ACTIVE": "Estado"
+    }
+  },
+  "WALLET": {
+    "INCOME_TYPE": {
+      "CASH": "Efectivo",
+      "CHECK": "Cheque",
+      "TRANSFER": "Transferencia",
+      "DEPOSIT": "Depósito",
+      "CREDIT": "Nota de crédito"
+    }
+  },
+  "EXPENSE": {
+    "TOOLS": {
+      "UNASSIGN": "Desasignar",
+      "DOWNLOAD_DOC": "Descargar documento",
+      "EDIT": "Editar",
+      "DELETE": "Eliminar"
+    },
+    "GENERAL": {
+      "SINGULAR": "Gasto",
+      "PLURAL": "Gastos",
+      "NEW": {
+        "PLURAL": "Crear gastos",
+        "SINGULAR": "Crear gasto"
+      },
+      "ASSIGN_TITLE": {
+        "PLURAL": "Asignar gastos",
+        "SINGULAR": "Asignar gasto"
+      },
+      "ASSIGN_TITLE_PROPERTY": {
+        "PLURAL": "Asignar gastos a inmuebles",
+        "SINGULAR": "Asignar gasto a inmueble"
+      },
+      "ASSIGN": "Asignar gastos",
+      "ASSIGN_PROPERTY": "Asignar a inmuebles",
+      "EDIT": "Editar gasto",
+      "DELETE": "Eliminar gasto",
+      "DOWNLOAD": "Descargar gasto",
+      "LIST": "Listar gastos",
+      "ASSIGNMENT": "Asignar gasto",
+      "PLURAL_MAYUS": "Gastos",
+      "SELECT_EXPENSE_PERIOD": "Periodo",
+      "SELECT_EXPENSE_PROVIDER": "Proveedor",
+      "BTN_SAVE": "Guardar",
+      "BTN_ADD_EXPENSE": "Agregar Gasto",
+      "SELECT_ACCOUNT": "Asignar cuenta",
+      "SELECT_ACCOUNT_PLACEHOLDER": "Cuenta contable",
+      "SELECT_SUB_ACCOUNT": "Asignar sub-cuenta",
+      "SELECT_SUB_ACCOUNT_PLACEHOLDER": "Sub-cuenta contable",
+      "SELECT_PERIOD": "Periodo",
+      "SELECT_PERIOD_PLACEHOLDER": "Periodo",
+      "SELECT_PROVIDER": "Proveedor",
+      "SELECT_PROVIDER_PLACEHOLDER": "Proveedor",
+      "SELECT_ALL": "Todos",
+      "SELECT_NOT_ASSIGNED": "Sin asignar",
+      "NOTIFICATION": {
+        "SUCCESS": "Cambios Guardados",
+        "UNKNOWN_ERROR": "Lo siento, algo ha salido mal",
+        "ERROR_EXPENSE_ASSIGNED": "Gasto con asignaciones",
+        "ERROR_EXPENSE_OUTCOME": "Gasto con pagos realizados",
+        "ERROR_EXPENSE_UNASSIGNMENT": "Gasto sin poder ser desasignado",
+        "NO_EXPENSES": "No existen gastos"
+      }
+    },
+    "EXPENSES": {
+      "EXPENSE": "Gasto",
+      "DOCUMENT_NUMBER": "Nº",
+      "SELECT_TYPE_DOCUMENT": "Tipo",
+      "SELECT_TYPE_DOCUMENT_PLACE": "Tipo documento",
+      "SELECT_ASSIGMENTS_PLACE": "Asignación",
+      "SELECT_ASSIGMENTS": "Tipo asignación",
+      "SELECT_CREATION_DATE": "Emisión",
+      "INIT_DATE": "Desde",
+      "END_DATE": "Hasta",
+      "RANGE_DATE": "Desde - Hasta",
+      "AMOUNT": "Monto",
+      "DESCRIPTION": "Descrip.",
+      "DESCRIPTION_LARGE": "Descripción",
+      "ASSIGN": "Asignar",
+      "EXPENSE_DONT_EXIST": "No hay gastos disponibles"
+    },
+    "FEE": {
+      "SINGULAR": "Cuota",
+      "PLURAL": "Cuotas",
+      "PORCENT": "  %",
+      "MONEY": "Monto",
+      "OUT_OF_RANGE": "Campo cuota debe ser entre 1 y 60",
+      "FEES_PAID": "Nº de cuotas debe ser mayor a cantidad de cuotas bloquiadas",
+      "DUPLICATE_PERIOD_TITLE": "Perido duplicado",
+      "DUPLICATE_PERIOD_MESSAGE": "No pueden repetir los periodos."
+    },
+    "SECTOR": {
+      "SINGULAR": "Sector",
+      "PLURAL": "Sectores"
+    },
+    "ASSIGN": {
+      "SINGULAR": "Asignación",
+      "PLURAL": "Asignaciones",
+      "ASSIGN": "Asignar Gastos",
+      "TABLE": {
+        "HEAD": {
+          "DOCUMENT": "Documento",
+          "PROVIDER": "Proveedor",
+          "DESCRIPTION": "Descripción",
+          "AMOUNT": "Monto",
+          "BALANCE": "Saldo",
+          "ASSIGN": "Asignar"
+        }
+      },
+      "UNASSIGNMENT": "¿Está seguro que desea desasignar gasto {{value}} ?"
+    },
+    "EXPENSE_ASSIGNMENTS_PROPERTIES": {
+      "SELECT_METHODS": "Métodos cálculo recargo",
+      "SELECT_METHOD": "Método de cálculo",
+      "PROPERTY_DIVISION": "División entre inmuebles",
+      "PRORRATE": "Factor prorrateo recalculado",
+      "CATEGORY": "Categoría",
+      "ASSIGNED_AMOUNT": "Monto a asignar",
+      "NOTIFICATION": {
+        "WARNING": "Alerta",
+        "SUCCESS": "Cambios Guardados",
+        "ALERT_INFO_CHANGE_EXPENSE": "Al cambiar gasto, se perderan asignaciones realizadas a inmuebles  ¿Desea continuar?",
+        "AMOUNT_INVALID": "Suma asignaciones no debe ser mayor a monto de gasto",
+        "ERROR_EXPENSE_ASSIGNED": "Gasto con asignaciones",
+        "ERROR_EXPENSE_OUTCOME": "Gasto con pagos realizados",
+        "ERROR_EXPENSE_UNASSIGNMENT": "Gasto sin poder ser desasignado",
+        "ERROR_AMOUNT_NOT_MATCH": "Montos no coinciden",
+        "ERROR_AMOUNT_NaN": "Monto de gasto debe ser un número válido"
+      },
+      "ASSIGN_DIFFERENCE": "Asignar diferencia",
+      "ACCOUNT_DIFFERENCE": "Enviar a cuenta contable de ajuste o diferencias",
+      "FUND_DIFFERENCE": "Enviar a fondo",
+      "MANUAL_DIFFERENCE": "Solucionar manualmente",
+      "MESSAGE_DIFFERENCE": "Al asignar documento {{value}} se ha generado una diferencia de {{value2}} pesos, ¿Que desea hacer con esta diferencia? ",
+      "PROPERTY_ASSIGNMENTS": {
+        "TABLE_HEADER": {
+          "PROPERTY_NAME": "Inmueble",
+          "OWNER": "Propietario",
+          "FACTOR_PRORRATEO": "Factor prorrateo",
+          "FACTOR_PRORRATEO_RECALCULADO": "Recalculado",
+          "AMOUNT": "Monto",
+          "ASSIGN": "Asignar"
+        }
+      }
+    },
+    "CREATE": {
+      "CREATION_DATE": "Fecha emisión",
+      "EXPIRATION_DATE": "Fecha vencimiento",
+      "TABLE": {
+        "HEAD": {
+          "INIT_DATE": "Fecha emisión",
+          "PROVIDER": "Proveedor",
+          "DOCUMENT": "Documento",
+          "DESCRIPTION": "Descripción",
+          "ASSIGN": "Asignado",
+          "PORCENT": "Porcentaje",
+          "PERIOD": "Periodo",
+          "WAY_TO_PAY": "Forma de pago",
+          "PAYMENT_DOCUMENT": "Nº Cheque",
+          "NUMBER_OUT": "Folio egreso",
+          "AMOUNT": "Monto",
+          "TOOLS": "Herramientas"
+        }
+      }
+    },
+    "DELETE": {
+      "CONFIRMATION_TEXT": "¿Está seguro que desea eliminar gasto {{value}} ?"
+    },
+    "ASSIGNMENT_TYPES": {
+      "GASTO_COMUN": "Gasto Común",
+      "FONDO": "Fondo",
+      "CAJA_CHICA": "Caja chica",
+      "INMUEBLE": "Inmueble",
+      "SERVICIO_DE_CONSUMO": "Servicio de consumo"
+    }
+  },
+  "TRANSACTION": {
+    "GENERAL": {
+      "SINGULAR": "Transacción",
+      "PLURAL": "Transacciones"
+    }
+  },
+  "SETTINGS": {
+    "GENERAL": {
+      "SINGULAR": "Configuración",
+      "PLURAL": "Configuraciones"
+    },
+    "LATE_PAYMENT": {
+      "SINGULAR": "Interés por mora",
+      "PLURAL": "Intereses por mora",
+      "ERROR": {
+        "TITLE": "Error",
+        "NOTFUND": "Aún no existen fondos creados"
+      },
+      "FORM": {
+        "TITLE_PERIODICITY": "Periodicidad",
+        "TITLE_DEBT": "Tipo interés",
+        "INTEREST_RATE": {
+          "TITLE": "Tasa de interés",
+          "STATIC": "Fija",
+          "CONVENTIONAL_MAXIMUN": "Máximo convencional",
+          "MAXIMO_CONVENCIONAL": "Máximo convencional"
+        },
+        "TITLE_PORCENT": "Porcentaje",
+        "DEBT_TO_CONSIDER": {
+          "TITLE": "Deuda a considerar",
+          "ALL_DEBT_IN_ARREARS": "Toda la deuda en mora",
+          "SELECT_DEBT_CONCEPTS": "Seleccionar conceptos de deudas",
+          "CONCEPTO_DEUDA":"Por conceptos de deudas",
+          "TODA":"Toda la deuda en mora"
+        },
+        "TITLE_AFFECTION_FUND": "Fondo afecto",
+        "TITLE_DESCRIPTION": "Descripción",
+        "CREDIT": {
+          "TITLE": "Abono rebaja saldo capital",
+          "YES": "Si",
+          "NO": "No"
+        },
+        "BUTTON_SAVE": "Guardar"
+      },
+      "TABLE_LOGS": {
+        "HEADER": {
+          "PERIODICITY": "Periodicidad",
+          "INTEREST_TYPE": "Tipo interés",
+          "FUND_NAME": "Fondo",
+          "CAPITAL_REDUCTION": "Saldo capital",
+          "DESCRIPTION": "Descripción",
+          "CREATE": "Modificación",
+          "PORCENT": "Porcentaje",
+          "DELETE": "Eliminación"
+        }
+      },
+      "METADATA_FIELDS": {
+        "MULTA": "Multa",
+        "INTERES": "Interés",
+        "COMPUESTO": "Compuesto",
+        "SIMPLE": "Simple",
+        "CONCEPTO_DEUDA": "Concepto de deuda",
+        "DIARIO": "Diario",
+        "MENSUAL": "Mensual",
+        "TODA": "Toda la deuda",
+        "PORCENTAJE": "Porcentaje",
+        "MAXIMO_CONVENCIONAL": "Máximo convencional"
+      }
+    }
+  },
+  "ACCOUNTING_ACCOUNTS": {
+    "GENERAL": {
+      "SINGULAR": "Cuenta contable",
+      "PLURAL": "Cuentas contables"
+    },
+    "ACCOUNTING_ACCOUNTS_EXPENSE": {
+      "EXPENSE": "Cuentas contables de gasto"
+    },
+    "LIST_ACCOUNT": {
+      "HEADER": {
+        "CODE": "Código",
+        "NAME": "Nombre",
+        "NUMBER_OF_ACCOUNTS": "Subcuentas asociadas"
+      }
+    },
+    "MSG_ERROR": "No es posible editar la cuenta",
+    "ADD_ACCOUNT": "Agregar subcuenta",
+    "MSG_SUCCESS": "Subcuenta creada con éxito",
+    "NEW_ACCOUNT": {
+      "TITLE": "Nueva subcuenta",
+      "FORM": "Nombre de subcuenta",
+      "NEW": "Nuevo",
+      "EXIST_SUBACCOUNT": "¡Esta subcuenta ya existe! ¿Deseas agregarla?",
+      "EXIST_SUBACCOUNT_FORM": "¡Esta subcuenta ya existe!",
+      "EXITST_ACCOUNT": "¡El nombre de esta cuenta ya existe!"
+    },
+    "SECTORS": "Obligatorio en sectores:"
+  },
+  "CREDIT_NOTE": {
+    "GENERAL": {
+      "SINGULAR": "Nota de crédito",
+      "PLURAL": "Notas de crédito",
+      "MASSIVE": {
+        "SINGULAR": "Nota de crédito masiva",
+        "PLURAL": "Notas de crédito masivas"
+      }
+    },
+    "FILTERS": {
+      "PERIOD": "Período",
+      "CONCEPT": "Concepto deuda",
+      "ASSIGN_FUND": "Asignar a fondo"
+    },
+    "TABLE_HEADER": {
+      "PROPERTY_NAME": "Inmueble",
+      "PERIOD": "Período",
+      "NUMBER_BILL": "Nota cobro",
+      "CONCEPT_TYPE": "Concepto",
+      "AMOUNT": "Monto ",
+      "AMOUNT_CREDIT_NOTE": "Monto nota crédito ",
+      "STATE": "Estado",
+      "ASSIGN": "Seleccionar",
+      "FUND": "Fondo"
+    },
+    "LIST_STATE": {
+      "PAID": "Pagada",
+      "PENDING": "Vigente",
+      "PARTIAL": "Parcial"
+    },
+    "NOTIFICATION": {
+      "WARNING": "Alerta",
+      "AMOUNT_INVALID": "Monto nota de crédito, no puede ser mayor a monto nota de cobro!",
+      "NOT_BILLS": "Periodo sin notas de cobro...",
+      "SUCCESS_CREDIT_NOTE": "Notas de crédito guardadas",
+      "ERROR_CREDIT_NOTE": "Problemas al guardar la nota de crédito, vuelva a intentarlo más tarde"
+    }
+  },
+  "BANK_ACCOUNT": {
+    "GENERAL": {
+      "SINGULAR": "Cuenta bancaria",
+      "PLURAL": "Cuentas bancarias",
+      "CREATE": "Crear cuenta bancaria",
+      "MSG_DELETE": "¿Está seguro que desea eliminar la cuenta bancaria?",
+      "MSG_CHANGE_DEFAULT": "¿Está seguro que desea cambiar la cuenta por defecto?",
+      "CHANGE": "Cambiar"
+    },
+    "LIST": {
+      "PLURAL": "Listar cuentas bancarias"
+    },
+    "FORM_LABELS": {
+      "ACCOUNT_TYPE":"Tipo de cuenta",
+      "BANK":"Banco",
+      "NUM_ACCOUNT": "Nº de Cuenta",
+      "OPENING_BALANCE":"Saldo de Apertura",
+      "OPENING_DATE":"Fecha de Apertura",
+      "EJECUTIVE_NAME":"Nombre Ejecutivo",
+      "EJECUTIVE_EMAIL":"Email Ejecutivo",
+      "EJECUTIVE_PHONE":"Telefono Ejecutivo",
+      "DEFAULT_ACCOUNT":"Cuenta por defecto"
+    },
+    "CREATE": {
+      "SINGULAR": "Crear cuenta bancaria",
+      "PLURAL": "Crear cuentas bancarias"
+    },
+    "EDIT": {
+      "SINGULAR": "Editar cuenta bancaria"
+    },
+    "TABLE_HEADER": {
+      "INITIAL_DATE": "Fecha de apertura",
+      "ACCOUNT_TYPE": "Tipo de cuenta",
+      "INSTITUTION": "Institución",
+      "INITIAL_BALANCE": "Saldo de apertura",
+      "TOOLS": "Herramientas"
+    }
+  },
+  "CONSUMER_SERVICES": {
+    "GENERAL": {
+      "SINGULAR": "Servicio consumo",
+      "PLURAL": "Servicios de consumo",
+      "CONSUMER_SERVICES_FOR": "Servicios de consumo para"
+    },
+    "FORM": {
+      "TITLE": "Datos de Servicio de Consumo",
+      "TITLE_MONTHS": "Valor de m3/KW mensual",
+      "SERVICE_TITLE_CREATE": "Crear servicio de consumo",
+      "SERVICE_TITLE_EDIT": "Editar servicio de consumo",
+      "TITLE_UNIT_TYPES": "Tipo de unidades afectas",
+      "LABEL_NAME": "Nombre",
+      "LABEL_SELECT_ACCOUNT": "Cuenta de consumo",
+      "LABEL_SECTORS": "Sector",
+      "LABEL_MEASURE": "Unidad medición",
+      "LABEL_UNITS": "Unidades",
+      "LABEL_UNIT_PROPERTY": "Registro consumo afecto a",
+      "LABEL_CHARGE_SYSTEM": "Sistema de cobro",
+      "LABEL_CHARGE_AMOUNT": "Valor de m3/KW",
+      "PLACEHOLDERS": {
+        "NAME": "Nombre servicio",
+        "SELECT_ACCOUNT": "Seleccione cuenta",
+        "SELECT_SECTOR": "Seleccione sector",
+        "UNITS": "Seleccione unidad",
+        "UNIT_PROPERTY": "Tipo unidad afecta",
+        "CHARGE_SYSTEM": "Seleccione forma cargo",
+        "COST_BYMONTH": "Costo mensual",
+        "AMOUNT": "Costo"
+      },
+      "FIELDS": {
+        "UNIT": "Unidad",
+        "PROPERTY": "Inmueble",
+        "DISTRIBUTION": "Distribución de consumo m3/KW",
+        "MONTHLY_VARIABLE": "Valor de m3/KW mensual variable",
+        "MONTHLY_FIXED": "Valor de m3/KW fijo mensual",
+        "MANUAL": "Cálculo manual",
+        "M3": "m3",
+        "KW": "KW"
+      },
+      "SAVE_BUTTON": "Guardar"
+    },
+    "DISTRIBUTION_CONSUMPTION": {
+      "SINGULAR": "Distribución consumo",
+      "PLURAL": "Distribuciones de consumo",
+      "MESSAGE_SUPPLIER": "Debe seleccionar proveedor"
+    },
+    "ASSIGN_EXPENSES_TO_DISTRIBUTION": {
+      "SINGULAR": "Asignar gasto a distribución",
+      "PLURAL": "Asignar gastos a distribución",
+      "SELECT_SECTOR": "Sector",
+      "SELECT_PERIOD": "Periodo",
+      "DETAIL_EXPENSE": "Detalle asignación",
+      "SELECT_EXPENSES": "Seleccionar gasto a asignar",
+      "SELECT_EXPENSE": "Debes seleccionar gasto.",
+      "NOT_EXPENSES": "Proveedor sin gastos!.",
+      "NOT_CONSUMER_SERVICES": "No existen distribuciones."
+    },
+    "RECORD_READING": {
+      "TABLE_EXPENSE": {
+        "TITLE": "Gastos Asociados",
+        "DOCUMENT": "Documento",
+        "DESC": "Descripción",
+        "PERCENT": "Pocentaje",
+        "AMOUNT": "Monto",
+        "TOTAL_EXPENSE": "Total Gastos",
+        "TOTAL_ASIGNED": "Total Asignado"
+      },
+      "ERROR": {
+        "NOT_SERVICE": "El sector seleccionado no tiene servicios de consumo asociado..",
+        "ASSIGNED_AMOUNT": "El total del monto asignado no puede ser mayor al monto total de los gastos.",
+        "VALUE": "El valor de la lectura anterior no puede ser mayor al valor de la lectura actual.",
+        "NO_EXPENSE": "El servicio tiene un sistema de cobro manual pero no tiene gastos asociados.",
+        "PERIOD_LOCKED_PREF": "El periodo de",
+        "PERIOD_LOCKED_MESSAGE": "Se encuentra cerrado"
+      },
+      "SINGULAR": "Registro de lectura",
+      "PLURAL": "Registros de lectura",
+      "FORM": {
+        "PERIOD": "Periodo",
+        "SECTOR": "Sector",
+        "SERVICE": "Servicio",
+        "PERIOD_DEFAULT": "Seleccionar Periodo",
+        "SECTOR_DEFAULT": "Seleccionar Sector",
+        "SERVICE_DEFAULT": "Seleccionar Servicio"
+      },
+      "TABLE": {
+        "TITLE": "Lecturas",
+        "COLS": {
+          "NAME": "Nombre",
+          "PREV": "Lectura Anterior",
+          "CURRENT": "Lectura Actual",
+          "CONSUPTION": "Consumo",
+          "STATUS": "Estado",
+          "AMOUNT": "Monto",
+          "TOTAL_CONSUMPTION": "Consumo Total: ",
+          "TOTAL_AMOUNT": "Monto Total: $",
+          "KW": "[kw]",
+          "M3": "[m3]"
+        }
+      }
+    },
+    "TABLE_HEADER": {
+      "SECTOR": "Sector",
+      "SUPPLIER": "Proveedor",
+      "DISTRIBUTION_TYPE": "Tipo distribución",
+      "FIXED_CHARGE": "Cargo fijo afecto"
+    },
+    "TABLE_BODY": {
+      "MONTH": "Mes",
+      "FIXED_CHARGE": "Cargo fijo",
+      "TOTAL": "Total %"
+    },
+    "DISTRIBUTION_TYPE": {
+      "FIXED": "Fija",
+      "MONTHLY": "Mensual"
+    },
+    "FIXED_CHARGED_TYPE": {
+      "COMMON_EXPENSE": "Gasto común",
+      "PROPERTY": "Inmueble",
+      "NONE": "Sin cargo fijo",
+      "MESSAGE_WITHOUT_SERVICES": "Sector sin servicios de consumo"
+    },
+    "MODAL_CONFIRMATION": {
+      "TITLE_MODAL": "Confirmación",
+      "CONFIRMATION_MESSAGE": "la combinación de <strong>{{sector}} </strong> y  <strong>{{proveedor}}</strong> ya tiene distribución asignada en base de datos.",
+      "CONFIRMATION_CLEAR": "Esta acción eliminara todos los cambios realizado, ¿Desea continuar con la operación?",
+      "BUTTON_CONTINUE": "Continuar",
+      "MESSAGE_AMONT": "El monto de distribución no debe ser mayor a 100"
+    }
+  },
+  "FIXED_CHARGE": "Cargo fijo",
+  "GUARD": {
+    "MESSAGE": {
+      "UNAUTHORIZED": "El usuario y/o contraseña son incorrectos.",
+      "PASSWORD_FORGOT_UNAUTHORIZED": "El usuario o correo electrónico es incorrecto.",
+      "PASSWORD_FORGOT_SEND": "Hemos enviado un correo electrónico con las instrucciones para recuperar su contraseña.",
+      "FORBIDDEN": "No tiene permisos suficientes para acceder.",
+      "PASSWORD_UNAUTHORIZED": "No hemos logrado restablecer su contraseña, por favor intente de nuevo.",
+      "PASSWORD_RECOVERED": "Hemos logrado restablecer su contraseña correctamente, por favor inicia sesión."
+    },
+    "FORM_VALIDATION": {
+      "EM AIL_REQUIRED": "El correo electrónico es requerido",
+      "PASSWORD_REQUIRED": "La contraseña es requerida",
+      "PASSWORD_NOT_MATCH": "La contraseña no coincide"
+    },
+    "AUTH": {
+      "LOGIN_TITLE": "Entrar",
+      "LOGIN": "Iniciar sesión",
+      "LOGOUT": "Cerrar sesión",
+      "LOGIN_DESCRIPTION": "Iniciar sesión en su cuenta",
+      "EMAIL_FIELD": "Correo electrónico",
+      "PASSWORD_FIELD": "Contraseña",
+      "REPEAT_PASSWORD_FIELD": "Repetir contraseña",
+      "PASSWORD_FORGOT": "Recuperar contraseña",
+      "EMAIL_REQUIRED": "Correo electrónico es requerido",
+      "PASSWORD_REQUIRED": "La contraseña es requerido",
+      "RECOVER_TITLE": "Recuperar",
+      "PASSWORD_FORGOT_DESCRIPTION": "Para recuperar la contraseña de tu cuenta ingresa tu correo electrónico",
+      "SIGN_UP": "Regístrate",
+      "SIGN_UP_DESCRIPTION": "KASTOR hace más simple la administración de edificios y condominios, optimizando la información y potenciando la gestión administrativa.",
+      "SIGN_UP_CONTACT": "Contáctenos"
+    }
+  },
+  "CHARGE": {
+    "GENERAL": {
+      "SINGULAR": "Cobranza",
+      "PLURAL": "Cobranzas",
+      "GENERAL_COLLECTION_REPORT": "Reporte general de cobranza",
+      "CONFIG": "Configuración",
+      "PERIOD": "Periodo",
+      "OPTIONS": "Opciones",
+      "INIVIDUAL_CONSUMPTION_DETAIL": "Con detalle de consumos individuales.",
+      "INIVIDUAL_CONSUMPTION_SUMMARY": "Con resumen de cálculo de los servicios de consumos individuales.",
+      "LIGHT_CUT_MANAGEMENT": "Con estado de gestión de corte de luz.",
+      "GENERATE": "Generar",
+      "GENERATE_GENERAL_COLLECTION_REPORT": "Generar reporte general de cobranza",
+      "DETAIL_GENERAL_COLLECTION_REPORT": "Detalle reporte general de cobranza",
+      "MESSAGE_LOADING": "Generando planilla cobranza...",
+      "MESSAGE_REPORT": "Generando reporte..."
+    },
+    "TABLE": {
+      "PREVIOUS": "Anterior",
+      "CURRENT": "Actual",
+      "AMOUNT": "Monto",
+      "PROPERTY": "Inmueble",
+      "OWNER": "Responsable",
+      "SECTORS": "Sectores",
+      "PREVIOUS_DEBT": "Deuda anterior",
+      "LAST_PAYMENT": "Ultimo pago",
+      "PREVIOUS_BALANCE": "Saldo anterior",
+      "POSITIVE_BALANCE": "Saldo a favor",
+      "CONSUMER_SERVICES": "Servicios de consumo",
+      "FUNDS": "Fondos",
+      "SURCHARGE_CATEGORIES": "Categorías de recargo",
+      "TOTAL": "Total",
+      "SURPLUS": "Excedentes",
+      "INTEREST": "Interés",
+      "AMOUNT_SECTORS": "Gasto común"
+    }
+  }
+}

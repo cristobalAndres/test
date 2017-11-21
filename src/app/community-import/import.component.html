@@ -1,0 +1,264 @@
+<h1 class="mb30">
+  {{'COMMUNITY.IMPORT.IMPORT_TEXT' | translate }}
+</h1>
+
+<div class="alert alert-{{processStatus.uploadStatus === 'FINISHED' ? 'success' : 'danger'}} w-50 block-center" role="alert"
+     *ngIf="processStatus.uploadStatus === 'FINISHED' || processStatus.uploadStatus === 'ERROR'">
+  <strong>{{'COMMUNITY.IMPORT.LAST_IMPORT_STATUS_TITLE' | translate}}</strong> {{processStatus.finishedAt | amDateFormat: 'DD-MM-YYYY HH:mm'}}
+  <br />
+  {{processStatus.uploadStatus === 'ERROR' ? processStatus.message : 'COMMUNITY.IMPORT.LAST_IMPORT_SUCCESS_TITLE' | translate}}
+</div>
+
+<div class="animated fadeIn alert alert-info w-50 block-center" *ngIf="isProcessingData">
+  <div class="sk-wave mb20">
+    <div class="sk-rect sk-rect1 bg-success"></div>
+    <div class="sk-rect sk-rect2 bg-success"></div>
+    <div class="sk-rect sk-rect3 bg-success"></div>
+    <div class="sk-rect sk-rect4 bg-success"></div>
+    <div class="sk-rect sk-rect5 bg-success"></div>
+  </div>
+  <div class="text-center text-bold mb30">{{'GENERAL.PROCESS_START' | translate}}</div>
+</div>
+
+<div class="row animated fadeIn" *ngIf="!uploadedData && !uploadedErrorData && !isProcessingData">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-upload"></i> <strong>{{'GENERAL.IMPORT_FILE' | translate}}</strong>
+      </div>
+      <div class="card-block">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="file">{{'COMMUNITY.IMPORT.IMPORT_FILE' | translate}}</label>
+              <input class="form-control" id="file" name="file" type="file"
+                     (change)="fileChangeEvent($event)" [disabled]="isUploading"
+                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+              <small class="text-muted">{{'COMMUNITY.IMPORT.VALID_EXTENSIONS' | translate}}</small>
+            </div>
+            <div class="form-group" *ngIf="isUploading">
+              <div class="progress progress-sm">
+                <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar"
+                     style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-sm btn-primary" type="button" (click)="upload()"
+                [disabled]="isUploading || !fileToUpload">
+          <i class="fa fa-cloud-upload"></i> {{'COMMUNITY.IMPORT.UPLOAD_FILE' | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-download"></i> <strong>{{'COMMUNITY.IMPORT.DOWNLOAD_IMPORT' | translate}}</strong>
+      </div>
+      <div class="card-block">
+        <a class="btn btn-info btn-block" href="https://s3.amazonaws.com/kstk3/carga-comunidad/carga-comunidad.xlsx"
+           target="_blank">
+          <i class="fa fa-cloud-download"></i> {{'COMMUNITY.IMPORT.GENERATE_TEMPLATE' | translate}}
+        </a>
+        <small class="text-muted">
+          {{'COMMUNITY.IMPORT.GENERATE_TEMPLATE_DESCRIPTION' | translate}}
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card animated fadeIn" *ngIf="uploadedData">
+  <div class="card-header">
+    <i class="fa fa-bars"></i> <strong>{{'COMMUNITY.IMPORT_SUCCESS.UPLOAD_RESULTS' | translate}}</strong>
+    <div class="pull-right">
+      <button (click)="warningAcceptModal.show()" class="btn btn-sm btn-success">
+        <i class="fa fa-check"></i>
+        {{'GENERAL.SAVE_CHANGES' | translate}}
+      </button>
+      <button (click)="infoCancelModal.show()" class="btn btn-sm btn-danger">
+        <i class="fa fa-times"></i>
+        {{'GENERAL.CANCEL' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <div class="card-header">
+    <div class="row">
+      <div class="col" *ngFor="let data of status.detail_total_property">
+        <div class="card">
+          <div class="card-block p-1 clearfix">
+            <i class="fa {{data.icon}} bg-{{data.style}} p-1 font-2xl mr-1 float-left"></i>
+            <div class="text-muted text-uppercase font-weight-bold font-xs">{{data.type | translate}}</div>
+            <div class="h5 mb-0 mt-h" *ngIf="data.pipe === 1">{{data.total | numberFormat: ',':'.' }}</div>
+            <div class="h5 mb-0 mt-h" *ngIf="data.pipe === 2">{{data.total | numberFormat: { type: 'percent' } }}</div>
+          </div>
+        </div>
+      </div>
+      <!--/.col-->
+    </div>
+    <div class="row">
+      <div class="col" *ngFor="let data of status.detail_unit">
+        <div class="callout callout-info b-t-1 b-r-1 b-b-1 p-y-q bg-white">
+          <small class="text-muted text-bold">{{data.type | translate}}</small>
+          <br>
+          <strong class="h4">{{data.quantity_unit}}</strong>
+        </div>
+      </div>
+      <!--/.col-->
+    </div>
+  </div>
+
+  <div class="card-block">
+    <accordion>
+      <accordion-group #group *ngFor="let data of uploadedData.data">
+        <div accordion-heading class="row">
+          <div class="col-md-2">
+            <i class="fa"
+               [ngClass]="{'fa-caret-down': group?.isOpen, 'fa-caret-right': !group?.isOpen}"></i>
+            {{data.property.name}}
+          </div>
+          <div class="col-md-4">
+            {{data.property.propertyUser.user.name}}
+            {{data.property.propertyUser.user.lastName}}
+            {{data.property.propertyUser.user.motherLastName}}
+          </div>
+          <div class="col-md-4">
+            {{data.property.propertyUser.user.email}}
+          </div>
+          <div class="col-md-2">
+            {{data.units.length}} {{'UNITS.GENERAL.PLURAL' | translate}}
+          </div>
+        </div>
+        <div class="table">
+          <div class="row bg-stripe">
+            <div class="col-md-2 th">{{'COMMUNITY.TABLE_HEADER_IMPORT_SUCCESS.UNIT_NAME' | translate}}</div>
+            <div class="col-md-3 th">{{'COMMUNITY.TABLE_HEADER_IMPORT_SUCCESS.NAME' | translate}}</div>
+            <div class="col-md-3 th">{{'COMMUNITY.TABLE_HEADER_IMPORT_SUCCESS.EMAIL' | translate}}</div>
+            <div class="col-md-2 text-center th">{{'COMMUNITY.TABLE_HEADER_IMPORT_SUCCESS.UNIT_FACTOR' | translate}}</div>
+            <div class="col-md-2 th">{{'COMMUNITY.TABLE_HEADER_IMPORT_SUCCESS.UNIT_TYPE_NAME' | translate}}</div>
+          </div>
+          <div class="row" *ngFor="let unit of data.units">
+            <div class="col-md-2 td">{{unit.name}}</div>
+            <div class="col-md-3 td">
+              {{unit.unitUser.user.name}}
+              {{unit.unitUser.user.lastName}}
+              {{unit.unitUser.user.motherLastName}}
+            </div>
+            <div class="col-md-3 td">{{unit.unitUser.user.email}}</div>
+            <div class="col-md-2 text-center td">{{unit.factor | numberFormat: { type: 'percent' } }}</div>
+            <div class="col-md-2 td">{{unit.unitType.name}}</div>
+          </div>
+        </div>
+      </accordion-group>
+    </accordion>
+  </div>
+  <div class="card-footer">
+    <div class="pull-right">
+      <button (click)="warningAcceptModal.show()" class="btn btn-sm btn-success">
+        <i class="fa fa-check"></i>
+        {{'GENERAL.SAVE_CHANGES' | translate}}
+      </button>
+      <button (click)="infoCancelModal.show()" class="btn btn-sm btn-danger">
+        <i class="fa fa-times"></i>
+        {{'GENERAL.CANCEL' | translate}}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="card animated fadeIn" *ngIf="uploadedErrorData">
+  <div class="card-header">
+    <i class="fa fa-bars"></i> <strong>{{'COMMUNITY.IMPORT_ERRORS.UPLOAD_ERROR_RESULTS' | translate}}</strong>
+    <div class="pull-right">
+      <button (click)="closeImportErrors()" class="btn btn-sm btn-info">
+        {{'GENERAL.TRY_BACK' | translate}}
+      </button>
+    </div>
+  </div>
+  <div class="card-block">
+    <div class="table">
+      <div class="row bg-stripe">
+        <div class="th col-md-2 text-center">{{'COMMUNITY.TABLE_HEADER_IMPORT_ERRORS.POSITION' | translate}}</div>
+        <div class="th col-md-3">
+          {{'COMMUNITY.TABLE_HEADER_IMPORT_ERRORS.PROPERTY_NAME' | translate}} |
+          {{'COMMUNITY.TABLE_HEADER_IMPORT_ERRORS.UNIT_NAME' | translate}}
+        </div>
+        <div class="th col-md-7">{{'COMMUNITY.TABLE_HEADER_IMPORT_ERRORS.MESSAGE' | translate}}</div>
+      </div>
+      <div class="row" *ngFor="let error of uploadedErrorData">
+        <div class="td col-md-2 text-center">{{error.rowNumber}} {{error.columnNumber | toXLSColumnName}}</div>
+        <div class="td col-md-3">{{error.propertyName}} <span *ngIf="error.unitName">|</span> {{error.unitName}}</div>
+        <div class="td col-md-7">
+            <span class="badge"
+                  [ngClass]="{'badge-danger': error.errorType === 'ERROR', 'badge-warning': error.errorType === 'WARNING'}">
+              {{'COMMUNITY.IMPORT_ERROR_TYPES.'+error.errorType | translate}}
+            </span>
+          {{error.message}}
+          <div *ngIf="error.possibleValues">
+            <strong>{{'COMMUNITY.TABLE_HEADER_IMPORT_ERRORS.POSSIBLE_VALUES' | translate}}: </strong>
+            {{error.possibleValues}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>
+
+<div bsModal #warningAcceptModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-warning" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'GENERAL.CONFIRMATION_TITLE' | translate}}</h5>
+        <button type="button" class="close" (click)="warningAcceptModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{'COMMUNITY.IMPORT_SUBMIT.CONFIRMATION_TEXT' | translate}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="warningAcceptModal.hide()">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+        <button type="button" class="btn btn-success" (click)="warningAcceptModal.hide(); acceptImport(); ">
+          <i class="fa fa-check"></i> {{'GENERAL.SAVE_CHANGES' | translate}}
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #infoCancelModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{'GENERAL.INFORMATION_TITLE' | translate}}</h5>
+        <button type="button" class="close" (click)="infoCancelModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{'COMMUNITY.IMPORT_SUBMIT.CANCELLATION_TEXT' | translate}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="infoCancelModal.hide()">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+        <button type="button" class="btn btn-danger" (click)="infoCancelModal.hide(); cancelImport();">
+          <i class="fa fa-times"></i> {{'GENERAL.CANCEL_CHANGES' | translate}}
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<app-community-import-log *ngIf="!uploadedData && !uploadedErrorData && !isProcessingData"></app-community-import-log>

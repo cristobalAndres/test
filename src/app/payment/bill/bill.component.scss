@@ -1,0 +1,25 @@
+.income-type-none .amount-group,
+.income-type-none .document-group,
+.income-type-cash .document-group,
+.income-type-transfer .income-origin,
+.income-type-transfer .income-document,
+.income-type-deposit .income-origin,
+.income-type-deposit .income-document
+{
+  display: none;
+}
+
+
+.through{
+  font-size: 28px !important;
+  text-decoration:line-through !important;
+}
+
+.z-index-2000{
+  z-index:2000 !important;
+}
+
+.margin-10{
+  margin-left:10px; 
+  margin-right:10px;
+}

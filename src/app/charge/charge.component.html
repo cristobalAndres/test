@@ -1,0 +1,290 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'CHARGE.GENERAL.GENERAL_COLLECTION_REPORT' | translate}}
+  </h1>
+</div>
+<hr>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-gear"></i> {{ 'CHARGE.GENERAL.CONFIG' | translate }}
+          <span *ngIf="sectorSelected && sectorSelected.name !== 'DEFAULT_SECTOR'">
+            <strong>{{ sectorSelected.name | translate}}</strong>
+          </span>
+          <strong *ngIf="periodSelected" class="float-right">{{'GENERAL.MONTHS.' + periodSelected.name | translate}}</strong>
+        </div>
+        <div *ngIf="!collapseConfig" class="card-body">
+          <div class="row animated fadeIn">
+            <div class="col-6">
+              <label for="cuentas">{{ 'CHARGE.GENERAL.PERIOD' | translate }}</label>
+              <select class="form-control" name="sector" [(ngModel)]="periodSelected">
+                <option value="" disabled selected>{{'CONSUMER_SERVICES.ASSIGN_EXPENSES_TO_DISTRIBUTION.SELECT_PERIOD' | translate}}</option>
+                <option *ngFor="let period of periods" [ngValue]="period">
+                  <span>{{'GENERAL.MONTHS.' + period.name | translate}} {{period.periodGroup}}</span>
+                </option>
+              </select>
+            </div>
+            <div class="col-3">
+              <label for="cuentas">{{ 'CHARGE.GENERAL.GENERATE' | translate }}</label>
+              <button class="btn btn-primary btn-block" (click)="generateReportCharges()" title="{{ 'CHARGE.GENERAL.GENERATE_GENERAL_COLLECTION_REPORT' | translate }}">
+                <i class="fa fa-file-text-o"></i>
+              </button>
+            </div>
+            <div class="col-3">
+              <label for="cuentas">Exportar</label>
+              <button *ngIf="!isLoadingDonwload" class="btn btn-primary btn-block" [disabled]="(properties.report && properties.report.length > 0) ? false : true"
+                (click)="generateReportXlsx()" title="{{ 'CHARGE.GENERAL.GENERATE_GENERAL_COLLECTION_REPORT' | translate }}">
+                <i class="fa fa-file-excel-o"></i>
+              </button>
+              <br>
+              <div class="form-group" *ngIf="isLoadingDonwload">
+                <div class="progress progress-sm">
+                  <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+                </div>
+                <div class="text-center text-bold mb30">{{ 'CHARGE.GENERAL.MESSAGE_REPORT' | translate }}</div>
+              </div>
+            </div>
+            <div class="col-12">
+              <label for="cuentas">{{ 'CHARGE.GENERAL.OPTIONS' | translate }}</label>
+              <div class="row">
+                <div class="col-lg-4">
+                  <i *ngIf="!options.consumptionDetail" (click)="selectedOptions('consumptionDetail')" class="fa fa-square-o font-2xl animated fadeIn"></i>
+                  <i *ngIf="options.consumptionDetail" (click)="selectedOptions('consumptionDetail')" class="fa fa-check-square-o font-2xl animated fadeIn"></i>
+                  <span (click)="selectedOptions('consumptionDetail')">{{ 'CHARGE.GENERAL.INIVIDUAL_CONSUMPTION_DETAIL' | translate }}</span>
+                </div>
+                <div class="col-lg-4">
+                  <i *ngIf="!options.lightCutManagement" (click)="selectedOptions('lightCutManagement')" class="fa fa-square-o font-2xl animated fadeIn"></i>
+                  <i *ngIf="options.lightCutManagement" (click)="selectedOptions('lightCutManagement')" class="fa fa-check-square-o font-2xl animated fadeIn"></i>
+                  <span (click)="selectedOptions('lightCutManagement')">{{ 'CHARGE.GENERAL.LIGHT_CUT_MANAGEMENT' | translate }}</span>
+                </div>
+                <div class="col-lg-4">
+                  <i *ngIf="!options.sectors" (click)="selectedOptions('sectors')" class="fa fa-square-o font-2xl animated fadeIn"></i>
+                  <i *ngIf="options.sectors" (click)="selectedOptions('sectors')" class="fa fa-check-square-o font-2xl animated fadeIn"></i>
+                  <span (click)="selectedOptions('sectors')">{{ 'CHARGE.TABLE.SECTORS' | translate }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <hr>
+              <!-- <div *ngIf="isLoading" class="row animated fadeIn">
+                <div class="sk-three-bounce">
+                  <div class="sk-child sk-bounce1"></div>
+                  <div class="sk-child sk-bounce2"></div>
+                  <div class="sk-child sk-bounce3"></div>
+                </div>
+              </div>
+              <div *ngIf="isLoading" class="text-center">{{ 'CHARGE.GENERAL.MESSAGE_LOADING' | translate }}</div> -->
+              <div *ngIf="isLoading" class="animated fadeIn alert alert-info w-50 block-center">
+                <div class="sk-wave mb20">
+                  <div class="sk-rect sk-rect1 bg-success"></div>
+                  <div class="sk-rect sk-rect2 bg-success"></div>
+                  <div class="sk-rect sk-rect3 bg-success"></div>
+                  <div class="sk-rect sk-rect4 bg-success"></div>
+                  <div class="sk-rect sk-rect5 bg-success"></div>
+                </div>
+                <div class="text-center text-bold mb30">{{ 'CHARGE.GENERAL.MESSAGE_LOADING' | translate }}</div>
+              </div>
+              <div class="scroll">
+                <div>
+                  <table *ngIf="properties.report && properties.report.length > 0 && !isLoading" class="table table-bordered table-striped table-sm animated fadeIn">
+                    <thead>
+                      <tr>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.PROPERTY' | translate }}</th>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.OWNER' | translate }}</th>
+                        <th *ngIf="options.sectors" class="text-center colour-fade2" [colSpan]="properties.sectors.length"> {{ 'CHARGE.TABLE.SECTORS' | translate }}</th>
+                        <th class="colour-fade2 th" rowspan="3">{{ 'CHARGE.TABLE.AMOUNT_SECTORS' | translate }}</th>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.PREVIOUS_DEBT' | translate }}</th>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.LAST_PAYMENT' | translate }}</th>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.PREVIOUS_BALANCE' | translate }}</th>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.POSITIVE_BALANCE' | translate }}</th>
+                        <th *ngIf="properties.consumerServices.length > 0" class="text-center colour-fade" [colSpan]="options.consumptionDetail ? (properties.consumerServices.length * 3 ) : properties.consumerServices.length">
+                          {{ 'CHARGE.TABLE.CONSUMER_SERVICES' | translate }}</th>
+                        <th *ngIf="properties.funds.length > 0" [colSpan]="properties.funds.length" class="text-center colour-fade3"> {{ 'CHARGE.TABLE.FUNDS' | translate }}</th>
+                        <th *ngIf="properties.surchargesCategorie.length > 0" [colSpan]="properties.surchargesCategorie.length" class="text-center colour-fade4">
+                          {{ 'CHARGE.TABLE.SURCHARGE_CATEGORIES' | translate }}</th>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.INTEREST' | translate }}</th>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.TOTAL' | translate }}</th>
+                        <th class="th" rowspan="3">{{ 'CHARGE.TABLE.SURPLUS' | translate }}</th>
+                      </tr>
+                      <tr>
+                        <ng-container *ngIf="options.sectors">
+                          <th rowspan="2" *ngFor="let sector of properties.sectors" class="colour-fade2 th">
+                            <span *ngIf="sector.slug === 'DEFAULT_SECTOR'">
+                              {{'SECTOR.GENERAL.DEFAULT_SECTOR' | translate}} %
+                            </span>
+                            <span *ngIf="sector.slug != 'DEFAULT_SECTOR'" class="text-capitalize th">
+                              {{sector.name}} %
+                            </span>
+                          </th>
+                        </ng-container>
+                        <ng-container *ngIf="properties.consumerServices.length > 0">
+                          <th [colSpan]="options.consumptionDetail ? 3 : 1" *ngFor="let consumerService of properties.consumerServices" class="colour-fade th">
+                            <span class="text-capitalize">
+                              {{consumerService.name}}
+                            </span>
+                          </th>
+                        </ng-container>
+                        <th rowspan="2" *ngFor="let fund of properties.funds" class="colour-fade3 th">
+                          <span class="text-capitalize">
+                            {{fund.name}}
+                          </span>
+                        </th>
+                        <th rowspan="2" *ngFor="let surchargeCategory of properties.surchargesCategorie" class="colour-fade4 th">
+                          <span class="text-capitalize">
+                            {{surchargeCategory.name}}
+                          </span>
+                        </th>
+                      </tr>
+                      <tr>
+                        <ng-container *ngIf="properties.consumerServices.length > 0 && options.consumptionDetail">
+                          <ng-container *ngFor="let consumerService of properties.consumerServices" class="colour-fade">
+                            <th class="colour-fade">{{ 'CHARGE.TABLE.PREVIOUS' | translate }}</th>
+                            <th class="colour-fade">{{ 'CHARGE.TABLE.CURRENT' | translate }}</th>
+                            <th class="colour-fade">{{ 'CHARGE.TABLE.AMOUNT' | translate }}</th>
+                          </ng-container>
+                        </ng-container>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of properties.report">
+                        <td class="th">{{item.property.name}}</td>
+                        <td class="th">{{item.user.name}}</td>
+                        <ng-container *ngIf="options.sectors">
+                          <td *ngFor="let sector of item.sectors; let _i=index" class="colour-fade2 th sector_{{_i}}">
+                            {{sector.factor }}
+                          </td>
+                        </ng-container>
+                        <td class="colour-fade2 th">
+                          {{calculateAmountSectors(item) | numberFormat: {type: 'currency'} }}
+                          <span class="hidden amount-sectors">{{calculateAmountSectors(item) }}</span>
+                        </td>
+                        <td class="th">
+                          {{item.previousDebt | numberFormat: {type: 'currency'} }}
+                          <span class="hidden previous-debt">{{ item.previousDebt }}</span>
+                        </td>
+                        <td class="th">
+                          <span *ngIf="item.lastPayment">{{ item.lastPayment.amount | numberFormat: {type: 'currency'} }}</span>
+                          <span *ngIf="!item.lastPayment">{{ 0 | numberFormat: {type: 'currency'} }}</span>
+                          &nbsp; {{ item.lastPayment ? 'F' + item.lastPayment.folio : '-' }} &nbsp;
+                          <span *ngIf="item.lastPayment">{{ item.lastPayment.date | date:'dd-MM-yyyy' }}</span>
+                          <span *ngIf="!item.lastPayment">{{ null | date:'dd-MM-yyyy' }}</span>
+                        </td>
+                        <td class="th">
+                          {{item.previousBalance | numberFormat: {type: 'currency'} }}
+                          <span class="hidden previous-balance">{{ item.previousBalance }}</span>
+                        </td>
+                        <td class="th">
+                          {{item.positiveBalance | numberFormat: {type: 'currency'} }}
+                          <span class="hidden positive-balance">{{ item.positiveBalance }}</span>
+                        </td>
+                        <ng-container>
+                          <ng-container *ngFor="let consumerService of item.consumerServies" class="colour-fade">
+                            <td *ngIf="options.consumptionDetail" class="colour-fade th">
+                              {{consumerService.prev }}
+                              <span class="hidden prev_{{consumerService.service.id}}">{{consumerService.prev }}</span>
+                            </td>
+                            <td *ngIf="options.consumptionDetail" class="colour-fade th">
+                              {{consumerService.current }}
+                              <span class="hidden current_{{consumerService.service.id}}">{{consumerService.current }}</span>
+                            </td>
+                            <td class="colour-fade th">
+                              {{consumerService.amount | numberFormat: {type: 'currency'} }}
+                              <span class="hidden amount_{{consumerService.service.id}}">{{consumerService.amount }}</span>
+                            </td>
+                          </ng-container>
+                        </ng-container>
+                        <td *ngFor="let fund of item.funds" class="colour-fade3 th">
+                          {{fund.amount | numberFormat: {type: 'currency'} }}
+                          <span class="hidden fund_{{fund.id}}">{{fund.amount}}</span>
+                        </td>
+                        <td *ngFor="let surcharge of item.surcharges" class="colour-fade4 th">
+                          {{surcharge.amount | numberFormat: {type: 'currency'} }}
+                          <span class="hidden surcharge_{{surcharge.surcharge.id}}">{{surcharge.amount }}</span>
+                        </td>
+                        <td class="th">
+                          <strong>{{ item.interest | numberFormat: {type: 'currency'} }}</strong>
+                          <span class="hidden interest">{{item.interest}}</span>
+                        </td>
+                        <td class="th">
+                          <strong>{{ item.total | numberFormat: {type: 'currency'} }}</strong>
+                          <span class="hidden total">{{item.total}}</span>
+                        </td>
+                        <td class="th">
+                          <strong>{{ item.excessBalance | numberFormat: {type: 'currency'} }}</strong>
+                          <span class="hidden excess-balance">{{item.excessBalance}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>
+                          <span class="hidden totals"></span>
+                        </th>
+                        <th>
+                          <span class="hidden totals"></span>
+                        </th>
+                        <th class="" *ngFor="let sector of properties.sectors; let _i=index">
+                          {{ calculateTotals('sector_' + _i, '.') }}
+                          <span class="hidden totals">{{calculateTotals('sector_' + _i, '.')}} </span>
+                        </th>
+                        <th class="th">
+                          {{ calculateTotals('amount-sectors') | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('amount-sectors')}} </span>
+                        </th>
+                        <th class="th">
+                          {{ calculateTotals('previous-debt') | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('previous-debt')}} </span>
+                        </th>
+                        <th>
+                          <span class="hidden totals"></span>
+                        </th>
+                        <th class="th">
+                          {{ calculateTotals('previous-balance') | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('previous-balance')}} </span>
+                        </th>
+                        <th class="th">
+                          {{ calculateTotals('positive-balance') | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('positive-balance')}} </span>
+                        </th>
+                        <ng-container *ngFor="let consumerService of properties.consumerServices">
+                          <th class="th">
+                            {{ calculateTotals('prev_' + consumerService.id) }}
+                          </th>
+                          <th class="th">{{ calculateTotals('current_' + consumerService.id) }}
+                          </th>
+                          <th class="th">{{ calculateTotals('amount_' + consumerService.id) | numberFormat: {type: 'currency'} }}
+                            <span class="hidden totals">{{calculateTotals('amount_' + consumerService.id)}} </span>
+                          </th>
+                        </ng-container>
+                        <th class="th" *ngFor="let fund of properties.funds">
+                          {{ calculateTotals('fund_' + fund.id) | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('fund_' + fund.id)}} </span>
+                        </th>
+                        <th class="th" *ngFor="let surchargeCategory of properties.surchargesCategorie">
+                          {{ calculateTotals('surcharge_' + surchargeCategory.id) | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('surcharge_' + surchargeCategory.id)}} </span>
+                        </th>
+                        <th class="th">{{ calculateTotals('interest') | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('interest')}} </span>
+                        </th>
+                        <th class="th">{{ calculateTotals('total') | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('total')}} </span>
+                        </th>
+                        <th class="th">{{ calculateTotals('excess-balance') | numberFormat: {type: 'currency'} }}
+                          <span class="hidden totals">{{calculateTotals('excess-balance')}} </span>
+                        </th>
+
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<toaster-container></toaster-container>

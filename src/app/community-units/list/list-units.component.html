@@ -1,0 +1,145 @@
+<div class="animated fadeIn ">
+    <h1>
+      {{'COMMUNITY-UNITS.GENERAL.DETAIL.TITLE' | translate }}
+    </h1>
+
+    <div class="row mb-1 fadeIn" *ngIf="!isUploading">
+      <div class="col-md-4 ml-auto">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-search"></i></span>
+          <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}"/>
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-striped" [mfData]="units | dataFilter:{query: filterQuery, cols: ['type', 'name', 'factor_sector', 'property_name', 'owner_full']}" #mf="mfDataTable" [mfRowsOnPage]="10" *ngIf="!isUploading">
+      <thead>
+      <tr>
+        <th>
+          <mfDefaultSorter by="type">
+            {{'COMMUNITY-UNITS.GENERAL.DETAIL.TABLE_HEADER.TYPE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="name">
+            {{'COMMUNITY-UNITS.GENERAL.DETAIL.TABLE_HEADER.NAME' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th class="text-center">
+          <mfDefaultSorter by="factor">
+            {{'COMMUNITY-UNITS.GENERAL.DETAIL.TABLE_HEADER.FACTOR' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="property">
+            {{'COMMUNITY-UNITS.GENERAL.DETAIL.TABLE_HEADER.PROPERTY' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+            <mfDefaultSorter by="owner">
+              {{'COMMUNITY-UNITS.GENERAL.DETAIL.TABLE_HEADER.OWNER' | translate}}
+            </mfDefaultSorter>
+        </th>
+        <th class="text-center"> {{'COMMUNITY-UNITS.GENERAL.DETAIL.TABLE_HEADER.TOOLS' | translate}}</th>
+      </tr>
+      </thead>
+      
+      <tfoot *ngIf="!isLoading">
+        <tr>
+          <td colspan="6">
+            <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+          </td>
+        </tr>
+      </tfoot>
+      <tbody>
+        <tr *ngFor="let unit of mf.data">
+          <td>{{unit.unit_type}}</td>
+          <td>{{unit.name}}</td>
+          <td class="text-center">
+            <ul>
+              <li *ngFor= "let sector of unit.sectors">
+                  <label *ngIf= "sector.name !== 'DEFAULT_SECTOR'">
+                      {{sector.name}} : {{sector.factor | numberFormat: { type: 'percent' } }}
+                  </label> 
+                  <label *ngIf= "sector.name === 'DEFAULT_SECTOR'">
+                      {{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate  }} : {{sector.factor | numberFormat: { type: 'percent' } }}
+                  </label> 
+              </li>
+            </ul>
+         </td>     
+          <ng-container *ngIf ="unit.property_name; else no_property" >
+            <td>{{unit.property_name}}</td>
+          </ng-container>
+          <ng-template #no_property>
+            <td></td>
+          </ng-template>
+          
+          <ng-container *ngIf ="unit.owner_full; else no_owner" >
+            <td>{{unit.owner_full}}</td>
+          </ng-container> 
+          
+          <ng-template #no_owner>
+            <td></td>
+          </ng-template> 
+          
+          <td class="center">
+          <!-- HERRAMIENTAS AUN NO IMPLEMENTADAS
+          <ng-container *ngIf ="unit.owner.name; else no_owner_button" >
+            <button type="button" class="btn btn-sm btn-success" title="{{'COMMUNITY-UNITS.GENERAL.DETAIL.BUTTONS.EDIT_OWNER' | translate}}"><i class="fa fa-user"></i></button>
+          </ng-container> 
+          <ng-template #no_owner_button>
+            <button type="button" class="btn btn-sm btn-success" title="{{'COMMUNITY-UNITS.GENERAL.DETAIL.BUTTONS.ADD_OWNER' | translate}}"><i class="fa fa-user-plus"></i></button>
+          </ng-template> 
+            <button type="button" class="btn btn-sm btn-primary" title="{{'COMMUNITY-UNITS.GENERAL.DETAIL.BUTTONS.EDIT_UNIT' | translate}}"><i class="fa fa-edit"></i></button>
+            <button type="button" class="btn btn-sm btn-danger" title="{{'COMMUNITY-UNITS.GENERAL.DETAIL.BUTTONS.DELETE_UNIT' | translate }}" (click)="dangerDeleteModal.show(); selectUnit(unit);"><i class="fa fa-trash"></i></button>
+          -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+<div bsModal #dangerDeleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dangerDeleteModal"
+aria-hidden="true">
+<div class="modal-dialog modal-danger" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">{{'GENERAL.CONFIRMATION_TITLE' | translate}}</h5>
+      <button type="button" class="close" (click)="dangerDeleteModal.hide();" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p *ngIf= "selectedUnitForDelete">{{'COMMUNITY-UNITS.GENERAL.DETAIL.CONFIRMATION_DELETE_TEXT' | translate:deleteModalParam}} </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="dangerDeleteModal.hide(); deselectUnit()">
+        {{'GENERAL.CLOSE' | translate}}
+      </button>
+      <button *ngIf="selectedUnitForDelete" type="button" class="btn btn-danger" (click)="dangerDeleteModal.hide();">
+        <i class="fa fa-trash"></i> {{'GENERAL.DELETE' | translate}}
+      </button>
+    </div>
+  </div>
+  <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="form-group" *ngIf="isUploading">
+    <div class="progress progress-sm">
+      <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+    </div>
+</div>
+
+<div *ngIf="!isUploading && units.length === 0" class="animated fadeIn alert alert-info w-80 block-center">
+    <div class="text-center mb20">
+      <i class="fa fa-info-circle fa-3x"></i>
+    </div>
+    <div class="text-center text-bold mb30">
+      {{ 'COMMUNITY-UNITS.GENERAL.DETAIL.MESSAGE_WITHOUT_UNITS' | translate }}
+    </div>
+</div>
+
+<toaster-container></toaster-container>

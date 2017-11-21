@@ -1,0 +1,23 @@
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog {{style}}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{title}}</h5>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>{{text}}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">
+          {{buttonCancelText}}
+      </button>
+        <button type="button" class="btn {{buttonOkStyle}}" (click)="accept(); ">
+        <i class="{{buttonOkIcon}}"></i> {{buttonOkText}}
+      </button>
+      </div>
+    </div>
+  </div>
+</div>

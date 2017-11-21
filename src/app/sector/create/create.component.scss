@@ -1,0 +1,75 @@
+.text-line{
+  line-height: 30px;
+}
+
+.padding-table-td{
+  padding: 0 4px;
+}
+
+.margin-1{
+  margin: 1px;
+}
+
+.content-distribution-item{
+  padding: 0 16px;
+}
+
+.distribution-item{
+  margin-bottom: 2px;
+  padding: 4px;
+  &:nth-child(odd){
+    background-color: rgba(0,0,0,.05);
+  }
+}
+
+.margin-right-10{
+  margin-right: 10px;
+}
+
+.card{
+  margin-bottom: 2px;
+}
+
+.click{
+  cursor: pointer;
+}
+
+.destac{
+  font-weight: 600;
+}
+
+.icon-expand{
+  margin-top: 20px;
+}
+
+.c-primary{
+  color: #36a9e1;
+}
+
+.c-warning{
+  color: #fabb3d;
+}
+
+.unit{
+  margin: 6px 1.25rem;
+}
+
+.unit-square-o{
+  margin-right: 3px;
+}
+
+.mr-3{
+  margin-right: 3px !important;
+}
+
+.mr-5{
+  margin-right: 5px;
+}
+
+.mr-8{
+  margin-right: 8px;
+}
+
+.input-danger{
+  border: 2px solid red;
+}

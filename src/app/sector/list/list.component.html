@@ -1,0 +1,95 @@
+<div class="animated fadeIn" *ngIf="!isLoading">
+  <h1>
+    {{'SECTOR.GENERAL.PLURAL' | translate }}
+  </h1>
+
+  <div class="row mb-1">
+    <div class="col-md-4 ml-auto">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}" />
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-striped" [mfData]="data | dataFilter:{query: filterQuery, cols: ['name']}"
+         #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+    <tr>
+      <th>
+        <mfDefaultSorter by="property_name">
+          {{'SECTOR.TABLE_HEADER.SECTOR_NAME' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th>
+        <mfDefaultSorter by="description">
+          {{'SECTOR.TABLE_HEADER.UNITS' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th class="text-center">
+        <mfDefaultSorter by="period">
+          {{'SECTOR.TABLE_HEADER.FACTOR' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th class="text-center">
+        <mfDefaultSorter by="period">
+          {{'SECTOR.TABLE_HEADER.TOTAL_FACTOR' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th class="center">
+        <mfDefaultSorter by="">
+          {{'EXPENSE.CREATE.TABLE.HEAD.TOOLS' | translate}}
+        </mfDefaultSorter>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of mf.data">
+      <td>
+        <label *ngIf="item.name === 'DEFAULT_SECTOR'">
+        {{'SECTOR.GENERAL.DEFAULT_SECTOR' | translate}}
+        </label>
+        <label *ngIf="item.name !== 'DEFAULT_SECTOR'">
+          {{item.name}}
+        </label>
+      </td>
+      <td>
+        <ul>
+          <li *ngFor="let units of item.units">
+            <ng-container *ngIf="units">
+              {{units.name}}
+            </ng-container>
+          </li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li *ngFor="let units of item.units" class="text-right">
+            <ng-container *ngIf="units">
+              {{units.unit_sector.factor}}
+            </ng-container>
+          </li>
+        </ul>
+      </td>
+      <td class="text-right">{{item.totalFactor}}</td>
+
+      <td class="center">
+
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="8">
+        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+<div *ngIf="isLoading">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>

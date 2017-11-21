@@ -1,0 +1,139 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'EXPENSE.GENERAL.ASSIGN_TITLE.PLURAL' | translate}}
+  </h1>
+  <div class="row mb-1">
+    <div class="col-md-4 ml-auto">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}" />
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-stripped" [mfData]="data | dataFilter:{query: filterQuery, cols: ['expense_code', 'expense_supplier_name', 'expense_description', 'expense_amount', 'amount']}"
+    #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+      <tr>
+        <th>
+          <mfDefaultSorter by="expense_code">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.DOCUMENT' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="supplier">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.PROVIDER' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="description">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.DESCRIPTION' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="expense_amount">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.AMOUNT' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="amount">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.BALANCE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th class="center">
+          <label class="switch switch-sm switch-text switch-info mb-0">
+            <input [(ngModel)]="assignAllExpense" class="switch-input" type="checkbox" (change)="changeAllAssign();">
+            <span class="switch-label"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <td colspan="6">
+          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+        </td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr *ngFor="let item of mf.data">
+        <td>{{item.expense.expense_type.code}}{{item.expense.code}}</td>
+        <td>{{item.expense.supplier.name}}</td>
+        <td>{{item.expense.description}}</td>
+        <td>{{item.expense.amount | numberFormat: { type: 'currency' } }}</td>
+        <td>{{item.amount | numberFormat: { type: 'currency' } }}</td>
+        <td class="center">
+          <label class="switch switch-sm switch-text switch-info mb-0">
+            <input [(ngModel)]="item.state"  class="switch-input" type="checkbox" (change)="changeAssign(item);">
+            <span class="switch-label"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="animated fadeIn alert alert-info w-100 block-center" *ngIf="mf.data.length === 0 && !isLoading">
+    <div class="text-center mb20">
+      <i class="fa fa-info-circle fa-5x"></i>
+    </div>
+    <div class="text-center text-bold mb30">
+      {{'EXPENSE.EXPENSES.EXPENSE_DONT_EXIST' | translate}}
+    </div>
+  </div>
+  <form #formExpanses="ngForm" [formGroup]="expensesForm" (submit)="sendExpenses();" (change)="detectChangeForm()">
+    <div class="card" *ngIf="expensesForm['controls'].expense_assignments['controls'].length > 0">
+      <div class="card-header">
+        {{'EXPENSE.ASSIGN.SINGULAR' | translate}}
+      </div>
+      <div class="card-block">
+        <div class="row">
+          <div formArrayName="expense_assignments" class="w-100">
+            <div class="w-100" *ngFor="let fee of expensesForm['controls'].expense_assignments['controls']; let i=index">
+              <app-expense-assign
+                [countFees]="countFees"
+                [expensesForm]="expensesFormSingular"
+                [sectors]="sectors"
+                [periods]="periods"
+                [expenseAmount]="amountGlobal"
+                [expensesAssignForm]="expensesForm.controls.expense_assignments.controls[i]" (ouputStateForm)="ouputFormValid($event)"
+                (ouputStateFormFees)="ouputFormValidFee($event)" (ouputPeriod)="ouputPeriodSelected($event)"></app-expense-assign>
+            </div>
+          </div>
+          <button [disabled]="!expensesForm.valid || validForm === true" *ngIf="expensesForm['controls'].expense_assignments['controls'].length > 0 && !isUploading"
+            class="btn btn-primary btn-block pull-right" type="submit">{{ 'EXPENSE.GENERAL.BTN_SAVE' | translate  }}</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="form-group" *ngIf="isUploading">
+    <div class="progress progress-sm">
+      <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+    </div>
+  </div>
+
+
+  <!-- pruebas con formualrio que se va a la API -->
+  <form style="display: none;" #formExpansesSingular="ngForm" [formGroup]="expensesFormSingular" (submit)="sendExpenses();">
+    <div class="card" *ngIf="expensesFormSingular['controls'].expense_assignments['controls'].length > 0">
+      <div class="card-header">
+        {{'EXPENSE.ASSIGN.SINGULAR' | translate}}
+      </div>
+      <div class="card-block">
+        <div class="row">
+          <div formArrayName="expense_assignments">
+            <div *ngFor="let fee of expensesFormSingular['controls'].expense_assignments['controls']; let i=index">
+              <app-expense-assign
+                [countFees]="countFees"
+                [sectors]="sectors"
+                [periods]="periods"
+                [expenseAmount]="fee.value.amount"
+                [expensesAssignForm]="expensesFormSingular.controls.expense_assignments.controls[i]">
+              </app-expense-assign>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

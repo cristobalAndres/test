@@ -1,0 +1,281 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'EXPENSE.GENERAL.ASSIGN_TITLE_PROPERTY.PLURAL' | translate}}
+  </h1>
+  <div *ngIf="!isUploading" class="row mb-1">
+    <div class="col-md-4 ml-auto">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}" />
+      </div>
+    </div>
+  </div>
+
+  <table *ngIf="!isUploading" class="table table-stripped" [mfData]="data | dataFilter:{query: filterQuery, cols: ['expense_type_code','expense_code', 'expense_supplier_name', 'expense_description', 'expense_amount', 'amount']}"
+    #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+      <tr>
+        <th>
+          <mfDefaultSorter by="expense_type_code">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.DOCUMENT' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="expense_supplier_name">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.PROVIDER' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="expense_description">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.DESCRIPTION' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="expense_amount">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.AMOUNT' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="amount">
+            {{'EXPENSE.ASSIGN.TABLE.HEAD.BALANCE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th class="center">
+            {{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.PROPERTY_ASSIGNMENTS.TABLE_HEADER.ASSIGN' | translate  }}
+        </th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <td colspan="6">
+          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+        </td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr *ngFor="let item of mf.data">
+        <td>{{item.expense.expense_type.code}}{{item.expense.code}}</td>
+        <td>{{item.expense.supplier.name}}</td>
+        <td>{{item.expense.description}}</td>
+        <td>{{item.expense.amount | numberFormat: { type: 'currency' } }}</td>
+        <td>{{item.amount | numberFormat: { type: 'currency' } }}</td>
+        <td class="center">
+          <label class="switch switch-sm switch-text switch-primary mb-0">
+            <input [(ngModel)]="item.state" class="switch-input" type="checkbox" (change)="changeAssign(item);">
+            <span class="switch-label"></span>
+            <span class="switch-handle"></span>
+          </label>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="animated fadeIn alert alert-info w-100 block-center" *ngIf="data.length === 0 && !isUploading">
+    <div class="text-center mb20">
+      <i class="fa fa-info-circle fa-5x"></i>
+    </div>
+    <div class="text-center text-bold mb30">
+      {{'EXPENSE.EXPENSES.EXPENSE_DONT_EXIST' | translate}}
+    </div>
+  </div>
+</div>
+<div class="form-group" *ngIf="isUploading">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>
+<hr *ngIf="showProperties">
+<div *ngIf="showProperties" class="animated fadeIn">
+  <div class="row">
+    <div class="col-12">
+      <h4>{{'PROPERTY.GENERAL.PLURAL' | translate}}</h4>
+    </div>
+  </div>
+  <div [formGroup]="formAssignment" class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="surcharge_category"><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.CATEGORY' | translate }}</strong></label>
+        <select formControlName="surcharge_category_id" name="surcharge_category_id" [(ngModel)]="categorySelected" class="form-control" id="surcharge_category">
+          <option value="" disabled selected>{{ 'SURCHARGE.IMPORT.FORM.PLACEHOLDERS.SELECT_CATEGORY' | translate  }}</option>
+          <option *ngFor="let category of categories" [ngValue]="category.id">
+            {{category.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="col">
+      <label for="sector"><strong>{{ 'SECTOR.GENERAL.SECTOR' | translate }}</strong></label>
+      <select class="form-control" formControlName="sector" name="sector" [(ngModel)]="sectorSelected" (change)="filters();" id="sector">
+        <option value="" disabled selected>{{'SECTOR.GENERAL.SECTOR' | translate}}</option>
+        <option *ngFor="let sector of sectors" [ngValue]="sector">
+            <span *ngIf="sector.name === 'DEFAULT_SECTOR'">{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate  }}</span>
+            <span *ngIf="sector.name !== 'DEFAULT_SECTOR'">{{ sector.name | translate}}</span>
+        </option>
+      </select>
+    </div>
+    <div class="col">
+      <label for="period"><strong>{{ 'EXPENSE.GENERAL.SELECT_EXPENSE_PERIOD' | translate }}</strong></label>
+      <select class="form-control" formControlName="period" name="period" [(ngModel)]="periodSelected" id="period">
+          <option value="" disabled selected>{{ 'EXPENSE.GENERAL.SELECT_PERIOD_PLACEHOLDER' | translate  }}</option>
+          <option *ngFor="let element of periods" [ngValue]="element">
+            {{'GENERAL.MONTHS.' + element.name | translate}} {{element.periodGroup}}
+          </option>
+        </select>
+    </div>
+    <div class="col-3">
+      <label for="method"><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.SELECT_METHOD' | translate }}</strong></label>
+      <select class="form-control" formControlName="method" name="method" [(ngModel)]="methodSelected" (change)="filters();" id="method">
+        <option value="" disabled selected>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.SELECT_METHODS' | translate  }}</option>
+        <option *ngFor="let method of methods" [ngValue]="method">
+          {{'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.' + method.slug | translate}}
+        </option>
+      </select>
+    </div>
+    <div class="col-2">
+      <label><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.ASSIGNED_AMOUNT' | translate }}</strong></label>
+      <input type="hidden" [(ngModel)]="expenseAmountSelected" formControlName="amount" name="amount">
+      <h4>{{expenseAmountSelected | numberFormat: { type: 'currency' } }}</h4>
+    </div>
+    <div class="col-1">
+      <label><strong>{{ 'GENERAL.ALL' | translate  }}</strong></label>
+      <label class="switch switch-sm switch-text switch-primary mb-0 margin-top-min">
+        <input [(ngModel)]="checkAllSwitch" [ngModelOptions]="{standalone: true}" class="switch-input" type="checkbox" (change)="checkedAll();">
+        <span class="switch-label"></span>
+        <span class="switch-handle"></span>
+      </label>
+    </div>
+  </div>
+  <div *ngIf="showProperties" class="animated fadeIn">
+    <div class="row assign-property-header">
+      <div class="col-2"><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.PROPERTY_ASSIGNMENTS.TABLE_HEADER.PROPERTY_NAME' | translate  }}</strong></div>
+      <div class="col"><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.PROPERTY_ASSIGNMENTS.TABLE_HEADER.OWNER' | translate  }}</strong></div>
+      <div class="col" *ngIf="this.methodSelected.slug === 'PRORRATE'"><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.PROPERTY_ASSIGNMENTS.TABLE_HEADER.FACTOR_PRORRATEO' | translate  }}</strong></div>
+      <div class="col" *ngIf="this.methodSelected.slug === 'PRORRATE'"><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.PROPERTY_ASSIGNMENTS.TABLE_HEADER.FACTOR_PRORRATEO_RECALCULADO' | translate  }}</strong></div>
+      <div class="col-2"><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.PROPERTY_ASSIGNMENTS.TABLE_HEADER.AMOUNT' | translate  }}</strong></div>
+      <div class="col-1 text-right"><strong>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.PROPERTY_ASSIGNMENTS.TABLE_HEADER.ASSIGN' | translate  }}</strong></div>
+    </div>
+  </div>
+  <div *ngFor="let property of properties" class="row assign-property">
+    <div class="col-2">
+      <span>{{property.name}}</span>
+    </div>
+    <div class="col">
+      <span>{{property.users[0].auth_user.name}} &nbsp; {{property.users[0].auth_user.motherlastname}}</span>
+    </div>
+    <div class="col" *ngIf="this.methodSelected.slug === 'PRORRATE'">
+      <span>{{property.factors[0].factor | number:'2.1-2' }} % </span>
+    </div>
+    <div class="col" *ngIf="this.methodSelected.slug === 'PRORRATE'">
+      <span *ngIf="property.factors[0].recalculated">{{property.factors[0].recalculated | number:'2.1-2' }} % </span>
+    </div>
+    <div class="col-2">
+      <input type="number" [disabled]="!property.state" [(ngModel)]="property.amount" class="form-control form-control-sm" placeholder="0"
+        (change)="changeAmountAssign(property);">
+    </div>
+    <div class="col-1 text-right">
+      <label class="switch switch-sm switch-text switch-primary mb-0 margin-top-min">
+        <input [(ngModel)]="property.state" class="switch-input" type="checkbox" (change)="includeCalculate(property, true);">
+        <span class="switch-label"></span>
+        <span class="switch-handle"></span>
+      </label>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col align-self-end">
+      <button [disabled]="!formAssignment.valid || formAssignment['controls'].surcharge_property['controls'].length === 0 || formAmountAssignments"
+        (click)="validateAmountAssign(formAssignment.value, confirmBalanceAssignment);" class="btn btn-primary btn-block pull-right"
+        type="submit">{{ 'EXPENSE.GENERAL.BTN_SAVE' | translate  }}</button>
+    </div>
+  </div>
+</div>
+<br>
+
+<div bsModal #confirmBalanceAssignment="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmBalanceAssignment"
+  aria-hidden="true">
+  <div class="modal-dialog modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.ASSIGN_DIFFERENCE' | translate }}</h5>
+        <button type="button" class="close" (click)="confirmBalanceAssignment.hide();" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col">
+            <span *ngIf="differenceNotification.value !== null">{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.MESSAGE_DIFFERENCE' | translate:differenceNotification }}</span>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col">
+            <input type="radio" name="type-diferred" [(ngModel)]="radioType" value="account" (change)="differenceAssign('account');"
+            /> &nbsp;
+            <strong><span>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.ACCOUNT_DIFFERENCE' | translate  }}</span></strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <input type="radio" name="type-diferred" [(ngModel)]="radioType" value="fund" (change)="differenceAssign('fund');" />            &nbsp;
+            <strong><span>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.FUND_DIFFERENCE' | translate  }}</span></strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <input type="radio" name="type-diferred" [(ngModel)]="radioType" value="manual" (change)="differenceAssign('manual')" />            &nbsp;
+            <strong><span>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.MANUAL_DIFFERENCE' | translate  }}</span></strong>
+          </div>
+        </div>
+        <hr *ngIf="showFundsAssign">
+        <div *ngIf="showFundsAssign" class="row">
+          <div class="col-12">
+            <h5>{{ 'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.FUND_DIFFERENCE' | translate }}:</h5>
+          </div>
+          <div class="col-12">
+            <select class="form-control" [(ngModel)]="fundSelectedView" (change)="differenceAssignFund(fundSelectedView);">
+              <option value="" disabled selected>{{ 'FUND.GENERAL.SINGULAR' | translate  }}</option>
+              <option *ngFor="let fund of funds" [ngValue]="fund.id">
+                  {{fund.name}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="confirmBalanceAssignment.hide();">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="(formAssignment['controls'].difference['controls'].account.value === null && formAssignment['controls'].difference['controls'].fund.value === null)"
+          (click)="saveAssignmentsProperties(formAssignment.value); confirmBalanceAssignment.hide();">
+          <i class="fa fa-save"></i> {{'GENERAL.SAVE' | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <button type="button" class="btn btn-primary" (click)="showChildModal()">Open child modal</button> -->
+<div bsModal #confirmationChangeExpense="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-danger modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">{{'GENERAL.CONFIRMATION_TITLE' | translate}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{'EXPENSE.EXPENSE_ASSIGNMENTS_PROPERTIES.NOTIFICATION.ALERT_INFO_CHANGE_EXPENSE' | translate}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="hideChildModal();">
+            {{'GENERAL.CANCEL' | translate}}
+        </button>
+        <button type="button" class="btn btn-danger" (click)="confirmationChangeExpense.hide(); renderNewExpense(expenseSelectedModal)">
+            <i class="fa fa-check"></i> {{'GENERAL.CONFIRM' | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,95 @@
+<div class="form-group" *ngIf="isLoading">
+  <div class="progress progress-sm">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+  </div>
+</div>
+
+<div class="animated fadeIn" *ngIf="data.length > 0">
+  <table class="table table-striped" [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+      <tr>
+        <th>
+          <mfDefaultSorter by="periodicity">
+            {{'SETTINGS.LATE_PAYMENT.TABLE_LOGS.HEADER.PERIODICITY' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="interest_type">
+            {{'SETTINGS.LATE_PAYMENT.TABLE_LOGS.HEADER.INTEREST_TYPE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="fund_name">
+            {{'SETTINGS.LATE_PAYMENT.TABLE_LOGS.HEADER.FUND_NAME' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="reduction">
+            {{'SETTINGS.LATE_PAYMENT.TABLE_LOGS.HEADER.CAPITAL_REDUCTION' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="description">
+            {{'SETTINGS.LATE_PAYMENT.TABLE_LOGS.HEADER.DESCRIPTION' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th class="text-right">
+          <mfDefaultSorter by="porcent">
+            {{'SETTINGS.LATE_PAYMENT.TABLE_LOGS.HEADER.PORCENT' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="create_date">
+            {{'SETTINGS.LATE_PAYMENT.TABLE_LOGS.HEADER.CREATE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="create_date">
+            {{'SETTINGS.LATE_PAYMENT.TABLE_LOGS.HEADER.DELETE' | translate}}
+          </mfDefaultSorter>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let log of mf.data">
+        <td>
+          <span *ngIf="log.interest_fine_metadata_periodicity">{{'SETTINGS.LATE_PAYMENT.METADATA_FIELDS.' + log.interest_fine_metadata_periodicity.interest_fine_field.name | translate}}</span>
+          <span *ngIf="!log.interest_fine_metadata_periodicity">-</span>
+        </td>
+        <td>
+          <span *ngIf="log.interest_fine_metadata_type">{{'SETTINGS.LATE_PAYMENT.METADATA_FIELDS.' + log.interest_fine_metadata_type.interest_fine_field.name  | translate}}</span>
+          <span *ngIf="!log.interest_fine_metadata_type">-</span>
+        </td>
+        <td>{{log.fund_name}}</td>
+        <td>
+          <span *ngIf="log.capital_reduction">{{'GENERAL.YES' | translate}}</span>
+          <span *ngIf="!log.capital_reduction">{{'GENERAL.NOT' | translate}}</span>
+        </td>
+        <td>{{log.description}}</td>
+        <td class="text-right">{{log.porcent | numberFormat}}</td>
+        
+        
+        <td>{{log.init_date | date:'dd-MM-yyyy H:mm:s'}}</td>
+        <td>{{log.end_date | date:'dd-MM-yyyy H:mm:s'}}</td>
+        
+        <!--
+        <td>{{log.init_date | amSubtract: 3 : 'hours'  | amDateFormat: 'DD-MM-YYYY HH:mm'}}</td>
+        <td>{{log.end_date | amSubtract: 3 : 'hours' | amDateFormat: 'DD-MM-YYYY HH:mm'}}</td>
+        | amFromUtc |
+        | amLocal | 
+        -->
+        <!--
+        <td>{{log.init_date | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY HH:mm'}}</td>
+        <td>{{log.end_date | amFromUtc | amLocal | amDateFormat: 'DD-MM-YYYY HH:mm'}}</td>
+        -->  
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="12">
+          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

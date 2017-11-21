@@ -1,0 +1,40 @@
+<div class="row" [formGroup]="feeForm">
+  <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 margin-top-min">
+    <input id="description" type="text" formControlName="description" name="description" class="form-control" />
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 padding-min">
+    <select [attr.disabled]="feeForm.controls['periodState'].value === true ? '': null" [attr.class]="feeForm.controls['periodState'].value === true ? 'select-disabled':'form-control'"
+      class="form-control" id="period" formControlName="period" name="period" (change)="changePeriod()">
+      <option value="" disabled selected>{{ 'EXPENSE.GENERAL.SELECT_PERIOD_PLACEHOLDER' | translate }}</option>
+      <option *ngFor="let element of periods" [hidden]="element.period < periodCurrentSetting" [ngValue]="element.period">
+        {{'GENERAL.MONTHS.' + element.name | translate}} {{element.periodGroup}}
+      </option>
+    </select>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 padding-min">
+    <input [attr.disabled]="feeForm.controls['periodState'].value === true ? '': null" [style.border]="alert === true ? '2px solid red' : 'none'"
+      min="0" step="0.01" id="numero_documento" type="number" formControlName="porcent" name="porcent" class="form-control"
+      placeholder="0" (change)="changePorcent()" (keypress)="_helperService.validateCharacter($event)" />
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 padding-min">
+    <input [attr.disabled]="feeForm.controls['periodState'].value === true ? '': null" [style.border]="alert === true ? '2px solid red' : 'none'"
+      step="1" id="numero_documento" [(ngModel)]="amount" formControlName="amount" name="amount" class="form-control" placeholder="0"
+      currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', precision:'0' }" (blur)="changeMoney()" (keypress)="_helperService.validateCharacter($event)"
+    />
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+    <div formArrayName="expense_fee_sectors" name="sectors">
+      <div id="content_sectors" class="row">
+        <div *ngFor="let sector of feeForm['controls'].expense_fee_sectors['controls']; let i=index" class="padding-custom-fee col">
+          <app-sector-dynamic
+            [sectorName]="sector._value.name"
+            [disabledSector]="feeForm.controls['periodState'].value"
+            [sectorForm]="feeForm.controls.expense_fee_sectors.controls[i]"
+            [alert]="notificationAlert"
+            (ouputValueSector)="ouputValueSector($event)"></app-sector-dynamic>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input *ngIf="edit" type="hidden" formControlName="id" name="id">
+</div>

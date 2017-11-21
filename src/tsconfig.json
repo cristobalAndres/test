@@ -1,0 +1,36 @@
+{
+  "compileOnSave": false,
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ],
+  "extends": "./src/tsconfig",
+  "compilerOptions": {
+    "module": "es6",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "outDir": "./dist/out-tsc",
+    "baseUrl": "src",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es6",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2016",
+      "dom"
+    ],
+    "plugins": [
+      { "name": "tslint-language-service",
+        "alwaysShowRuleFailuresAsWarnings": false,
+        "ignoreDefinitionFiles": true,
+        "configFile": "../tslint.json",
+        "disableNoUnusedVariableRule": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,99 @@
+<div class="row" [formGroup]="expensesForm">
+  <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+    <div class="form-group">
+      <label for="proveedores">{{ 'EXPENSE.GENERAL.SELECT_PROVIDER' | translate }}</label>
+      <select id="proveedores" [(ngModel)]="providerSelected" formControlName="supplier_id" name="supplier_id" class="form-control"
+        (change)="changeSelectProvider();">
+        <option value="" disabled selected>{{ 'EXPENSE.GENERAL.SELECT_PROVIDER_PLACEHOLDER' | translate }}</option>
+        <option *ngFor="let element of suppliers" [ngValue]="element.id">
+          {{element.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+    <label for="DESCRIPTION">{{ 'EXPENSE.EXPENSES.DESCRIPTION_LARGE' | translate }}</label>
+    <textarea id="DESCRIPTION" rows="1" formControlName="description" name="description" class="form-control"></textarea>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
+    <label for="numero_documento">{{ 'EXPENSE.EXPENSES.DOCUMENT_NUMBER' | translate }}</label>
+    <input id="numero_documento" type="number" formControlName="code" name="code" class="form-control" [min]="1" placeholder="0"
+      (keypress)="_helperService.validateCharacter($event); $event.stopPropagation();" />
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+    <div class="form-group">
+      <label for="tipo_documento">{{ 'EXPENSE.EXPENSES.SELECT_TYPE_DOCUMENT' | translate }}</label>
+      <select id="tipo_documento" [(ngModel)]="typeDocumentSelected" formControlName="expense_type_id" name="expense_type_id" class="form-control"
+        (change)="changeSelectTypeDocument();">
+        <option value="" disabled selected>{{ 'EXPENSE.EXPENSES.SELECT_TYPE_DOCUMENT_PLACE' | translate }}</option>
+        <option *ngFor="let element of typeDocuments" value="{{element.id}}">
+          {{element.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+    <div class="form-group form-custom" *ngIf="hasInitDate">
+      <label for="CREATION_DATE">{{ 'EXPENSE.CREATE.CREATION_DATE' | translate }}</label>
+      <input id="CREATION_DATE" type="text" class="form-control" formControlName="date" name="date" bsDatepicker value="{{ expensesForm['controls'].date.value | date:'dd-MM-yyyy' }}"
+        [bsConfig]="bsConfig" />
+    </div>
+
+    <div class="form-group form-custom" *ngIf="!hasInitDate">
+      <label for="CREATION_DATE">{{ 'EXPENSE.CREATE.CREATION_DATE' | translate }}</label>
+      <input id="CREATION_DATE" type="text" class="form-control" formControlName="date" name="date" bsDatepicker value="{{ expensesForm['controls'].date.value  | date:'dd-MM-yyyy' }}"
+        [bsConfig]="bsConfig" />
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+    <div class="form-group form-custom" *ngIf="hasEndDate">
+      <label for="fecha_vencimiento">{{ 'EXPENSE.CREATE.EXPIRATION_DATE' | translate }}</label>
+      <input id="fecha_vencimiento" type="text" class="form-control" formControlName="expiration_date" name="expiration_date" bsDatepicker
+        [bsConfig]="bsConfig" value="{{ expensesForm['controls'].expiration_date.value  | date:'dd-MM-yyyy' }}" />
+    </div>
+
+    <div class="form-group form-custom" *ngIf="!hasEndDate">
+      <label for="fecha_vencimiento">{{ 'EXPENSE.CREATE.EXPIRATION_DATE' | translate }}</label>
+      <input id="fecha_vencimiento" type="text" class="form-control" formControlName="expiration_date" name="expiration_date" bsDatepicker
+        [bsConfig]="bsConfig" value="{{ expensesForm['controls'].expiration_date.value  | date:'dd-MM-yyyy' }}" />
+    </div>
+  </div>
+
+
+  <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+    <div class="form-group form-custom">
+      <label for="amount">{{ 'EXPENSE.EXPENSES.AMOUNT' | translate }}</label>
+      <input [attr.disabled]="((expensesForm.controls['expenseState'].value ?true:null && (expensesForm.controls['showAssigment'].value === false ?true:null)) || (expensesForm.controls['expense_assignments'].value.length > 1?'':null))"
+        id="amount" formControlName="amount" name="amount" class="form-control" placeholder="99999"
+        (blur)="changeAmount()"  currencyMask [options]="maskMaskNumberFormat.currency"/>
+    </div>
+  </div>
+  <div *ngIf="edit !== true" class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
+    <label for="cuenta_contable">{{ 'EXPENSE.EXPENSES.ASSIGN' | translate }}</label>
+    <br>
+    <label class="switch switch-3d switch-info">
+      <input [(ngModel)]="assignSwitch" (change)="changeAssign();" type="checkbox" formControlName="assign" name="assign" class="switch-input"
+        checked="">
+      <span class="switch-label"></span>
+      <span class="switch-handle"></span>
+    </label>
+  </div>
+  <input type="hidden" [(ngModel)]="expense_type" formControlName="expense_type" name="expense_type">
+  <input type="hidden" [(ngModel)]="supplier_name" formControlName="supplier_name" name="supplier_name">
+  <input type="hidden" formControlName="supplier_id" name="supplier_id">
+  <div class="col-lg-12">
+    <h4 *ngIf="title && expensesForm.controls.expense_assignments.value.length > 0">{{title}}</h4>
+    <div formArrayName="expense_assignments" class="w-100">
+      <div class="w-100" *ngFor="let fee of expensesForm['controls'].expense_assignments['controls']; let i=index">
+
+        <app-expense-assign [periodCurrentSetting]="periodCurrentSetting" [countFees]="countFees" [sectors]="sectors" [periods]="periods"
+          [edit]="edit" [expenseAmount]="expensesForm.controls.amount.value" [expensesAssignForm]="expensesForm.controls.expense_assignments.controls[i]"
+          (ouputStateForm)="ouputFormValid($event)" (ouputStateFormFees)="ouputFormValidFee($event)" (ouputPeriod)="ouputPeriodSelected($event)">
+        </app-expense-assign>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="animated fadeIn ">
+  <h1 class="text-capitalize">
+    {{'COMMUNITY.GENERAL.PLURAL' | translate }}
+  </h1>
+
+  <div class="row mb-1">
+    <div class="col-md-4 ml-auto">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}"/>
+      </div>
+    </div>
+  </div>
+  <table class="table table-striped" [mfData]="data | dataFilter:{query: filterQuery, cols: ['code', 'name', 'id_number']}" #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+    <tr>
+      <th>
+        <mfDefaultSorter by="code">
+          {{'COMMUNITY.TABLE_HEADER.CODE' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th>
+        <mfDefaultSorter by="name">
+          {{'COMMUNITY.TABLE_HEADER.NAME' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th>
+        <mfDefaultSorter by="identification_number">
+          {{'COMMUNITY.TABLE_HEADER.IDENTIFICATION_NUMBER' | translate}}
+        </mfDefaultSorter>
+      </th>
+      <th>
+        <mfDefaultSorter by="active">
+          {{'COMMUNITY.TABLE_HEADER.ACTIVE' | translate}}
+        </mfDefaultSorter>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of mf.data">
+      <td>{{item.code}}</td>
+      <td>{{item.name}}</td>
+      <td>{{item.id_number}}</td>
+      <td>{{item.active}}</td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="4">
+        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>

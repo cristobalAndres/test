@@ -1,0 +1,53 @@
+<div class="animated fadeIn">
+  <h1>
+    {{'EXPENSE.GENERAL.NEW.PLURAL' | translate}}
+  </h1>
+  <form #formExpanses="ngForm" [formGroup]="formExpense" (submit)="sendExpenses(formExpense.value);" (change)="detectChangeForm()">
+    <div class="animated fadeIn">
+      <div class="card">
+        <div class="card-header">
+          {{'EXPENSE.GENERAL.PLURAL' | translate}}
+          <button (click)="addExpense();" type="button" class="btn btn-outline-primary btn-sm float-right"><i class="fa fa-plus-square"></i> {{'EXPENSE.GENERAL.BTN_ADD_EXPENSE' | translate}}</button>
+        </div>
+        <div class="card-block">
+          <div class="col-lg-12">
+            <div class="content-parameters-post">
+              <div formArrayName="expense">
+                <div *ngFor="let expense of formExpense['controls'].expense['controls']; let i=index" class="row">
+                  <div class="card" >
+                    <div class="card-header">
+                      <span>{{ 'EXPENSE.EXPENSES.EXPENSE' | translate  }} {{(i + 1)}}</span>
+                      <button *ngIf="formExpense['controls'].expense['controls'].length > 1" type="button" class="btn btn-danger pull-right" (click)="removeExpense(i);">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                    <div class="card-block animated fadeIn" >
+                      <app-expense-dynamic
+                        [sectors]="sectors"
+                        [position]="i"
+                        [assignmentTypeDefault]="assignmentTypeDefault"
+                        [expensesForm]="formExpense['controls'].expense['controls'][i]"
+                        [periodInitSetting]="periodInitSetting"
+                        [periodCurrentSetting]="periodCurrentSetting"
+                        (ouputFees)="ouputFees($event)"
+                        (ouputStateForm)="ouputFormValid($event)"
+                        (ouputStateFormFees)="ouputFormValidFee($event)"
+                        (ouputPeriod)="ouputPeriodSelected($event)"></app-expense-dynamic>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="isUploading">
+              <div class="progress progress-sm">
+                <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+              </div>
+            </div>
+            <button [disabled]="!formExpense.valid || validForm === true" *ngIf="formExpense['controls'].expense['controls'].length > 0 && !isUploading"
+              class="btn btn-primary btn-block pull-right" type="submit">{{ 'EXPENSE.GENERAL.BTN_SAVE' | translate  }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

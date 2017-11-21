@@ -1,0 +1,68 @@
+<div class="animated fadeIn ">
+  <h1 class="text-capitalize">
+    {{'BANK.GENERAL.PLURAL' | translate }}
+  </h1>
+
+  <div class="row mb-1">
+    <div class="col-md-4 offset-md-8">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}" />
+      </div>
+    </div>
+  </div>
+  
+  <table class="table table-striped" [mfData]="data | dataFilter:{query: filterQuery, cols: ['code', 'name', 'id_number']}"
+    #mf="mfDataTable" [mfRowsOnPage]="10">
+    <thead>
+      <tr>
+        <th>
+          <mfDefaultSorter by="code">
+            {{'BANK.TABLE_HEADER.NAME' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="name">
+            {{'BANK.TABLE_HEADER.CREATION_DATE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="identification_number">
+            {{'BANK.TABLE_HEADER.UPDATE_DATE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th>
+          <mfDefaultSorter by="active">
+            {{'BANK.TABLE_HEADER.ACTIVE' | translate}}
+          </mfDefaultSorter>
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of mf.data">
+        <td>{{item.name}}</td>
+        <td>{{formatDate(item.created_at)}}</td>
+        <td>{{formatDate(item.updated_at)}}</td>
+        <td>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" [(ngModel)]="item.active" type="checkbox">
+            </label>
+          </div>
+        </td>
+        <td>
+          <span *ngIf="item.active" class="badge badge-success">Activo</span>
+          <span *ngIf="!item.active" class="badge badge-danger">Inactivo</span>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">
+          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

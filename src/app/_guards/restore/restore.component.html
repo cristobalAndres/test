@@ -1,0 +1,74 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form class="card mx-4" name="form" (ngSubmit)="f.form.valid && recover()" #f="ngForm" novalidate>
+          <div class="card-block p-4">
+            <h1>{{'GUARD.AUTH.PASSWORD_FORGOT' | translate}}</h1>
+            <p class="text-muted">{{'GUARD.AUTH.PASSWORD_FORGOT_DESCRIPTION' | translate}}</p>
+
+            <div class="alert alert-danger" role="alert" *ngIf="hasErrors">
+              {{'GUARD.MESSAGE.PASSWORD_UNAUTHORIZED' | translate}}
+            </div>
+
+            <div class="alert alert-success" role="alert" *ngIf="wasSend">
+              {{'GUARD.MESSAGE.PASSWORD_RECOVERED' | translate}}
+            </div>
+
+            <div class="mb-3" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+                <input type="email" class="form-control" name="email"
+                       placeholder="{{'GUARD.AUTH.EMAIL_FIELD' | translate}}" [(ngModel)]="model.email" #email="ngModel"
+                       required/>
+              </div>
+              <div *ngIf="f.submitted && !email.valid" class="invalid-feedback">
+                {{'GUARD.FORM_VALIDATION.EMAIL_REQUIRED' | translate}}
+              </div>
+            </div>
+
+            <div class="mb-3" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="icon-lock"></i></span>
+                <input type="password" class="form-control" placeholder="{{'GUARD.AUTH.PASSWORD_FIELD' | translate}}"
+                       name="password" [(ngModel)]="model.password" #password="ngModel" required/>
+              </div>
+              <div *ngIf="f.submitted && !password.valid" class="invalid-feedback">
+                {{'GUARD.FORM_VALIDATION.PASSWORD_REQUIRED' | translate}}
+              </div>
+            </div>
+
+            <div class="mb-4" [ngClass]="{ 'has-error': f.submitted && !repassword.valid }">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="icon-lock"></i></span>
+                <input type="password" class="form-control"
+                       placeholder="{{'GUARD.AUTH.REPEAT_PASSWORD_FIELD' | translate}}" name="repassword"
+                       [(ngModel)]="model.repeat_password" #repassword="ngModel" required/>
+              </div>
+              <div *ngIf="(f.submitted && !repassword.valid) || (model.password !== model.repeat_password)"
+                   class="invalid-feedback">
+                {{'GUARD.FORM_VALIDATION.PASSWORD_NOT_MATCH' | translate}}
+              </div>
+            </div>
+
+          </div>
+          <div class="card-footer p-4">
+            <div class="row">
+              <div class="col-6">
+                <button [disabled]="loading" class="btn btn-block btn-primary">
+                  {{'GUARD.AUTH.RECOVER_TITLE' | translate}}
+                </button>
+              </div>
+              <div class="col-6">
+                <button routerLinkActive="active" [routerLink]="['/login']" type="button"
+                        class="btn btn-block btn-link">
+                  {{'GUARD.AUTH.LOGIN' | translate}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

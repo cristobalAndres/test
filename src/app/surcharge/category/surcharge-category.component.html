@@ -1,0 +1,129 @@
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>
+
+<div class="progress progress-sm" *ngIf="isLoading">
+    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+</div>
+
+<div class="animated fadeIn" *ngIf="!isLoading">
+    <h1>
+        {{'SURCHARGE.CATEGORY_SURCHARGE.GENERAL.SINGULAR' | translate}}
+    </h1>
+
+    <div class="row mb-1">
+        <div class="col-md-8">
+            <button type="button" class="btn btn-primary" data-toggle="modal" (click)="actionsModal.show()">
+                <i class="fa fa-plus"></i>&nbsp; {{'SURCHARGE.CATEGORY_SURCHARGE.NEW_CATEGORY_SURCHARGE' | translate}}
+            </button>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input type="text" class="form-control" [(ngModel)]="filterQuery" placeholder="{{'GENERAL.SEARCH.SEARCH' | translate}}" />
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-striped" [mfData]="categories | dataFilter:{query: filterQuery, cols: ['created_at_format', 'name']}"
+        #mf="mfDataTable" [mfRowsOnPage]="10">
+        <thead>
+            <tr>
+                <th>
+                    <mfDefaultSorter by="created_at">
+                        {{'SURCHARGE.CATEGORY_SURCHARGE.TABLE_HEADER.CREATED_AT' | translate}}
+                    </mfDefaultSorter>
+                </th>
+                <th>
+                    <mfDefaultSorter by="name">
+                        {{'SURCHARGE.CATEGORY_SURCHARGE.TABLE_HEADER.NAME' | translate}}
+                    </mfDefaultSorter>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let item of mf.data">
+                <td>{{item.created_at_format}}</td>
+                <td>{{item.name}}</td>
+                <td class="text-right">
+                    <button type="button" class="btn btn-danger btn-sm" [disabled]="!item.delete" (click)="selectToDelete(item);dangerDeleteModal.show();">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <td colspan="8">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
+<div bsModal #actionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="actionsModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form [formGroup]="ngForm" (ngSubmit)="onSubmit(ngForm.value)">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{'SURCHARGE.CATEGORY_SURCHARGE.NEW_CATEGORY_SURCHARGE' | translate}}</h5>
+                    <button type="button" class="close" (click)="actionsModal.hide()" aria-label="Close">
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">{{'SURCHARGE.CATEGORY_SURCHARGE.NEW_CATEGORY_SURCHARGE_SHORT' | translate}}</label>
+                        <input type="text" class="form-control" id="name" aria-describedby="name" [formControl]="ngForm.controls['name']" placeholder="{{'SURCHARGE.CATEGORY_SURCHARGE.NEW_CATEGORY_SURCHARGE_SHORT' | translate}}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="actionsModal.hide()">
+                        {{'GENERAL.CLOSE' | translate}}
+                    </button>
+                    <button type="submit" class="btn btn-success" [disabled]="!ngForm.valid" (click)="actionsModal.hide()">
+                        {{'SURCHARGE.CATEGORY_SURCHARGE.CREATE_CATEGORY_SURCHARGE' | translate}}
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div bsModal #dangerDeleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dangerDeleteModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-danger" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{'SURCHARGE.CATEGORY_SURCHARGE.MODAL.CONFIRMATION_TITLE' | translate}}</h5>
+                <button type="button" class="close" (click)="dangerDeleteModal.hide();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p *ngIf="deleteModalParam.value!= ''"> {{'SURCHARGE.CATEGORY_SURCHARGE.MODAL.DELETE.CONFIRMATION_TEXT' | translate:deleteModalParam}} </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="dangerDeleteModal.hide();cancelDelete()">
+                    {{'GENERAL.CLOSE' | translate}}
+                </button>
+                <button type="button" class="btn btn-danger" (click)="deleteCategory(); dangerDeleteModal.hide();">
+                    <i class="fa fa-trash"></i> {{'GENERAL.DELETE' | translate}}
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

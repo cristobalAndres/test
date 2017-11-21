@@ -1,0 +1,43 @@
+.text-line{
+  line-height: 30px;
+}
+
+.padding-table-td{
+  padding: 0 4px;
+}
+
+.margin-1{
+  margin: 1px;
+}
+
+.content-distribution-item{
+  padding: 0 16px;
+}
+
+.distribution-item{
+  margin-bottom: 2px;
+  padding: 4px;
+  &:nth-child(odd){
+    background-color: rgba(0,0,0,.05);
+  }
+}
+
+.margin-right-10{
+  margin-right: 10px;
+}
+
+.card{
+  margin-bottom: 2px;
+}
+
+.click{
+  cursor: pointer;
+}
+
+.destac{
+  font-weight: 600;
+}
+
+.icon-expand{
+  margin-top: 20px;
+}

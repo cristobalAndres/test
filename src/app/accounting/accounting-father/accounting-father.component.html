@@ -1,0 +1,64 @@
+<form #formAccounting="ngForm" [formGroup]="accountingForm" >
+  <div class="card">
+    <div class="col-lg-12 margin-top-min">
+      <div class="row father-account">
+        <div class="col-lg-2">{{accountingForm['controls'].code.value | accountCodeMask}}</div>
+        <div class="col-lg-3 text-center" *ngIf="!formActive || accountingForm['controls'].id.value !== editAlias.id">{{accountingForm['controls'].alias.value ? accountingForm['controls'].alias.value: accountingForm['controls'].name.value}}</div>
+        <div class="col-lg-3" *ngIf="formActive && accountingForm['controls'].id.value === editAlias.id">
+          <div class="form-group"><input type="text" id="alias" class="form-control" formControlName="aliasAux" (keyup)="validateAlias($event.target.value, accountingForm.value)" name="alias"></div>
+        </div>
+        <div class="col-lg-4 text-center" *ngIf="!existAlias">{{accountingForm['controls'].children.value.length}}</div>
+        <div class="col-lg-4 text-right" *ngIf="existAlias">
+          <div class="animated fadeIn alert alert-warning w-100">
+            <div class="text-center text-bold mb1">
+              <div class="col-lg-12"><i class="fa fa-info-circle fa-2x"></i> &nbsp;{{ 'ACCOUNTING_ACCOUNTS.NEW_ACCOUNT.EXITST_ACCOUNT' | translate }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1">
+          <i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true" *ngIf="showSpinner"></i>
+        </div>
+
+        <div class="col-lg-2 text-right">
+          <button class="btn btn-sm btn-primary" [disabled]="statusEdit || !accountingForm['controls'].status.value" *ngIf="!formActive || accountingForm['controls'].id.value !== editAlias.id" (click)="editAccountingMaster(accountingForm.value)" ><i class="fa fa-edit"></i></button>
+          <button class="btn btn-sm btn-success" *ngIf="(formActive && accountingForm['controls'].id.value === editAlias.id) && !existAlias " [disabled]="!accountingForm.valid" (click)="saveAccountingMaster(accountingForm.value)"><i class="fa fa-check"></i></button>
+          <button class="btn btn-sm btn-warning" *ngIf="(formActive && accountingForm['controls'].id.value === editAlias.id) && existAlias " [disabled]="!accountingForm.valid" (click)="saveAccountingMaster(accountingForm.value)"><i class="fa fa-check"></i></button>
+          <button class="btn btn-sm btn-danger" *ngIf="(formActive && accountingForm['controls'].id.value === editAlias.id) " (click)="disableForm()"><i class="fa fa-close"></i></button>
+          <button [disabled]="statusEdit || !accountingForm['controls'].status.value" *ngIf="!accountingForm['controls'].active.value === false" class="btn btn-sm btn-default" (click)="renderChildrenAccountDown(accountingForm.value)"><i class="fa fa-caret-up"></i></button>
+          <button *ngIf="!accountingForm['controls'].active.value" [disabled]="statusEdit || !accountingForm['controls'].status.value" class="btn btn-sm btn-default" (click)="renderChildrenAccountDown(accountingForm.value)"><i class="fa fa-caret-down"></i></button>
+        </div>
+        <input type="hidden" [ngModel]="uid" [ngModelOptions]="{standalone: true}" value="{{accountingForm['controls'].id.value}}">
+      </div>
+      <div *ngIf="accountingForm.value.active" class="card-block fadeIn animated">
+        <div formArrayName="sectors" class="row" *ngIf="!spinnerSectorFather">
+          <div *ngFor="let sector of accountingForm['controls'].sectors['controls']; let i=index" >
+            <div *ngIf="accountingForm['controls'].sectors['controls'][i].value.name !== null">
+              <app-accounting-sectors [accountingForm]="accountingForm['controls'].sectors['controls'][i]" [accountingId]="accountingId"
+                                      (sector)="outputFormSector($event)"></app-accounting-sectors>
+            </div>
+          </div>
+          <div class="col">
+            <button (click)="ouputAdd(accountingForm.value)" type="button" class="btn btn-outline-primary btn-sm float-lg-right"><i class="fa fa-plus-square"></i> {{'ACCOUNTING_ACCOUNTS.ADD_ACCOUNT' | translate}}</button>
+          </div>
+        </div>
+        <i class="fa fa-spinner fa-spin fa-2x fa-fw spinnerFather" *ngIf="spinnerSectorFather" aria-hidden="true"></i>
+        <div formArrayName="children">
+
+          <div *ngFor="let element of accountingForm['controls'].children['controls']; let _j = index;">
+            <app-expense-accounting-account-children
+              [accountingForm]="accountingForm['controls'].children['controls'][_j]"
+              [blockStatus]="blockStatus"
+              [sectors]="sectors"
+              [disableEditChild]="disableEditChild"
+              [form]="form"
+              [status]="status"
+              [changeSelectedChild]="changeSelectedChild"
+              (blockEditStatus)="onBlockEditStatus($event)"
+            >
+            </app-expense-accounting-account-children>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

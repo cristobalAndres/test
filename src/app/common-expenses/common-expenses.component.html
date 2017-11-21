@@ -1,0 +1,408 @@
+<div *ngIf="!isProcessingData">
+  <h1>{{'COMMON_EXPENSE.GENERAL.SINGULAR' | translate}}</h1>
+  <div class="card"  *ngIf="!isUploading">
+    <div class="card-block">
+      <div class="row">
+        <div class="col">
+          <label>{{'GENERAL.MONTH' | translate}}</label>
+          <select [(ngModel)]="month" name="selectMonth" class="custom-select center form-control" (change)="changePeriod()">
+              <option *ngFor="let month of months" [ngValue]="month.number">{{'GENERAL.MONTHS.' + month.name | translate}}</option>
+            </select>
+        </div>
+        <div class="col">
+          <label>{{'GENERAL.YEAR' | translate}}</label>
+          <select [(ngModel)]="year" class="custom-select center form-control" (change)="changePeriod()">
+              <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
+            </select>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-primary btn-block close-common-expense" [disabled]="validateCommonExpense && validateCommonExpense.length > 0" (click)="openModalCloseInfo()"> {{'COMMON_EXPENSE.GENERAL.CLOSE_COMMON_EXPENSE' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group" *ngIf="isUploading">
+      <div class="progress progress-sm">
+        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+      </div>
+  </div>
+  <div *ngIf= "!isUploading">
+    <div class="animated fadeIn alert alert-warning w-100 block-center" *ngIf="validateCommonExpense && validateCommonExpense.length > 0">
+      <div class="text-center mb20">
+        <i class="fa fa-warning fa-5x"></i>
+      </div>
+      <ul>
+        <li class="mb10 text-center" *ngFor="let item of validateCommonExpense">
+          <div *ngIf="item.data.length > 0">
+            <strong class="text-center text-bold">{{'COMMON_EXPENSE.VALIDATE.'+ item.message | translate}}.</strong>
+            <button *ngIf= "item.message !== 'PERIOD_CLOSED' " class="btn btn-link" (click)="messageValidate(item); validateResumeModal.show();">Ver más</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card"  *ngIf="!isUploading">
+    <div class="card-block">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+            </div>
+            <div id="content_sectors" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <div class="row">
+                <div class="col" *ngFor="let sector of sectors">
+                  <div class="text-center">
+                    <label *ngIf="sector.name === 'DEFAULT_SECTOR'">{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate  }}</label>
+                    <label *ngIf="sector.name !== 'DEFAULT_SECTOR'">{{ sector.name | translate}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngFor="let data of accountAssign" class="row">
+            <div *ngFor="let children of data.children" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="col-lg-12 main-account">
+                <div class="row">
+                  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <strong>{{children.name}}</strong>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="row">
+                      <div class="col text-right not-padding" *ngFor="let sector of sectors">
+                        <strong>{{getAccountTotal(children, sector) | numberFormat: { type: 'currency' } }}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 sub-account" *ngFor="let children of children.children">
+                <div (click)="changeStateAccount(children)" class="row">
+                  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <a class="sub-account-expense">
+                      <i *ngIf="children.state" class="fa fa-sort-asc"></i>
+                      <i *ngIf="!children.state" class="fa fa-sort-desc"></i>
+                      {{children.name}}
+                    </a>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="row">
+                      <div class="col text-right not-padding" *ngFor="let sector of sectors">
+                        <label for="amoutAccouting">{{getAccountTotal(children, sector) | numberFormat: { type: 'currency' } }}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="children.state" class="col-lg-12 content-table-detail animated fadeIn">
+                  <table class="table table-striped table-bordered">
+                    <thead class="table-info">
+                      <tr>
+                        <th>{{ 'COMMON_EXPENSE.EXPENSE_DETAIL.SUPPLIER' | translate }}</th>
+                        <th>{{ 'COMMON_EXPENSE.EXPENSE_DETAIL.DOC_NUMBER' | translate }}</th>
+                        <th>{{ 'COMMON_EXPENSE.EXPENSE_DETAIL.DESCRIPTION' | translate }}</th>
+                        <th>{{ 'COMMON_EXPENSE.EXPENSE_DETAIL.FEE' | translate }}</th>
+                        <ng-container *ngFor="let sector of sectors">
+                          <th *ngIf="sector.name === 'DEFAULT_SECTOR';else other_sector">{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate  }}</th>
+                          <ng-template #other_sector><th>{{ sector.name }}</th></ng-template>
+                        </ng-container>
+                      </tr>
+                    </thead>
+                    <tbody *ngFor="let assignments of children.account_expense_assignments">
+                        <tr *ngFor="let data of assignments.data">
+                          <td>{{data.supplier.name}}</td>
+                          <td>{{data.expense_type.code}}{{data.code}}</td>
+                          <td>{{data.description}}</td>
+                          <td>{{data.expense_assignment.expense_fees[0].description | translate}}</td>
+                          <ng-container *ngFor="let sector of sectors">
+                            <td class="text-right">{{ calculateAmountExpenseBySector(data.expense_assignment.expense_fees[0].sectors, sector) | numberFormat: { type: 'currency' } }}</td>
+                          </ng-container>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <hr class="divider">
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div class="col-lg-12">
+                <div class="row">
+                  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
+                    <strong>{{ 'COMMON_EXPENSE.TOTALS.TOTAL_BY_SECTOR' | translate }}</strong>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="row">
+                      <div class="col text-right not-padding" *ngFor="let sector of sectors">
+                        {{getAccountTotal(data, sector) | numberFormat: { type: 'currency' } }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="row">
+        <div class="col-10 text-right"><strong>{{ 'COMMON_EXPENSE.TOTALS.COMMUNITY_TOTAL' | translate | uppercase }}</strong></div>
+        <div class="col-2 text-right" *ngIf="accountAssign"><strong> {{getCommunityTotal() | numberFormat: { type: 'currency' } }}</strong></div>
+      </div>
+      <hr class="divider">
+      <div *ngIf="fundsCommunity" class="row justify-content-md-center">
+        <div class="col-md-12">
+          <h3>{{ 'COMMON_EXPENSE.FUND_DETAIL.FUND_TITLE' | translate }}</h3>
+        </div>
+        <div class="col-lg-12">
+          <table class="table table-bordered">
+            <thead class="table-info">
+              <tr>
+                <th>{{ 'COMMON_EXPENSE.FUND_DETAIL.FUND' | translate }}</th>
+                <th *ngFor="let sector of sectors">
+                  <span *ngIf="sector.name === 'DEFAULT_SECTOR'">{{ 'SECTOR.GENERAL.DEFAULT_SECTOR' | translate  }}</span>
+                  <span *ngIf="sector.name !== 'DEFAULT_SECTOR'">{{ sector.name | translate}}</span>
+                </th>
+                <th>{{ 'COMMON_EXPENSE.FUND_DETAIL.FUND_TOTAL' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let fund of fundsCommunity">
+                <th scope="row">{{fund.name}}</th>
+                <td *ngFor="let sector of sectors" class="text-right">
+                  {{ getFundTotal(fund, sector) | numberFormat: { type: 'currency' } }}
+                </td>
+                <td class="text-right">{{ getFundTotal(fund) | numberFormat: { type: 'currency' } }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div bsModal #validateResumeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="validateResumeModalLabel">
+  <div class="modal-dialog modal-primary modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 *ngIf= "dataValidated && dataValidated.message === 'ACCOUNT_WITHOUT_EXPENSES' "> {{ 'COMMON_EXPENSE.VALIDATE.ACCOUNT_WITHOUT_EXPENSES' | translate }}. </h5>
+        <h5 *ngIf= "dataValidated && dataValidated.message === 'SURCHARGE_DONT_PAY_TOTAL' "> {{ 'COMMON_EXPENSE.VALIDATE.SURCHARGE_DONT_PAY_TOTAL' | translate }}. </h5>
+        <h5 *ngIf= "dataValidated && dataValidated.message === 'CONSUMER_SERVICE_NOT_EXPENSE_ASSOICATED' "> {{ 'COMMON_EXPENSE.VALIDATE.CONSUMER_SERVICE_NOT_EXPENSE_ASSOICATED' | translate }}. </h5>
+        <h5 *ngIf= "dataValidated && dataValidated.message === 'READINGS_WITHOUT_EXPENSES' "> {{ 'COMMON_EXPENSE.VALIDATE.READINGS_WITHOUT_EXPENSES' | translate }}. </h5>
+
+        <button type="button" class="close" (click)="validateResumeModal.hide(); reValidateMandatory();" aria-label="Close" *ngIf= "dataValidated && dataValidated.message === 'ACCOUNT_WITHOUT_EXPENSES'">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+        <button type="button" class="close" (click)="validateResumeModal.hide();" aria-label="Close" *ngIf= "dataValidated && dataValidated.message !== 'ACCOUNT_WITHOUT_EXPENSES'">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+      <div class="modal-body">
+        <div class="row mb3 mx-auto">
+          <table class="table table-hover table-sm table-responsive" *ngIf="dataValidated && dataValidated.message === 'SURCHARGE_DONT_PAY_TOTAL'">
+            <thead>
+            <tr>
+              <th>Inmueble</th>
+              <th>Descripción</th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody *ngIf="dataValidated">
+            <tr *ngFor="let item of dataValidated.data">
+              <td>{{ item.property.name }}</td>
+              <td>{{ item.code }}</td>
+              <td>{{item.bill_debts[0].amount | numberFormat: { type: 'currency' } }}</td>
+            </tr>
+            </tbody>
+          </table>
+          <table class="table table-hover table-sm table-responsive" *ngIf="dataValidated && dataValidated.message === 'CONSUMER_SERVICE_NOT_EXPENSE_ASSOICATED'">
+            <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Gastos asignados</th>
+              <th>Lecturas</th>
+            </tr>
+            </thead>
+            <tbody *ngIf="dataValidated">
+            <tr *ngFor="let item of dataValidated.data">
+              <td>{{ item.cs.name }}</td>
+              <td>{{ item.total_expense}}</td>
+              <td>{{ item.cs.consumer_service_readings.length}}</td>
+            </tr>
+            </tbody>
+          </table>
+          <table class="table table-hover table-sm table-responsive" *ngIf="dataValidated && dataValidated.message === 'READINGS_WITHOUT_EXPENSES'">
+            <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Gastos asignados</th>
+              <th>Lecturas</th>
+            </tr>
+            </thead>
+            <tbody *ngIf="dataValidated">
+            <tr *ngFor="let item of dataValidated.data">
+              <td>{{ item.cs.name }}</td>
+              <td>{{ item.total_expense}}</td>
+              <td>{{ item.cs.consumer_service_readings.length}}</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-hover table-sm table-responsive mx-auto" style="width: 100%;" *ngIf="dataValidated && dataValidated.message === 'ACCOUNT_WITHOUT_EXPENSES'">
+            <thead>
+            <tr>
+              <th style="width: 20%;">Alias</th>
+              <th>Sectores</th>
+            </tr>
+            </thead>
+            <tbody *ngIf="dataValidated">
+            <tr *ngFor="let item of dataValidated.data">
+              <td>{{ item.alias }}</td>
+              <td>
+                <div class= "container">
+                  <div class ="row">
+                    <div class="col form-check" *ngFor= "let sector of item.account_sectors">
+                      <label *ngIf="sector.name === 'DEFAULT_SECTOR'">
+                          {{'SECTOR.GENERAL.DEFAULT_SECTOR' | translate}}
+                        </label>
+                        <label *ngIf="sector.name !== 'DEFAULT_SECTOR'">
+                          {{sector.name}}
+                        </label>
+                      <label class="switch switch-3d switch-info">
+                        <input type="checkbox" class="switch-input" [checked]= "sector.mandatory" [disabled]= "!hasError(item, sector)"
+                          (change)= "changeMandatoryOnSector(item, sector)" >
+                          <span class="switch-label" [ngClass]="{'disabled-switch': hasError(item, sector) === false}"></span>
+                          <span class="switch-handle" [ngClass]="{'disabled-switch': hasError(item, sector) === false}"></span>
+                      </label>
+                  </div>
+                </div>
+              </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-primary" (click)="validateResumeModal.hide(); reValidateMandatory();"
+              *ngIf= "dataValidated && dataValidated.message === 'ACCOUNT_WITHOUT_EXPENSES'">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+        <button type="button" class="btn btn-primary" (click)="validateResumeModal.hide();"
+              *ngIf= "dataValidated && dataValidated.message !== 'ACCOUNT_WITHOUT_EXPENSES'">
+          {{'GENERAL.CLOSE' | translate}}
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<div bsModal #modalInfo="bs-modal" class="modal modal-primary fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Información de cierre</h4>
+        <button type="button" class="close pull-right" (click)="hideModalCloseInfo()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngIf="interestFineSet">
+          <div class="row">
+              <label class="col-sm-4"><b>{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_PERIODICITY' | translate}}</b></label>
+              <div class="col-sm-8">
+                : {{ 'SETTINGS.LATE_PAYMENT.METADATA_FIELDS.' + interestFine.periodicidad | translate }}
+              </div>
+          </div>
+          <div class="row">
+              <label class="col-sm-4"><b>{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_DEBT' | translate}}</b></label>
+              <div class="col-sm-8">
+                : {{ 'SETTINGS.LATE_PAYMENT.METADATA_FIELDS.' + interestFine.interest_type | translate }}
+              </div>
+          </div>
+          <div class="row">
+              <label class="col-sm-4"><b>{{'SETTINGS.LATE_PAYMENT.FORM.INTEREST_RATE.TITLE' | translate}}</b></label>
+              <div class="col-sm-8">
+                : {{ interestFine.interest_rate | numberFormat: { type: 'percent' } }}
+              </div>
+          </div>
+          <div class="row">
+              <label class="col-sm-4"><b>{{'SETTINGS.LATE_PAYMENT.FORM.DEBT_TO_CONSIDER.TITLE' | translate}}</b></label>
+              <div class="col-sm-8">
+                : {{ 'SETTINGS.LATE_PAYMENT.FORM.DEBT_TO_CONSIDER.' + interestFine.debt_consider  | translate  }}
+              </div>
+          </div>
+
+          <div class="row">
+              <label class="col-sm-4"><b>{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_AFFECTION_FUND' | translate}}</b></label>
+              <div class="col-sm-8">
+                : {{ interestFine.fund_name }}
+              </div>
+          </div>
+
+          <div class="row">
+              <label class="col-sm-4"><b>{{'SETTINGS.LATE_PAYMENT.FORM.TITLE_DESCRIPTION' | translate}}</b></label>
+              <div class="col-sm-8">
+                : {{ interestFine.description }}
+              </div>
+          </div>
+
+          <div class="row">
+              <label class="col-sm-4"><b>{{'SETTINGS.LATE_PAYMENT.FORM.CREDIT.TITLE' | translate}}</b></label>
+              <div class="col-sm-8">
+                : {{'SETTINGS.LATE_PAYMENT.FORM.CREDIT.' + interestFine.capital_reduction | translate}}
+              </div>
+          </div>
+          <div class="row">
+              <label class="col-sm-4"><b>{{'COMMON_EXPENSE.MODAL.DATE_CLOUSURE_PREVIUS_PERIOD' | translate}}</b></label>
+              <div class="col-sm-8">
+                : {{ interestFine.closure_date | date:'dd-MM-y'}}
+              </div>
+          </div>
+
+          <div class="row" *ngIf="interestFine.periodicidad === 'DIARIO'">
+              <label class="col-sm-4"><b>{{'COMMON_EXPENSE.MODAL.DATE_ISSUE' | translate}}</b></label>
+              <div class="col-sm-4">
+                  <input class="form-control" type="text" [readonly]="true" [(ngModel)]="dateIssue" (blur)="onChangeDateModal()" id="initial_date" name="initial_date"
+                  bsDatepicker [bsConfig]="bsConfig" >
+              </div>
+          </div>
+        </ng-container>
+
+        <div class="row">
+            <label class="col-sm-4"><b>{{'COMMON_EXPENSE.MODAL.DATE_EXPIRATION' | translate}}</b></label>
+            <div class="col-sm-4">
+                <input class="form-control" type="text" [readonly]="true" [(ngModel)]="dateExpiration" (blur)="onChangeDateModal()" id="initial_date" name="initial_date"
+                bsDatepicker [bsConfig]="bsConfig" >
+            </div>
+        </div>
+        <br>
+        <div class="text-right">
+          <button type="button" class="btn btn-primary" (click)="closeCommonExpense(); hideModalCloseInfo()" [disabled]="!isEnableButtonContinueClose">{{'COMMON_EXPENSE.MODAL.BUTTON_CONTINUE_TEXT' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="animated fadeIn alert alert-info w-50 block-center" *ngIf="isProcessingData">
+  <div class="sk-wave mb20">
+    <div class="sk-rect sk-rect1 bg-success"></div>
+    <div class="sk-rect sk-rect2 bg-success"></div>
+    <div class="sk-rect sk-rect3 bg-success"></div>
+    <div class="sk-rect sk-rect4 bg-success"></div>
+    <div class="sk-rect sk-rect5 bg-success"></div>
+  </div>
+  <div class="text-center text-bold mb30">{{'GENERAL.PROCESS_START' | translate}}</div>
+</div>
+
+<toaster-container></toaster-container>

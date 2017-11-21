@@ -1,0 +1,137 @@
+/**
+ * GenesisUI - Bootstrap 4 Admin Template
+ * @version v1.8.5
+ * @link https://genesisui.com
+ * Copyright (c) 2017 creativeLabs Łukasz Holeczek
+ * @license Commercial
+ */
+// Override Boostrap variables
+@import "bootstrap-variables";
+
+// Import Bootstrap source files
+@import "bootstrap/bootstrap";
+
+// If you want you can import bootstrap scss files directly from node_modules or bower_components.
+// To do this please remove @import "bootstrap/bootstrap"; and uncomment proper line.
+
+// Import Bootstrap source files from node_modules
+// @import "node_modules/bootstrap/scss/bootstrap";
+
+// Import Bootstrap source files from bower_components
+// @import "bower_components/bootstrap/scss/bootstrap";
+
+// Override core variables
+@import "core-variables";
+
+// Import core styles
+@import "core/core";
+
+// Import vendors styles
+@import "vendors/vendors";
+
+// Import UI Kits
+@import "uikits/uikits";
+
+// Custom styles
+@import "custom";
+
+// Forms styles
+@import "forms";
+
+// Styles Siteﬁ
+.style-custom-card-fee{
+  margin-bottom: 0;
+  border-radius: 0;
+  border-bottom: 1px solid #fff;
+}
+.padding-card-fee{
+  padding: 5px 10px;
+}
+.txt-fee{
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 16px;
+}
+.not-padding{
+  padding: 0;
+}
+
+.not-margin{
+  margin: 0;
+}
+
+.padding-min{
+  padding: 4px;
+}
+.margin-top-min{
+  margin-top: 4px;
+}
+
+.padding-custom-fee{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 4px !important;
+  padding-right: 8px;
+}
+
+.card-light{
+  padding: 0 10px;
+  width: 100%;
+}
+
+.padding-top-0{
+  padding-top: 0 ;
+}
+
+.input-position-fee{
+  width: 60px;
+  margin-right: 4px;
+  margin-left: 4px;
+}
+.input-sector{
+  width: 100px;
+}
+.center{
+  text-align: center;
+}
+
+.hidden{
+  display: none;
+}
+
+.content-button-search{
+  line-height: 90px;
+}
+
+.font-small{
+  font-size: 11px;
+}
+
+button:disabled,
+button[disabled]{
+  cursor: not-allowed;
+}
+
+.select-disabled{
+  background-color: #e4e6eb !important;
+  padding: 0.4rem 0.75rem;
+  width: 100%;
+  cursor: not-allowed;
+}
+.select-disabled::-ms-expand {
+  display: none !important;
+}
+
+.card-assignment{
+  border-radius: 4px;
+  background-color:#f5f5f5;
+  margin-bottom: 5px;
+  padding: 8px;
+}
+
+button:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.3 !important;
+}
+
+bs-datepicker-container { z-index: 3000; }
