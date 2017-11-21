@@ -1,4 +1,3 @@
 deploy:
   provider: heroku
   api_key: 771a722c-11c5-4451-909a-66eb45529833
-  app: k3-git
